@@ -9,13 +9,37 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Icons\password_icon_50x50.png" />
+    <None Remove="Icons\username_icon_50x50.png" />
+    <None Remove="Images\x_30x30.png" />
+    <None Remove="Logo\RentalHub_Logo.png" />
+    <None Remove="Logo\RentalHub_Logo.svg" />
+    <None Remove="Logo\RH.png" />
+    <None Remove="Logo\RH_clean.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Themes\LightTheme.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\x_30x30.png" />
+    <Resource Include="Themes\LightTheme.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MVVM\Model\" />
-    <Folder Include="MVVM\ViewModel\" />
-    <Folder Include="MVVM\View\" />
+    <Folder Include="Fonts\" />
+    <Folder Include="Model\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icons\password_icon_50x50.png" />
+    <Resource Include="Icons\username_icon_50x50.png" />
+    <Resource Include="Logo\RentalHub_Logo.png" />
   </ItemGroup>
 
 </Project>
