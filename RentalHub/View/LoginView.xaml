@@ -12,7 +12,8 @@
         Background="Transparent"
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen"
-        MouseDown="Window_MouseDown">
+        MouseDown="Window_MouseDown"
+        Icon="../Logo/Logo_100x100.png">
 
     <Border CornerRadius="20"
             BorderThickness="3">

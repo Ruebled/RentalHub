@@ -25,16 +25,30 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="2.8471661"
-     inkscape:cx="362.99252"
+     inkscape:cx="267.1077"
      inkscape:cy="424.45715"
      inkscape:window-width="1920"
      inkscape:window-height="1013"
      inkscape:window-x="-9"
      inkscape:window-y="-9"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer2" />
   <defs
      id="defs1" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Background">
+    <circle
+       style="fill:#878472;fill-opacity:1;stroke:#878472;stroke-width:0.465;stroke-opacity:1"
+       id="path2"
+       cx="63.563202"
+       cy="107.56492"
+       r="23"
+       inkscape:export-filename="..\RentalHub\Logo\Logo_32x32.png"
+       inkscape:export-xdpi="54.664799"
+       inkscape:export-ydpi="54.664799" />
+  </g>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
