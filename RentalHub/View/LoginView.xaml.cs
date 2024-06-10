@@ -14,7 +14,7 @@ namespace RentalHub.MVVM.View
 
         private void Window_MouseDown(object sender, MouseEventArgs e)
         {
-            if(e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 DragMove();
             }

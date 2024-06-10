@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel="clr-namespace:RentalHub.ViewModel" xmlns:customcontrols="clr-namespace:RentalHub.CustomControls"
         mc:Ignorable="d"
         Title="LoginView"
         Height="550" 
@@ -14,6 +15,18 @@
         WindowStartupLocation="CenterScreen"
         MouseDown="Window_MouseDown"
         Icon="../Logo/Logo_100x100.png">
+
+    <Window.DataContext>
+        <viewModel:LoginViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
+    </Window.Resources>
+
+    <Window.Visibility>
+        <Binding Path="IsViewVisible" Mode="TwoWay" Converter="{StaticResource BooleanToVisibility}"/>
+    </Window.Visibility>
 
     <Border CornerRadius="20"
             BorderThickness="3">
@@ -96,6 +109,7 @@
                            Margin="0,35,0,0"
                            />
                 <TextBox x:Name="txtUser"
+                         Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
                          FontSize="13"
                          FontWeight="Medium"
                          FontFamily="Montserrat"
@@ -123,28 +137,22 @@
                            FontFamily="Montserrat"
                            Margin="0,35,0,0"
                            />
-                <PasswordBox x:Name="txtPass"
-                         FontSize="13"
-                         FontWeight="Medium"
-                         FontFamily="Montserrat"
-                         BorderThickness="0,0,0,1"
-                         Height="28"
-                         VerticalContentAlignment="Center"
-                         Margin="0,5,0,0"
-                         Padding="25,0,0,0">
-                    <PasswordBox.Background>
-                        <VisualBrush Stretch="None" AlignmentX="Left">
-                            <VisualBrush.Visual>
-                                <Viewbox Width="20" Height="20">
-                                    <Image Source="../Icons/password_icon_50x50.png"
-                                           Width="20" Height="20"/>
-                                </Viewbox>
-                            </VisualBrush.Visual>
-                        </VisualBrush>
-                    </PasswordBox.Background>
-                </PasswordBox>
+                <customcontrols:BindablePasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    Height="28"
+                                                    Margin="0,5,0,0">
+
+                </customcontrols:BindablePasswordBox>
+
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="#D75960"
+                           FontSize="12"
+                           FontWeight="Medium"
+                           FontFamily="Montserrat"
+                           Margin="0,10,0,0"
+                           TextWrapping="Wrap"/>
 
                 <Button x:Name="btnLogin"
+                        Command="{Binding LoginCommand}"
                         BorderThickness="0"
                         Content="LOG IN"
                         FontSize="16"
@@ -152,7 +160,6 @@
                         Cursor="Hand"
                         Grid.Column="2"
                         Margin="0,50,0,0"
-                        Click="btnLogin_Click"
                         FocusVisualStyle="{x:Null}">
 
                     <Button.Template>

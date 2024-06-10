@@ -38,7 +38,6 @@
 
   <ItemGroup>
     <Folder Include="Fonts\" />
-    <Folder Include="Model\" />
   </ItemGroup>
 
   <ItemGroup>

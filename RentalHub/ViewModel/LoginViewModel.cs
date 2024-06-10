@@ -1,4 +1,8 @@
-﻿using System.Security;
+﻿using RentalHub.Model;
+using RentalHub.Repositories;
+
+using System.Security;
+using System.Security.Principal;
 using System.Windows.Input;
 
 namespace RentalHub.ViewModel
@@ -11,6 +15,8 @@ namespace RentalHub.ViewModel
         private string _errorMessage;
         private bool _isViewVisible = true;
 
+        private IUserRepository userRepository;
+
         // Properties
         public string Username
         {
@@ -21,8 +27,8 @@ namespace RentalHub.ViewModel
                 OnPropertyChanged(nameof(Username));
             }
         }
-        public SecureString Password 
-        { 
+        public SecureString Password
+        {
             get => _password;
             set
             {
@@ -30,8 +36,8 @@ namespace RentalHub.ViewModel
                 OnPropertyChanged(nameof(Password));
             }
         }
-        public string ErrorMessage 
-        { 
+        public string ErrorMessage
+        {
             get => _errorMessage;
             set
             {
@@ -39,8 +45,8 @@ namespace RentalHub.ViewModel
                 OnPropertyChanged(nameof(ErrorMessage));
             }
         }
-        public bool IsViewVisible 
-        { 
+        public bool IsViewVisible
+        {
             get => _isViewVisible;
             set
             {
@@ -58,6 +64,8 @@ namespace RentalHub.ViewModel
         // Contructor
         public LoginViewModel()
         {
+            userRepository = new UserRepository();
+
             LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
             RecoverPassswordCommand = new ViewModelCommand(p => ExecuteRecoverPassCommand("", ""));
         }
@@ -70,8 +78,8 @@ namespace RentalHub.ViewModel
         private bool CanExecuteLoginCommand(object obj)
         {
             bool validData;
-            if(string.IsNullOrEmpty(Username) || 
-               Username.Length<3 || Password == null || Password.Length < 3)
+            if (string.IsNullOrEmpty(Username) ||
+               Username.Length < 3 || Password == null || Password.Length < 3)
             {
                 validData = false;
             }
@@ -85,7 +93,17 @@ namespace RentalHub.ViewModel
 
         private void ExecuteLoginCommand(object obj)
         {
-            throw new NotImplementedException();
+            var isValidUser = userRepository.AuthenticateUser(new System.Net.NetworkCredential(Username, Password));
+            if (isValidUser)
+            {
+                Thread.CurrentPrincipal = new GenericPrincipal(
+                    new GenericIdentity(Username), null);
+                IsViewVisible = false;
+            }
+            else
+            {
+                ErrorMessage = "* Invalid username or password";
+            }
         }
     }
 }
