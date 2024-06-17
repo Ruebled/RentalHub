@@ -79,7 +79,42 @@ namespace RentalHub.Repositories
 
         public UserModel GetByUsername(string username)
         {
-            throw new NotImplementedException();
+            UserModel user = new UserModel();
+
+            try
+            {
+                using (var connection = GetConnection())
+                using (var command = new OracleCommand())
+                {
+                    connection.Open();
+                    command.Connection = connection;
+                    command.CommandText = "SELECT * FROM USERS WHERE USERNAME=:USERNAME";
+
+                    // Add parameters to the command
+                    command.Parameters.Add(new OracleParameter("USERNAME", username));
+
+                    // Execute the query
+                    using var reader = command.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        user = new UserModel()
+                        {
+                            Id = reader[0].ToString(),
+                            Username = reader[1].ToString(),
+                            Password = string.Empty,
+                            Name = reader[3].ToString(),
+                            LastName = reader[4].ToString(),
+                            Email = reader[5].ToString(),
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                //
+            }
+            return user;
         }
 
         public void Remove(UserModel userModel)

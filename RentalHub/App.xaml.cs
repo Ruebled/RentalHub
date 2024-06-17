@@ -1,4 +1,4 @@
-﻿using RentalHub.MVVM.View;
+﻿using RentalHub.View;
 
 using System.Configuration;
 using System.Data;
@@ -13,6 +13,8 @@ namespace RentalHub
     {
         protected void ApplicationStart(object sender, StartupEventArgs e)
         {
+            //var mainView = new MainWindow();
+            //mainView.Show();
             var loginview = new LoginView();
             loginview.Show();
             loginview.IsVisibleChanged += (s, ev) =>

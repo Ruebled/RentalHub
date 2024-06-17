@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
-namespace RentalHub.MVVM.View
+namespace RentalHub.View
 {
     /// <summary>
     /// Interaction logic for LoginView.xaml
@@ -27,7 +27,9 @@ namespace RentalHub.MVVM.View
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
+            //this.Visibility = Visibility.Collapsed;
             Application.Current.Shutdown();
+            //this.Close();
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)

@@ -113,6 +113,4 @@
         <Setter Property="Margin" Value="2" />
         <Setter Property="FontSize" Value="14" />
     </Style>
-
-    <!-- Add more styles for other controls as needed -->
 </ResourceDictionary>
