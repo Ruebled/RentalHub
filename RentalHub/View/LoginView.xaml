@@ -47,14 +47,16 @@
 
                 <Button x:Name="btnMinimize"
                         BorderThickness="0"
-                        Content="-"
-                        FontSize="30"
-                        FontWeight="Bold"
-                        FontFamily="Montserrat"
                         Cursor="Hand"
                         Grid.Column="1"
                         Click="btnMinimize_Click"
                         FocusVisualStyle="{x:Null}">
+
+                    <Button.Content>
+                        <Image Source="../Icons/minimize_icon.png" 
+                               Stretch="Uniform"
+                               Width="11"/>
+                    </Button.Content>
 
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
@@ -67,17 +69,18 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
+
                 <Button x:Name="btnClose"
                         BorderThickness="0"
-                        FontSize="16"
-                        FontFamily="Montserrat"
                         Cursor="Hand"
                         Grid.Column="2"
                         Click="btnClose_Click"
                         FocusVisualStyle="{x:Null}">
 
                     <Button.Content>
-                        <Image Source="../Icons/x_30x30.png" Stretch="Uniform" />
+                        <Image Source="../Icons/close_icon.png" 
+                               Stretch="Uniform"
+                               Height="10"/>
                     </Button.Content>
 
                     <Button.Template>

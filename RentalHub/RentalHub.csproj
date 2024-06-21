@@ -9,19 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Fonts\**" />
-    <EmbeddedResource Remove="Fonts\**" />
-    <None Remove="Fonts\**" />
-    <Page Remove="Fonts\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="MainWindow.xaml.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\FontAwesome.otf" />
+    <None Remove="Icons\arrow_icon.png" />
     <None Remove="Icons\book_icon.png" />
     <None Remove="Icons\home_icon.png" />
+    <None Remove="Icons\maximize_icon.png" />
+    <None Remove="Icons\minimize_icon.png" />
     <None Remove="Icons\password_icon_50x50.png" />
     <None Remove="Icons\search_icon.png" />
     <None Remove="Icons\support_icon.png" />
@@ -39,23 +36,32 @@
 
   <ItemGroup>
     <Page Remove="MainWindow.xaml" />
+    <Page Remove="Themes\ButtonStyles.xaml" />
     <Page Remove="Themes\LightTheme.xaml" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Fonts\FontAwesome.otf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Icons\arrow_icon.png" />
     <Resource Include="Icons\book_icon.png" />
     <Resource Include="Icons\home_icon.png" />
+    <Resource Include="Icons\maximize_icon.png" />
+    <Resource Include="Icons\minimize_icon.png" />
     <Resource Include="Icons\search_icon.png" />
     <Resource Include="Icons\support_icon.png" />
     <Resource Include="Icons\user_icon.png" />
-    <Resource Include="Icons\x_30x30.png" />
+    <Resource Include="Icons\close_icon.png" />
     <Resource Include="Logo\Logo_100x100.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Themes\ButtonStyles.xaml" />
     <Resource Include="Themes\LightTheme.xaml" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="FontAwesome.Sharp" Version="6.1.1" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.4.0" />
   </ItemGroup>
 

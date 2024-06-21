@@ -1,7 +1,5 @@
 ﻿using RentalHub.View;
 
-using System.Configuration;
-using System.Data;
 using System.Windows;
 
 namespace RentalHub
@@ -28,5 +26,4 @@ namespace RentalHub
             };
         }
     }
-
 }

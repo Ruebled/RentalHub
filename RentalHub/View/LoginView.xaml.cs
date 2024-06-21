@@ -27,9 +27,7 @@ namespace RentalHub.View
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
-            //this.Visibility = Visibility.Collapsed;
             Application.Current.Shutdown();
-            //this.Close();
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
