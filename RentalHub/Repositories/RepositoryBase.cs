@@ -7,7 +7,8 @@ namespace RentalHub.Repositories
         private readonly string _connectionString;
         public RepositoryBase()
         {
-            _connectionString = "Data Source=localhost/orcl;User Id=system;Password=Oracle12#;";
+            _connectionString = "Data Source=localhost/orcl;User Id=test;Password=test;";
+            //"Data Source=localhost/orcl;User Id=system;Password=Oracle12#;"
         }
 
         protected OracleConnection GetConnection()

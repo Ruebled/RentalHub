@@ -26,11 +26,11 @@ namespace RentalHub.Repositories
                 {
                     connection.Open();
                     command.Connection = connection;
-                    command.CommandText = "SELECT COUNT(*) FROM USERS WHERE USERNAME = :USERNAME AND PASSWORD = :PASSWORD";
+                    command.CommandText = "SELECT COUNT(*) FROM USERS WHERE USERNAME = :USERNAME AND PASSWORDHASH = :PASSWORDHASH";
 
                     // Add parameters to the command
                     command.Parameters.Add(new OracleParameter("USERNAME", credential.UserName));
-                    command.Parameters.Add(new OracleParameter("PASSWORD", credential.Password));
+                    command.Parameters.Add(new OracleParameter("PASSWORDHASH", HashPassword(credential.Password)));
 
                     // Execute the query
                     int userCount = Convert.ToInt32(command.ExecuteScalar());
@@ -47,15 +47,18 @@ namespace RentalHub.Repositories
             return validUser;
         }
 
-        private string HashPassword(string password)
+        private string HashPassword(string input)
         {
             using (SHA256 sha256Hash = SHA256.Create())
             {
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
+                // ComputeHash - returns byte array
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+                // Convert byte array to a string
                 StringBuilder builder = new StringBuilder();
                 for (int i = 0; i < bytes.Length; i++)
                 {
-                    builder.Append(bytes[i].ToString("x2"));
+                    builder.Append(bytes[i].ToString("x2")); // "x2" converts byte to hexadecimal string
                 }
                 return builder.ToString();
             }
