@@ -69,5 +69,12 @@
        inkscape:export-filename="close_icon.png"
        inkscape:export-xdpi="96"
        inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.765"
+       d="m 47.311549,121.37797 1.839894,1.83989 1.971315,-1.83989"
+       id="path2"
+       inkscape:export-filename="..\RentalHub\Icons\arrow_icon.png"
+       inkscape:export-xdpi="200"
+       inkscape:export-ydpi="200" />
   </g>
 </svg>

@@ -12,57 +12,73 @@ namespace RentalHub.Repositories
     {
         public void Add(UserModel userModel)
         {
-            throw new NotImplementedException();
+            string query = "INSERT INTO Users (UserID, Username, PasswordHash, Email, FullName, PhoneNumber, UserType, CreatedAt) " +
+                "VALUES (user_id_seq.NEXTVAL, :USERNAME, :PASSWORDHASH, :EMAIL, :FULLNAME, :PHONENUMBER, :USERTYPE, SYSTIMESTAMP);";
+            var parameters = new OracleParameter[]
+            {
+                new OracleParameter("USERNAME", userModel.Username),
+                new OracleParameter("PASSWORDHASH", HashPassword(userModel.PasswordHash)),
+                new OracleParameter("EMAIL", userModel.Email),
+                new OracleParameter("FULLNAME", userModel.FullName),
+                new OracleParameter("PHONENUMBER", userModel.PhoneNumber),
+                new OracleParameter("USERTYPE", userModel.UserType),
+            };
+            ExecuteNonQuery(query, parameters);
         }
 
         public bool AuthenticateUser(NetworkCredential credential)
         {
-            bool validUser;
-
-            try
+            string query = "SELECT COUNT(*) FROM USERS WHERE USERNAME = :USERNAME AND PASSWORDHASH = :PASSWORDHASH";
+            var parameters = new OracleParameter[]
             {
-                using (var connection = GetConnection())
-                using (var command = new OracleCommand())
-                {
-                    connection.Open();
-                    command.Connection = connection;
-                    command.CommandText = "SELECT COUNT(*) FROM USERS WHERE USERNAME = :USERNAME AND PASSWORDHASH = :PASSWORDHASH";
-
-                    // Add parameters to the command
-                    command.Parameters.Add(new OracleParameter("USERNAME", credential.UserName));
-                    command.Parameters.Add(new OracleParameter("PASSWORDHASH", HashPassword(credential.Password)));
-
-                    // Execute the query
-                    int userCount = Convert.ToInt32(command.ExecuteScalar());
-
-                    // Check if user exists
-                    validUser = userCount > 0;
-                }
-            }
-            catch (Exception ex)
-            {
-                validUser = false;
-            }
-
-            return validUser;
+                new OracleParameter("USERNAME", credential.UserName),
+                new OracleParameter("PASSWORDHASH", HashPassword(credential.Password))
+            };
+            int userCount = Convert.ToInt32(ExecuteScalar(query, parameters));
+            return userCount > 0;
         }
 
-        private string HashPassword(string input)
+        private static string HashPassword(string input)
         {
-            using (SHA256 sha256Hash = SHA256.Create())
+            using SHA256 sha256Hash = SHA256.Create();
+            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i++)
             {
-                // ComputeHash - returns byte array
-                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
-
-                // Convert byte array to a string
-                StringBuilder builder = new StringBuilder();
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    builder.Append(bytes[i].ToString("x2")); // "x2" converts byte to hexadecimal string
-                }
-                return builder.ToString();
+                builder.Append(bytes[i].ToString("x2"));
             }
+            return builder.ToString();
         }
+
+        public UserModel? GetByUsername(string username)
+        {
+            // Define the SQL query
+            string query = "SELECT * FROM USERS WHERE USERNAME = :USERNAME";
+
+            // Create parameters for the query
+            var parameters = new OracleParameter[]
+            {
+                new OracleParameter("USERNAME", username)
+            };
+
+            // Execute the query and map the results to a UserModel object
+            var result = ExecuteQuery(query, reader => new UserModel
+            {
+                UserId = reader["USERID"].ToString(),
+                Username = reader["USERNAME"].ToString(),
+                PasswordHash = reader["PASSWORDHASH"].ToString(),
+                Email = reader["EMAIL"].ToString(),
+                FullName = reader["FULLNAME"].ToString(),
+                PhoneNumber = reader["PHONENUMBER"].ToString(),
+                UserType = reader["USERTYPE"].ToString(),
+                ImageID = reader["PROFILEIMAGEID"].ToString(),
+                CreateDate = reader["CREATEDAT"].ToString()
+            }, parameters);
+
+            // Return the first result or null if no results were found
+            return result.FirstOrDefault();
+        }
+
 
 
         public void Edit(UserModel userModel)
@@ -80,45 +96,6 @@ namespace RentalHub.Repositories
             throw new NotImplementedException();
         }
 
-        public UserModel GetByUsername(string username)
-        {
-            UserModel user = new UserModel();
-
-            try
-            {
-                using (var connection = GetConnection())
-                using (var command = new OracleCommand())
-                {
-                    connection.Open();
-                    command.Connection = connection;
-                    command.CommandText = "SELECT * FROM USERS WHERE USERNAME=:USERNAME";
-
-                    // Add parameters to the command
-                    command.Parameters.Add(new OracleParameter("USERNAME", username));
-
-                    // Execute the query
-                    using var reader = command.ExecuteReader();
-
-                    if (reader.Read())
-                    {
-                        user = new UserModel()
-                        {
-                            Id = reader[0].ToString(),
-                            Username = reader[1].ToString(),
-                            Password = string.Empty,
-                            Name = reader[3].ToString(),
-                            LastName = reader[4].ToString(),
-                            Email = reader[5].ToString(),
-                        };
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                //
-            }
-            return user;
-        }
 
         public void Remove(UserModel userModel)
         {

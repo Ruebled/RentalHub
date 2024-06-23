@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Runtime.InteropServices;
-using System.Windows.Automation;
 using System.Windows.Interop;
 
 
@@ -49,6 +48,11 @@ namespace RentalHub.View
         private void btnMinimize_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
+        }
+
+        private void LogOut_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

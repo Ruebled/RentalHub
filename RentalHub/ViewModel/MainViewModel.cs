@@ -1,8 +1,7 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using System.Windows.Input;
-
-using FontAwesome.Sharp;
-
+using System.Windows.Media.Imaging;
 using RentalHub.Model;
 using RentalHub.Repositories;
 
@@ -60,8 +59,11 @@ namespace RentalHub.ViewModel
         }
 
         //--> Commands
-        public ICommand ShowHomeViewComand { get; }
+        public ICommand ShowHomeViewCommand { get; }
         public ICommand ShowSearchViewCommand { get; }
+        public ICommand ShowBookingsViewCommand { get; }
+        public ICommand ShowProfileViewCommand { get; }
+        public ICommand ShowSupportViewCommand { get; }
 
         public MainViewModel()
         {
@@ -69,8 +71,11 @@ namespace RentalHub.ViewModel
             _currentUserAccount = new UserAccountModel();
 
             // Initialise commands
-            ShowHomeViewComand = new ViewModelCommand(ExecuteShowHomeViewCommand);
+            ShowHomeViewCommand = new ViewModelCommand(ExecuteShowHomeViewCommand);
             ShowSearchViewCommand = new ViewModelCommand(ExecuteShowSearchViewCommand);
+            ShowBookingsViewCommand = new ViewModelCommand(ExecuteShowBookingsViewCommand);
+            ShowProfileViewCommand = new ViewModelCommand(ExecuteShowProfileViewCommand);
+            ShowSupportViewCommand = new ViewModelCommand(ExecuteShowSupportViewCommand);
 
             // Default view
             ExecuteShowHomeViewCommand(null);
@@ -91,25 +96,84 @@ namespace RentalHub.ViewModel
             Caption = "Dashboard";
             IconSource = "/Icons/home_icon.png";
         }
+        private void ExecuteShowBookingsViewCommand(object obj)
+        {
+            CurrentChildView = new BookingsViewModel();
+            Caption = "Bookings";
+            IconSource = "/Icons/book_icon.png";
+        }
+        private void ExecuteShowProfileViewCommand(object obj)
+        {
+            CurrentChildView = new ProfileViewModel();
+            Caption = "Profile";
+            IconSource = "/Icons/user_icon.png";
+        }
+        private void ExecuteShowSupportViewCommand(object obj)
+        {
+            CurrentChildView = new SupportViewModel();
+            Caption = "Support";
+            IconSource = "/Icons/support_icon.png";
+        }
 
         private void LoadCurrentUserData()
         {
             var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
-            if(user!=null)
+
+            ImageRepository imageRepository = new ImageRepository();
+
+            BitmapImage ProfilePhotoRetrieved = null;
+            if (!string.IsNullOrEmpty(user.ImageID) && int.TryParse(user.ImageID, out int imageId))
+            {
+                ProfilePhotoRetrieved = imageRepository.GetImageById(imageId);
+            }
+            else
+            {
+                // Handle case where user.ImageID is null or not parseable to int
+                BitmapImage ConvertFromLocal = ConvertPngToBitmapImage("user_icon.png");
+
+                ProfilePhotoRetrieved = ConvertFromLocal;
+            }
+
+            if (user!=null)
             {
                 CurrentUserAccont = new UserAccountModel()
                 {
                     Username = user.Username,
-                    DisplayName = $"{user.Name} {user.LastName}",
-                    ProfilePicture = null
+                    DisplayName = $"{user.FullName}",
+                    ProfilePicture = ProfilePhotoRetrieved
                 };
-
             }
             else
             {
                 MessageBox.Show("Invalid Shithead appeared");
                 Application.Current.Shutdown();
             }
+        }
+
+        public BitmapImage ConvertPngToBitmapImage(string relativePath)
+        {
+            // Get the base directory of the current application domain
+            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            // Combine the base directory with the relative path to the images folder
+            string imagesDirectory = Path.Combine(baseDirectory, "Icons"); // Replace "Images" with your actual folder name
+
+            // Combine the images directory with the relative path to the image file
+            string absolutePath = Path.Combine(imagesDirectory, relativePath);
+
+            // Ensure the file exists
+            if (!File.Exists(absolutePath))
+            {
+                throw new FileNotFoundException($"File not found: {absolutePath}");
+            }
+
+            // Create a BitmapImage from the file
+            BitmapImage bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.UriSource = new Uri(absolutePath);
+            bitmap.EndInit();
+
+            return bitmap;
         }
     }
 }

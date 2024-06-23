@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModel="clr-namespace:RentalHub.ViewModel"
-        xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp" xmlns:local="clr-namespace:RentalHub.View"
+        xmlns:local="clr-namespace:RentalHub.View"
         mc:Ignorable="d"
         Title="MainView"
         Height="800" 
@@ -25,6 +25,18 @@
 
         <DataTemplate DataType="{x:Type viewModel:SearchViewModel}">
             <local:SearchView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:BookingsViewModel}">
+            <local:BookingsView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:ProfileViewModel}">
+            <local:ProfileView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:SupportViewModel}">
+            <local:SupportView/>
         </DataTemplate>
     </Window.Resources>
 
@@ -62,7 +74,7 @@
                     <RadioButton Style="{StaticResource menuButton}"
                                  Tag="{StaticResource PrimaryBrush}"
                                  IsChecked="True"
-                                 Command="{Binding ShowHomeViewComand}">
+                                 Command="{Binding ShowHomeViewCommand}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source ="/Icons/home_icon.png" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Dashboard" Style="{StaticResource menuButtonText}"/>
@@ -81,7 +93,8 @@
                     </RadioButton>
 
                     <RadioButton Style="{StaticResource menuButton}"
-                                 Tag="{StaticResource PrimaryBrush}">
+                                 Tag="{StaticResource PrimaryBrush}"
+                                 Command="{Binding ShowBookingsViewCommand}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source ="/Icons/book_icon.png" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="My Bookings" Style="{StaticResource menuButtonText}"/>
@@ -90,7 +103,8 @@
                     </RadioButton>
 
                     <RadioButton Style="{StaticResource menuButton}"
-                                 Tag="{StaticResource PrimaryBrush}">
+                                 Tag="{StaticResource PrimaryBrush}"
+                                 Command="{Binding ShowProfileViewCommand}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source ="/Icons/user_icon.png" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Profile" Style="{StaticResource menuButtonText}"/>
@@ -99,7 +113,8 @@
                     </RadioButton>
 
                     <RadioButton Style="{StaticResource menuButton}"
-                                 Tag="{StaticResource PrimaryBrush}">
+                                 Tag="{StaticResource PrimaryBrush}"
+                                 Command="{Binding ShowSupportViewCommand}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source ="/Icons/support_icon.png" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Support" Style="{StaticResource menuButtonText}"/>
@@ -189,6 +204,13 @@
                                     Margin="0,0,10,0">
 
                             <Button Style="{StaticResource iconButton}">
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Log Out"
+                                                  Click="LogOut_Click"/>
+                                        <!-- Add more MenuItems as needed -->
+                                    </ContextMenu>
+                                </Button.ContextMenu>
                                 <Image Source="../Icons/arrow_icon.png"
                                        Height="10"/>
                             </Button>
@@ -199,13 +221,22 @@
                                    VerticalAlignment="Center"/>
 
                             <Ellipse Height="35" Width="35"
-                                 Stroke="{StaticResource AccentBrush}"
-                                 StrokeThickness="2"
-                                 Margin="10,0,10,0">
+                                     Stroke="{StaticResource AccentBrush}"
+                                     StrokeThickness="1"
+                                     Margin="10,0,10,0">
                                 <Ellipse.Fill>
-                                    <ImageBrush ImageSource="../Icons/user_icon.png"/>
+                                    <ImageBrush ImageSource="{Binding CurrentUserAccont.ProfilePicture}"
+                                                Stretch="Uniform"
+                                                AlignmentX="Center"
+                                                AlignmentY="Center">
+                                        <ImageBrush.RelativeTransform>
+                                            <ScaleTransform ScaleX="-1" 
+                                                            CenterX="0.49"/>
+                                        </ImageBrush.RelativeTransform>
+                                    </ImageBrush>
                                 </Ellipse.Fill>
                             </Ellipse>
+
                         </StackPanel>
                     </Grid>
 

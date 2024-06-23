@@ -8,5 +8,6 @@ namespace RentalHub.ViewModel
 {
     public class HomeViewModel : ViewModelBase
     {
+        public HomeViewModel() { }
     }
 }

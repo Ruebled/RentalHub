@@ -44,15 +44,33 @@
     <Resource Include="Fonts\FontAwesome.otf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Icons\arrow_icon.png" />
-    <Resource Include="Icons\book_icon.png" />
-    <Resource Include="Icons\home_icon.png" />
-    <Resource Include="Icons\maximize_icon.png" />
-    <Resource Include="Icons\minimize_icon.png" />
-    <Resource Include="Icons\search_icon.png" />
-    <Resource Include="Icons\support_icon.png" />
-    <Resource Include="Icons\user_icon.png" />
-    <Resource Include="Icons\close_icon.png" />
+    <Content Include="Icons\arrow_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\book_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\home_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\maximize_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\minimize_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\search_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\support_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\user_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\close_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Logo\Logo_100x100.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
@@ -66,8 +84,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Icons\password_icon_50x50.png" />
-    <Resource Include="Icons\username_icon_50x50.png" />
+    <Content Include="Icons\password_icon_50x50.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\username_icon_50x50.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Logo\RentalHub_Logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

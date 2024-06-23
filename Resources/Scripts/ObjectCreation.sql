@@ -78,6 +78,11 @@ CREATE TABLE ZipCodes (
     Code VARCHAR2(20) NOT NULL UNIQUE
 );
 
+CREATE TABLE Images (
+    ImageID INT DEFAULT image_id_seq.NEXTVAL PRIMARY KEY,
+    Image BLOB NOT NULL
+);
+
 CREATE TABLE Users (
     UserID INT DEFAULT user_id_seq.NEXTVAL PRIMARY KEY,
     Username VARCHAR2(50) NOT NULL UNIQUE,
@@ -86,7 +91,9 @@ CREATE TABLE Users (
     FullName VARCHAR2(100),
     PhoneNumber VARCHAR2(20),
     UserType VARCHAR2(10) CHECK (UserType IN ('Guest', 'Host', 'Admin')),
-    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	ProfileImageId INT,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (ProfileImageId) REFERENCES Images(ImageID)
 );
 
 CREATE TABLE Apartments (
@@ -155,11 +162,6 @@ CREATE TABLE Apartment_Amenities (
     PRIMARY KEY (ApartmentID, AmenityID),
     FOREIGN KEY (ApartmentID) REFERENCES Apartments(ApartmentID),
     FOREIGN KEY (AmenityID) REFERENCES Amenities(AmenityID)
-);
-
-CREATE TABLE Images (
-    ImageID INT DEFAULT image_id_seq.NEXTVAL PRIMARY KEY,
-    Image BLOB NOT NULL
 );
 
 CREATE TABLE Photos (
