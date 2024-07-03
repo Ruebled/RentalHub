@@ -1,15 +1,29 @@
 ﻿using RentalHub.Model;
+using RentalHub.Repositories;
 
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.DirectoryServices;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 
 namespace RentalHub.ViewModel
 {
-    public class BookingsViewModel : ViewModelBase, INotifyPropertyChanged
+    public class BookingsViewModel : ViewModelBase
     {
+        BookingRepository _bookingRepository;
+        private UserModel user;
+        public UserModel User
+        {
+            get { return user; }
+            set
+            {
+                user = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ObservableCollection<BookingModel> _bookings;
         public ObservableCollection<BookingModel> Bookings
         {
@@ -29,21 +43,30 @@ namespace RentalHub.ViewModel
         public ICommand AddBookingCommand { get; set; }
         public ICommand EditBookingCommand { get; set; }
 
-        public BookingsViewModel()
+        public BookingsViewModel(UserModel user)
         {
+            User = user;
+            _bookingRepository = new BookingRepository();
+
             // Initialize properties and commands
             Bookings = new ObservableCollection<BookingModel>();
-            LoadBookings(); // Load initial bookings (for example)
+            LoadBookings();
 
             AddBookingCommand = new RelayCommand(AddBookingExecute);
             EditBookingCommand = new RelayCommand(EditBookingExecute, CanEditBookingExecute);
         }
 
-        private void LoadBookings()
+        private async Task LoadBookings()
         {
-            // Example: Load bookings from a data source
-            Bookings.Add(new BookingModel { ApartmentName = "Apartment A", CheckInDate = DateTime.Today, CheckOutDate = DateTime.Today.AddDays(7) });
-            Bookings.Add(new BookingModel { ApartmentName = "Apartment B", CheckInDate = DateTime.Today.AddDays(10), CheckOutDate = DateTime.Today.AddDays(17) });
+            Bookings.Clear();
+
+            BookingRepository bookingRepository = new BookingRepository();
+            var results = await Task.Run(() => bookingRepository.RetrieveBookings(user.UserId));
+
+            foreach (var booking in results)
+            {
+                Bookings.Add(booking);
+            }
         }
 
         private void AddBookingExecute(object obj)

@@ -14,9 +14,6 @@
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen"
         Icon="../Logo/Logo_100x100.png">
-    <Window.DataContext>
-        <viewModel:MainViewModel/>
-    </Window.DataContext>
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">

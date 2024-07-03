@@ -10,6 +10,7 @@ namespace RentalHub.ViewModel
     public class MainViewModel: ViewModelBase
     {
         // Fields
+        private UserModel _user;
         private UserAccountModel? _currentUserAccount;
         private ViewModelBase _currentChildView;
         private string _caption;
@@ -18,6 +19,15 @@ namespace RentalHub.ViewModel
         private IUserRepository? _userRepository;
 
         // Properties
+        public UserModel User
+        {
+            get { return _user; }
+            set
+            {
+                _user = value;
+                OnPropertyChanged(nameof(User));
+            }
+        }
         public UserAccountModel CurrentUserAccont
         {
             get { return _currentUserAccount; }
@@ -65,8 +75,10 @@ namespace RentalHub.ViewModel
         public ICommand ShowProfileViewCommand { get; }
         public ICommand ShowSupportViewCommand { get; }
 
-        public MainViewModel()
+        public MainViewModel(UserModel user)
         {
+            User = user;
+
             _userRepository = new UserRepository();
             _currentUserAccount = new UserAccountModel();
 
@@ -98,7 +110,7 @@ namespace RentalHub.ViewModel
         }
         private void ExecuteShowBookingsViewCommand(object obj)
         {
-            CurrentChildView = new BookingsViewModel();
+            CurrentChildView = new BookingsViewModel(User);
             Caption = "Bookings";
             IconSource = "/Icons/book_icon.png";
         }
@@ -117,12 +129,10 @@ namespace RentalHub.ViewModel
 
         private void LoadCurrentUserData()
         {
-            var user = _userRepository.GetByUsername(Thread.CurrentPrincipal.Identity.Name);
-
             ImageRepository imageRepository = new ImageRepository();
 
             BitmapImage ProfilePhotoRetrieved = null;
-            if (!string.IsNullOrEmpty(user.ImageID) && int.TryParse(user.ImageID, out int imageId))
+            if (!string.IsNullOrEmpty(User.ImageID) && int.TryParse(User.ImageID, out int imageId))
             {
                 ProfilePhotoRetrieved = imageRepository.GetImageById(imageId);
             }
@@ -134,12 +144,12 @@ namespace RentalHub.ViewModel
                 ProfilePhotoRetrieved = ConvertFromLocal;
             }
 
-            if (user!=null)
+            if (User!=null)
             {
                 CurrentUserAccont = new UserAccountModel()
                 {
-                    Username = user.Username,
-                    DisplayName = $"{user.FullName}",
+                    Username = User.Username,
+                    DisplayName = $"{User.FullName}",
                     ProfilePicture = ProfilePhotoRetrieved
                 };
             }

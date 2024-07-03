@@ -26,16 +26,29 @@ namespace RentalHub.Repositories
             ExecuteNonQuery(query, parameters);
         }
 
-        public bool AuthenticateUser(NetworkCredential credential)
+        public UserModel AuthenticateUser(NetworkCredential credential)
         {
-            string query = "SELECT COUNT(*) FROM USERS WHERE USERNAME = :USERNAME AND PASSWORDHASH = :PASSWORDHASH";
+            string query = "SELECT * FROM USERS WHERE USERNAME = :USERNAME AND PASSWORDHASH = :PASSWORDHASH";
             var parameters = new OracleParameter[]
             {
                 new OracleParameter("USERNAME", credential.UserName),
                 new OracleParameter("PASSWORDHASH", HashPassword(credential.Password))
             };
-            int userCount = Convert.ToInt32(ExecuteScalar(query, parameters));
-            return userCount > 0;
+
+            var result = ExecuteQuery(query, reader => new UserModel
+            {
+                UserId = reader["USERID"]?.ToString(),
+                Username = reader["USERNAME"]?.ToString(),
+                PasswordHash = reader["PASSWORDHASH"]?.ToString(),
+                Email = reader["EMAIL"]?.ToString(),
+                FullName = reader["FULLNAME"]?.ToString(),
+                PhoneNumber = reader["PHONENUMBER"]?.ToString(),
+                UserType = reader["USERTYPE"]?.ToString(),
+                ImageID = reader["PROFILEIMAGEID"]?.ToString(),
+                CreateDate = reader["CREATEDAT"]?.ToString()
+            }, parameters);
+
+            return result.FirstOrDefault();
         }
 
         private static string HashPassword(string input)

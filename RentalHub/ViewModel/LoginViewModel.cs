@@ -1,8 +1,9 @@
 ﻿using RentalHub.Model;
 using RentalHub.Repositories;
 
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Security;
-using System.Security.Principal;
 using System.Windows.Input;
 
 namespace RentalHub.ViewModel
@@ -16,6 +17,7 @@ namespace RentalHub.ViewModel
         private bool _isViewVisible = true;
 
         private IUserRepository userRepository;
+        public event EventHandler<UserModel>? LoginSuccessful;
 
         // Properties
         public string Username
@@ -66,8 +68,8 @@ namespace RentalHub.ViewModel
         {
             userRepository = new UserRepository();
 
-            LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
-            RecoverPassswordCommand = new ViewModelCommand(p => ExecuteRecoverPassCommand("", ""));
+            LoginCommand = new RelayCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
+            RecoverPassswordCommand = new RelayCommand(p => ExecuteRecoverPassCommand("", ""));
         }
 
         private void ExecuteRecoverPassCommand(string username, string email)
@@ -93,17 +95,20 @@ namespace RentalHub.ViewModel
 
         private void ExecuteLoginCommand(object obj)
         {
-            var isValidUser = userRepository.AuthenticateUser(new System.Net.NetworkCredential(Username, Password));
-            if (isValidUser)
+            UserModel user = userRepository.AuthenticateUser(new System.Net.NetworkCredential(Username, Password));
+            if (user != null)
             {
-                Thread.CurrentPrincipal = new GenericPrincipal(
-                    new GenericIdentity(Username), null);
-                IsViewVisible = false;
+                OnLoginSuccessful(user);
             }
             else
             {
                 ErrorMessage = "* Invalid username or password";
             }
+        }
+
+        protected virtual void OnLoginSuccessful(UserModel user)
+        {
+            LoginSuccessful?.Invoke(this, user);
         }
     }
 }

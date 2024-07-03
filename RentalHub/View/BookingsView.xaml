@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:RentalHub.View"
+             xmlns:local="clr-namespace:RentalHub.View" xmlns:viewmodel="clr-namespace:RentalHub.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:BookingsViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Border CornerRadius="20"
@@ -19,36 +19,58 @@
         <TextBlock Text="Bookings" FontSize="24" FontWeight="Bold" Margin="20"/>
 
         <!-- Bookings List -->
-        <ListBox Grid.Row="1" ItemsSource="{Binding Bookings}" Margin="20"
-                 SelectionMode="Single" SelectedItem="{Binding SelectedBooking}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding ApartmentName}" FontSize="18" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding CheckInDate, StringFormat='Check-in: {0:dd/MM/yyyy}'}"/>
-                        <TextBlock Text="{Binding CheckOutDate, StringFormat='Check-out: {0:dd/MM/yyyy}'}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            <Border Grid.Row="1" Margin="10">
+                <ListBox x:Name="ResultsListBox"
+             ItemsSource="{Binding Bookings}"
+             Margin="5"
+             BorderThickness="0"
+             ScrollViewer.VerticalScrollBarVisibility="Auto"
+             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+             ScrollViewer.CanContentScroll="False"
+             VirtualizingStackPanel.IsVirtualizing="True">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <UniformGrid Columns="3" Margin="5">
+                                <!-- Left Column -->
+                                <StackPanel Grid.Column="0" Orientation="Vertical" Margin="20" HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding ApartmentName}" FontWeight="Bold" FontSize="25"/>
+                                    <TextBlock Text="{Binding CheckInDate}" FontSize="20"/>
+                                    <TextBlock Text="{Binding CheckOutDate}" FontSize="28"/>
+                                </StackPanel>
 
-        <!-- Booking Details -->
-        <Border Grid.Row="1" 
-                Margin="20" 
-                BorderBrush="LightGray" 
-                BorderThickness="1">
-            <StackPanel>
-                <TextBlock Text="Booking Details" FontSize="18" FontWeight="Bold" Margin="10"/>
-                <TextBlock Text="{Binding SelectedBooking.ApartmentName}" FontSize="16" Margin="10"/>
-                <TextBlock Text="{Binding SelectedBooking.CheckInDate, StringFormat='Check-in: {0:dd/MM/yyyy}'}" Margin="10"/>
-                <TextBlock Text="{Binding SelectedBooking.CheckOutDate, StringFormat='Check-out: {0:dd/MM/yyyy}'}" Margin="10"/>
-                <Button Content="Edit Booking" Command="{Binding EditBookingCommand}" Margin="10"/>
-            </StackPanel>
-        </Border>
+                                <!-- Middle Column (skipped in this example) -->
 
-        <!-- Add Booking Button -->
-        <Button Grid.Row="2" Content="Add Booking" Command="{Binding AddBookingCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20"/>
-    </Grid>
+                                <!-- Right Column -->
+                                <StackPanel Grid.Column="2" Orientation="Vertical" Margin="20" HorizontalAlignment="Right">
+                                    <TextBlock Text="{Binding TotalPrice}" FontWeight="Bold" FontSize="25"/>
+                                    <TextBlock Text="{Binding Status}" FontSize="20"/>
+                                    <TextBlock Text="{Binding CreateDate}" FontSize="28"/>
+                                </StackPanel>
+                            </UniformGrid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <!-- Define two columns with Auto and * width -->
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Border with Button -->
+                <StackPanel Grid.Column="0" Orientation="Vertical" Margin="20">
+                    <Button Content="Add Booking" Background="gray" Command="{Binding AddBookingCommand}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                </StackPanel>
+
+                <!-- Right Border with Button -->
+                <StackPanel Grid.Column="2" Orientation="Vertical" Margin="20">
+                    <Button Content="Delete Booking" Command="{Binding DeleteBooking}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
 
     </Border>
 </UserControl>

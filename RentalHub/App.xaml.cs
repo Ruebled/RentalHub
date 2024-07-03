@@ -1,4 +1,5 @@
 ﻿using RentalHub.View;
+using RentalHub.ViewModel;
 
 using System.Windows;
 
@@ -11,19 +12,18 @@ namespace RentalHub
     {
         protected void ApplicationStart(object sender, StartupEventArgs e)
         {
-            //var mainView = new MainWindow();
-            //mainView.Show();
-            var loginview = new LoginView();
-            loginview.Show();
-            loginview.IsVisibleChanged += (s, ev) =>
+            var loginViewModel = new LoginViewModel();
+            var loginView = new LoginView { DataContext = loginViewModel };
+
+            loginViewModel.LoginSuccessful += (s, user) =>
             {
-                if (loginview.IsVisible == false && loginview.IsLoaded)
-                {
-                    var mainView = new MainWindow();
-                    mainView.Show();
-                    loginview.Close();
-                }
+                var mainViewModel = new MainViewModel(user);
+                var mainView = new MainWindow { DataContext = mainViewModel };
+                mainView.Show();
+                loginView.Close();
             };
+
+            loginView.Show();
         }
     }
 }

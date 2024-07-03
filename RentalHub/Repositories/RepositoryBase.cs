@@ -38,6 +38,7 @@ namespace RentalHub.Repositories
             return results;
         }
 
+
         protected int ExecuteNonQuery(string query, params OracleParameter[] parameters)
         {
             using (var connection = GetConnection())
