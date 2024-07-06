@@ -113,7 +113,7 @@
                            FontWeight="Medium"
                            FontFamily="Montserrat"/>
 
-                <TextBlock Text="Create a new one"
+                <TextBlock Text="Sign Up"
                            Foreground="White"
                            FontSize="12"
                            FontWeight="Medium"

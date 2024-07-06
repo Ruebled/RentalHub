@@ -3,22 +3,193 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:RentalHub.View"
+             xmlns:local="clr-namespace:RentalHub.View"     
+             xmlns:customcontrols="clr-namespace:RentalHub.CustomControls"
+             xmlns:viewmodel="clr-namespace:RentalHub.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:SignUpViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="500">
     <Grid>
-        <TextBlock Text="Create a new one"
-                   Foreground="White"
-                   HorizontalAlignment="Center"
+        <StackPanel Width="250"
+                    Grid.Row="2"
+                    Orientation="Vertical"
+                    Margin="0,10,0,10">
+            <Image Source="../Logo/RentalHub_Logo.png"
+                   Width="50"
+                   Height="50"/>
+
+            <TextBlock Text="Username"
+                       FontSize="12"
+                       FontWeight="Medium"
+                       FontFamily="Montserrat"
+                       Margin="0,15,0,0"
+/>
+            <TextBox x:Name="txtUser"
+                     Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
+                     FontSize="13"
+                     FontWeight="Medium"
+                     FontFamily="Montserrat"
+                     BorderThickness="0,0,0,1"
+                     Height="28"
+                     VerticalContentAlignment="Center"
+                     Margin="0,5,0,0"
+                     Padding="25,0,0,0">
+                <TextBox.Background>
+                    <VisualBrush Stretch="None" AlignmentX="Left">
+                        <VisualBrush.Visual>
+                            <Viewbox Width="20" Height="20">
+                                <Image Source="../Icons/username_icon_50x50.png"
+                                               Width="20" Height="20"/>
+                            </Viewbox>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </TextBox.Background>
+            </TextBox>
+
+            <TextBlock Text="Password"
+                   Foreground="DarkGray"
+                   FontSize="13"
+                   FontWeight="Medium"
+                   FontFamily="Montserrat"
+                   Margin="0,15,0,0"/>
+            <customcontrols:BindablePasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                Height="28" Margin="0,5,0,0">
+
+            </customcontrols:BindablePasswordBox>
+
+            <TextBlock Text="Email"
+                       FontSize="12"
+                       FontWeight="Medium"
+                       FontFamily="Montserrat"
+                       Margin="0,15,0,0"
+/>
+            <TextBox x:Name="txtEmail"
+                     Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
+                     FontSize="13"
+                     FontWeight="Medium"
+                     FontFamily="Montserrat"
+                     BorderThickness="0,0,0,1"
+                     Height="28"
+                     VerticalContentAlignment="Center"
+                     Margin="0,5,0,0"
+                     Padding="25,0,0,0">
+                <TextBox.Background>
+                    <VisualBrush Stretch="None" AlignmentX="Left">
+                        <VisualBrush.Visual>
+                            <Viewbox Width="20" Height="20">
+                                <Image Source="../Icons/email_icon_50x50.png"
+                                               Width="18" Height="18"/>
+                            </Viewbox>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </TextBox.Background>
+            </TextBox>
+
+            <TextBlock Text="Phone Number"
+                       FontSize="12"
+                       FontWeight="Medium"
+                       FontFamily="Montserrat"
+                       Margin="0,15,0,0"
+/>
+            <TextBox x:Name="txtPhoneNumber"
+                     Text="{Binding Phonenumber, UpdateSourceTrigger=PropertyChanged}"
+                     FontSize="13"
+                     FontWeight="Medium"
+                     FontFamily="Montserrat"
+                     BorderThickness="0,0,0,1"
+                     Height="28"
+                     VerticalContentAlignment="Center"
+                     Margin="0,5,0,0"
+                     Padding="25,0,0,0">
+                <TextBox.Background>
+                    <VisualBrush Stretch="None" AlignmentX="Left">
+                        <VisualBrush.Visual>
+                            <Viewbox Width="20" Height="20">
+                                <Image Source="../Icons/phone_number_icon_50x50.png"
+                                               Width="20" Height="20"/>
+                            </Viewbox>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                </TextBox.Background>
+            </TextBox>
+
+            <TextBlock Text="User Type"
+                       FontSize="12"
+                       FontWeight="Medium"
+                       FontFamily="Montserrat"
+                       Margin="0,15,0,0"/>
+            
+            <ComboBox Style="{StaticResource CustomComboBoxStyle}"
+                      SelectedIndex="0"
+                      BorderThickness="0"
+                      Padding="0">
+                <ComboBoxItem Style="{StaticResource CustomComboBoxItemStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="../Icons/tenant_icon_50x50.png" Width="20" Height="20"/>
+                        <TextBlock>Guest</TextBlock>
+                    </StackPanel>
+                </ComboBoxItem>
+                <ComboBoxItem  Style="{StaticResource CustomComboBoxItemStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="../Icons/landlord_icon_50x50.png" Width="20" Height="20"/>
+                        <TextBlock>Owner</TextBlock>
+                    </StackPanel>
+                </ComboBoxItem>
+            </ComboBox>
+
+            <TextBlock Text="{Binding ErrorMessage}"
+                   Foreground="#D75960"
                    FontSize="12"
                    FontWeight="Medium"
                    FontFamily="Montserrat"
-                   Cursor="Hand"
-                   Margin="8,0,0,0">
-            <TextBlock.InputBindings>
-                <MouseBinding Command="{Binding OpenSignInViewCommand}"
-                      MouseAction="LeftClick" />
-            </TextBlock.InputBindings>
-        </TextBlock>
+                   Margin="0,10,0,0"
+                   TextWrapping="Wrap"/>
+            
+            <!-- Sign Up Button -->
+            <Button x:Name="btnLogin"
+                Command="{Binding SignUpCommand}"
+                BorderThickness="0"
+                Content="SIGN UP"
+                FontSize="16"
+                FontFamily="Montserrat"
+                Cursor="Hand"
+                Grid.Column="2"
+                Margin="0,20,0,0"
+                FocusVisualStyle="{x:Null}">
+
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Width="150" Height="40"
+                            CornerRadius="20"
+                            Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+            <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Margin="0,10,0,0">
+                <TextBlock Text="Already have an account?"
+                       Foreground="DarkGray"
+                       FontSize="12"
+                       FontWeight="Medium"
+                       FontFamily="Montserrat"/>
+
+                <TextBlock Text="Sign In"
+                       Foreground="White"
+                       FontSize="12"
+                       FontWeight="Medium"
+                       FontFamily="Montserrat"
+                       Cursor="Hand"
+                       Margin="8,0,0,0">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="{Binding OpenSignInViewCommand}"
+                                  MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </UserControl>

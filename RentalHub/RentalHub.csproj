@@ -16,12 +16,16 @@
     <None Remove="Fonts\FontAwesome.otf" />
     <None Remove="Icons\arrow_icon.png" />
     <None Remove="Icons\book_icon.png" />
+    <None Remove="Icons\email_icon_50x50.png" />
     <None Remove="Icons\home_icon.png" />
+    <None Remove="Icons\landlord_icon_50x50.png" />
     <None Remove="Icons\maximize_icon.png" />
     <None Remove="Icons\minimize_icon.png" />
     <None Remove="Icons\password_icon_50x50.png" />
+    <None Remove="Icons\phone_number_icon_50x50.png" />
     <None Remove="Icons\search_icon.png" />
     <None Remove="Icons\support_icon.png" />
+    <None Remove="Icons\tenant_icon_50x50.png" />
     <None Remove="Icons\username_icon_50x50.png" />
     <None Remove="Icons\user_icon.png" />
     <None Remove="Logo\Logo_100x100.png" />
@@ -71,6 +75,10 @@
     <Content Include="Icons\close_icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Icons\email_icon_50x50.png" />
+    <Resource Include="Icons\landlord_icon_50x50.png" />
+    <Resource Include="Icons\phone_number_icon_50x50.png" />
+    <Resource Include="Icons\tenant_icon_50x50.png" />
     <Resource Include="Logo\Logo_100x100.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
