@@ -12,18 +12,18 @@ namespace RentalHub
     {
         protected void ApplicationStart(object sender, StartupEventArgs e)
         {
-            var loginViewModel = new LoginViewModel();
-            var loginView = new LoginView { DataContext = loginViewModel };
+            var checkAccountViewModel = new CheckAccountViewModel();
+            var checkAccountView = new CheckAccountView { DataContext = checkAccountViewModel };
 
-            loginViewModel.LoginSuccessful += (s, user) =>
+            checkAccountViewModel.LoginSuccessful += (s, user) =>
             {
                 var mainViewModel = new MainViewModel(user);
                 var mainView = new MainWindow { DataContext = mainViewModel };
                 mainView.Show();
-                loginView.Close();
+                checkAccountView.Close();
             };
 
-            loginView.Show();
+            checkAccountView.Show();
         }
     }
 }
