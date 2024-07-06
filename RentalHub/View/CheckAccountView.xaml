@@ -6,7 +6,7 @@
         xmlns:viewModel="clr-namespace:RentalHub.ViewModel"
         xmlns:local="clr-namespace:RentalHub.View"
         mc:Ignorable="d"
-        Title="LoginView"
+        Title="RentalHub change to custom"
         Height="550" 
         Width="500"
         WindowStyle="None"
@@ -20,9 +20,13 @@
     <!--<Window.DataContext>
         <viewModel:CheckAccountViewModel/>
     </Window.DataContext>-->
+    
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:LoginViewModel}">
             <local:LoginView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:SignUpViewModel}">
+            <local:SignUpView/>
         </DataTemplate>
     </Window.Resources>
     <Border CornerRadius="20"
@@ -94,7 +98,8 @@
             </Grid>
             
             <!--Content section / Child views-->
-            <ContentControl Content="{Binding CurrentChildView}"
+            <ContentControl x:Name="ChildrenHolder"
+                            Content="{Binding CurrentChildView}"
                             Grid.Row="2"/>
             
         </Grid>

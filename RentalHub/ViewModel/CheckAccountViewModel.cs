@@ -1,16 +1,25 @@
 ﻿using RentalHub.Model;
 
+using System;
+using System.ComponentModel;
+
 namespace RentalHub.ViewModel
 {
     public class CheckAccountViewModel : ViewModelBase
     {
-        public static CheckAccountViewModel Instance = new CheckAccountViewModel();
-        private ViewModelBase _currentChildView;
-        public event EventHandler<UserModel>? LoginSuccessful;
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+        public static CheckAccountViewModel Instance { get; private set; }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
+        private ViewModelBase _currentChildView;
+        public event EventHandler<UserModel> LoginSuccessful;
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public CheckAccountViewModel()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
-            CurrentChildView = new LoginViewModel();
+            Instance = this;
+            NavigateToSignIn();
         }
 
         public ViewModelBase CurrentChildView
@@ -18,9 +27,22 @@ namespace RentalHub.ViewModel
             get => _currentChildView;
             set
             {
-                _currentChildView = value;
-                OnPropertyChanged(nameof(CurrentChildView));
+                if (_currentChildView != value)
+                {
+                    _currentChildView = value;
+                    OnPropertyChanged(nameof(CurrentChildView));
+                }
             }
+        }
+
+        public void NavigateToSignIn()
+        {
+            CurrentChildView = new LoginViewModel();
+        }
+
+        public void NavigateToSignUp()
+        {
+            CurrentChildView = new SignUpViewModel();
         }
 
         protected virtual void OnLoginSuccessful(UserModel user)

@@ -12,10 +12,9 @@ namespace RentalHub.ViewModel
         private string _username;
         private SecureString _password;
         private string _errorMessage;
-        private bool _isViewVisible = true;
 
         private IUserRepository userRepository;
-        public event EventHandler<UserModel>? LoginSuccessful;
+        //public event EventHandler<UserModel>? LoginSuccessful;
 
         // Properties
         public string Username
@@ -23,8 +22,11 @@ namespace RentalHub.ViewModel
             get => _username;
             set
             {
-                _username = value;
-                OnPropertyChanged(nameof(Username));
+                if(_username != value)
+                {
+                    _username = value;
+                    OnPropertyChanged(nameof(Username));
+                }
             }
         }
         public SecureString Password
@@ -32,8 +34,11 @@ namespace RentalHub.ViewModel
             get => _password;
             set
             {
-                _password = value;
-                OnPropertyChanged(nameof(Password));
+                if (_password != value)
+                {
+                    _password = value;
+                    OnPropertyChanged(nameof(Password));
+                }
             }
         }
         public string ErrorMessage
@@ -45,34 +50,45 @@ namespace RentalHub.ViewModel
                 OnPropertyChanged(nameof(ErrorMessage));
             }
         }
-        public bool IsViewVisible
-        {
-            get => _isViewVisible;
-            set
-            {
-                _isViewVisible = value;
-                OnPropertyChanged(nameof(IsViewVisible));
-            }
-        }
 
         // -> Commands
         public ICommand LoginCommand { get; }
-        public ICommand RecoverPassswordCommand { get; }
-        public ICommand ShowPasswordCommand { get; }
-        public ICommand RememberPasswordCommand { get; }
+        public ICommand OpenSignUpViewCommand { get; }
+        //public ICommand RecoverPassswordCommand { get; }
+        //public ICommand ShowPasswordCommand { get; }
+        //public ICommand RememberPasswordCommand { get; }
 
         // Contructor
         public LoginViewModel()
         {
             userRepository = new UserRepository();
 
-            LoginCommand = new RelayCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
-            RecoverPassswordCommand = new RelayCommand(p => ExecuteRecoverPassCommand("", ""));
+            //LoginCommand = new RelayCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
+            LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
+            OpenSignUpViewCommand = new ViewModelCommand(ExecuteOpenSignUpViewCommand);
+
+            //OpenSignUpViewCommand = new RelayCommand(ExecuteOpenSignUpViewCommand, CanExecuteOpenSignUpViewCommand);
         }
 
-        private void ExecuteRecoverPassCommand(string username, string email)
+        private void ExecuteOpenSignUpViewCommand(object obj)
         {
-            throw new NotImplementedException();
+            if (CheckAccountViewModel.Instance != null)
+            {
+                CheckAccountViewModel.Instance.NavigateToSignUp();
+            }
+        }
+ 
+        private void ExecuteLoginCommand(object obj)
+        {
+            UserModel user = userRepository.AuthenticateUser(new System.Net.NetworkCredential(Username, Password));
+            if (user != null)
+            {
+                //OnLoginSuccessful(user);
+            }
+            else
+            {
+                ErrorMessage = "* Invalid username or password";
+            }
         }
 
         private bool CanExecuteLoginCommand(object obj)
@@ -90,23 +106,10 @@ namespace RentalHub.ViewModel
 
             return validData;
         }
-
-        private void ExecuteLoginCommand(object obj)
-        {
-            UserModel user = userRepository.AuthenticateUser(new System.Net.NetworkCredential(Username, Password));
-            if (user != null)
-            {
-                OnLoginSuccessful(user);
-            }
-            else
-            {
-                ErrorMessage = "* Invalid username or password";
-            }
-        }
-
-        protected virtual void OnLoginSuccessful(UserModel user)
-        {
-            LoginSuccessful?.Invoke(this, user);
-        }
+       
+        //protected virtual void OnLoginSuccessful(UserModel user)
+        //{
+        //    LoginSuccessful?.Invoke(this, user);
+        //}
     }
 }
