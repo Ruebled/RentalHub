@@ -42,6 +42,11 @@ namespace RentalHub.ViewModel
             CurrentChildView = new SignUpViewModel();
         }
 
+        public void NavigatePasswordReset()
+        {
+            CurrentChildView = new PasswordResetViewModel();
+        }
+
         public virtual void OnLoginSuccessful(UserModel user)
         {
             LoginSuccessful?.Invoke(this, user);

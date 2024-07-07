@@ -23,6 +23,7 @@
     <None Remove="Icons\minimize_icon.png" />
     <None Remove="Icons\password_icon_50x50.png" />
     <None Remove="Icons\phone_number_icon_50x50.png" />
+    <None Remove="Icons\reset_icon_50x50.png" />
     <None Remove="Icons\search_icon.png" />
     <None Remove="Icons\support_icon.png" />
     <None Remove="Icons\tenant_icon_50x50.png" />
@@ -78,6 +79,7 @@
     <Resource Include="Icons\email_icon_50x50.png" />
     <Resource Include="Icons\landlord_icon_50x50.png" />
     <Resource Include="Icons\phone_number_icon_50x50.png" />
+    <Resource Include="Icons\reset_icon_50x50.png" />
     <Resource Include="Icons\tenant_icon_50x50.png" />
     <Resource Include="Logo\Logo_100x100.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

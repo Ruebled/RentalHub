@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:RentalHub.View" 
 			 xmlns:viewmodel="clr-namespace:RentalHub.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:SignInViewModel}"
              mc:Ignorable="d"
-             d:DesignHeight="500" d:DesignWidth="500">
+             d:DesignHeight="550" d:DesignWidth="500">
     <Grid>
         <StackPanel Width="250"
                     Grid.Row="2"
@@ -101,7 +101,12 @@
                            FontWeight="Medium"
                            FontFamily="Montserrat"
                            Cursor="Hand"
-                           Margin="8,0,0,0"/>
+                           Margin="8,0,0,0">
+                    <TextBlock.InputBindings>
+                        <MouseBinding Command="{Binding OpenResetPasswordViewCommand}"
+                                      MouseAction="LeftClick" />
+                    </TextBlock.InputBindings>
+                </TextBlock>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"

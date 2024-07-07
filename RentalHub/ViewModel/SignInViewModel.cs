@@ -53,7 +53,7 @@ namespace RentalHub.ViewModel
         // -> Commands
         public ICommand SignInCommand { get; }
         public ICommand OpenSignUpViewCommand { get; }
-        //public ICommand RecoverPassswordCommand { get; }
+        public ICommand OpenResetPasswordViewCommand { get; }
         //public ICommand ShowPasswordCommand { get; }
         //public ICommand RememberPasswordCommand { get; }
 
@@ -62,11 +62,17 @@ namespace RentalHub.ViewModel
         {
             userRepository = new UserRepository();
 
-            //LoginCommand = new RelayCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
             SignInCommand = new RelayCommand(ExecuteSignInCommand, CanExecuteSignInCommand);
             OpenSignUpViewCommand = new ViewModelCommand(ExecuteOpenSignUpViewCommand);
+            OpenResetPasswordViewCommand = new ViewModelCommand(ExecuteOpenResetPasswordViewCommand);
+        }
 
-            //OpenSignUpViewCommand = new RelayCommand(ExecuteOpenSignUpViewCommand, CanExecuteOpenSignUpViewCommand);
+        private void ExecuteOpenResetPasswordViewCommand(object obj)
+        {
+            if(CheckAccountViewModel.Instance != null)
+            {
+                CheckAccountViewModel.Instance.NavigatePasswordReset();
+            }
         }
 
         private void ExecuteOpenSignUpViewCommand(object obj)

@@ -3,11 +3,11 @@
 namespace RentalHub.View
 {
     /// <summary>
-    /// Interaction logic for LoginView.xaml
+    /// Interaction logic for PasswordReset.xaml
     /// </summary>
-    public partial class SignInView : UserControl
+    public partial class PasswordResetView : UserControl
     {
-        public SignInView()
+        public PasswordResetView()
         {
             InitializeComponent();
         }
