@@ -18,9 +18,9 @@ namespace RentalHub.View
     /// <summary>
     /// Interaction logic for LoginView.xaml
     /// </summary>
-    public partial class LoginView : UserControl
+    public partial class SignInView : UserControl
     {
-        public LoginView()
+        public SignInView()
         {
             InitializeComponent();
         }

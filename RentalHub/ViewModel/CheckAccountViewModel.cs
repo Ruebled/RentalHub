@@ -1,8 +1,5 @@
 ﻿using RentalHub.Model;
 
-using System;
-using System.ComponentModel;
-
 namespace RentalHub.ViewModel
 {
     public class CheckAccountViewModel : ViewModelBase
@@ -37,7 +34,7 @@ namespace RentalHub.ViewModel
 
         public void NavigateToSignIn()
         {
-            CurrentChildView = new LoginViewModel();
+            CurrentChildView = new SignInViewModel();
         }
 
         public void NavigateToSignUp()
@@ -45,7 +42,7 @@ namespace RentalHub.ViewModel
             CurrentChildView = new SignUpViewModel();
         }
 
-        protected virtual void OnLoginSuccessful(UserModel user)
+        public virtual void OnLoginSuccessful(UserModel user)
         {
             LoginSuccessful?.Invoke(this, user);
         }

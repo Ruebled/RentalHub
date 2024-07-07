@@ -1,10 +1,11 @@
-﻿<UserControl x:Class="RentalHub.View.LoginView"
+﻿<UserControl x:Class="RentalHub.View.SignInView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:customcontrols="clr-namespace:RentalHub.CustomControls"
-             xmlns:local="clr-namespace:RentalHub.View"
+             xmlns:local="clr-namespace:RentalHub.View" 
+			 xmlns:viewmodel="clr-namespace:RentalHub.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:SignInViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="500">
     <Grid>
@@ -45,7 +46,6 @@
             </TextBox>
 
             <TextBlock Text="Password"
-                       Foreground="DarkGray"
                        FontSize="12"
                        FontWeight="Medium"
                        FontFamily="Montserrat"
@@ -55,7 +55,6 @@
                                                 Margin="0,5,0,0">
 
             </customcontrols:BindablePasswordBox>
-
             <TextBlock Text="{Binding ErrorMessage}"
                        Foreground="#D75960"
                        FontSize="12"
@@ -65,7 +64,7 @@
                        TextWrapping="Wrap"/>
 
             <Button x:Name="btnLogin"
-                    Command="{Binding LoginCommand}"
+                    Command="{Binding SignInCommand}"
                     BorderThickness="0"
                     Content="LOG IN"
                     FontSize="16"

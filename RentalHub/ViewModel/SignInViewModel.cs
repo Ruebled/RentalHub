@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace RentalHub.ViewModel
 {
-    public class LoginViewModel : ViewModelBase
+    public class SignInViewModel : ViewModelBase
     {
         // Fields
         private string _username;
@@ -14,7 +14,6 @@ namespace RentalHub.ViewModel
         private string _errorMessage;
 
         private IUserRepository userRepository;
-        //public event EventHandler<UserModel>? LoginSuccessful;
 
         // Properties
         public string Username
@@ -52,19 +51,19 @@ namespace RentalHub.ViewModel
         }
 
         // -> Commands
-        public ICommand LoginCommand { get; }
+        public ICommand SignInCommand { get; }
         public ICommand OpenSignUpViewCommand { get; }
         //public ICommand RecoverPassswordCommand { get; }
         //public ICommand ShowPasswordCommand { get; }
         //public ICommand RememberPasswordCommand { get; }
 
         // Contructor
-        public LoginViewModel()
+        public SignInViewModel()
         {
             userRepository = new UserRepository();
 
             //LoginCommand = new RelayCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
-            LoginCommand = new ViewModelCommand(ExecuteLoginCommand, CanExecuteLoginCommand);
+            SignInCommand = new RelayCommand(ExecuteSignInCommand, CanExecuteSignInCommand);
             OpenSignUpViewCommand = new ViewModelCommand(ExecuteOpenSignUpViewCommand);
 
             //OpenSignUpViewCommand = new RelayCommand(ExecuteOpenSignUpViewCommand, CanExecuteOpenSignUpViewCommand);
@@ -78,12 +77,12 @@ namespace RentalHub.ViewModel
             }
         }
  
-        private void ExecuteLoginCommand(object obj)
+        private void ExecuteSignInCommand(object obj)
         {
             UserModel user = userRepository.AuthenticateUser(new System.Net.NetworkCredential(Username, Password));
             if (user != null)
             {
-                //OnLoginSuccessful(user);
+                CheckAccountViewModel.Instance.OnLoginSuccessful(user);
             }
             else
             {
@@ -91,7 +90,7 @@ namespace RentalHub.ViewModel
             }
         }
 
-        private bool CanExecuteLoginCommand(object obj)
+        private bool CanExecuteSignInCommand(object obj)
         {
             bool validData;
             if (string.IsNullOrEmpty(Username) ||
@@ -106,10 +105,5 @@ namespace RentalHub.ViewModel
 
             return validData;
         }
-       
-        //protected virtual void OnLoginSuccessful(UserModel user)
-        //{
-        //    LoginSuccessful?.Invoke(this, user);
-        //}
     }
 }
