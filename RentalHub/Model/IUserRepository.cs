@@ -13,6 +13,8 @@ namespace RentalHub.Model
         UserModel GetById(int id);
         UserModel GetByUsername(string username);
         IEnumerable<UserModel> GetByAll();
-        //...
+        UserModel GetByEmail(string email);
+        void UpdateUserPassword(string userId, string newPassword);
+        string HashPassword(string input);
     }
 }

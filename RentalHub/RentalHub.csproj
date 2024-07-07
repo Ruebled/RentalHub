@@ -90,6 +90,7 @@
 
   <ItemGroup>
     <PackageReference Include="FontAwesome.Sharp" Version="6.1.1" />
+    <PackageReference Include="Google.Apis.Gmail.v1" Version="1.68.0.3427" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.4.0" />
   </ItemGroup>
 

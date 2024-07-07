@@ -51,7 +51,7 @@ namespace RentalHub.Repositories
             return result.FirstOrDefault();
         }
 
-        private static string HashPassword(string input)
+        public string HashPassword(string input)
         {
             using SHA256 sha256Hash = SHA256.Create();
             byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
@@ -92,7 +92,34 @@ namespace RentalHub.Repositories
             return result.FirstOrDefault();
         }
 
+        public UserModel? GetByEmail(string email)
+        {
+            string query = "SELECT USERID, EMAIL FROM USERS WHERE EMAIL = :EMAIL";
+            var parameters = new OracleParameter[]
+            {
+                new OracleParameter("EMAIL", email)
+            };
 
+            var result = ExecuteQuery(query, reader => new UserModel
+            {
+                UserId = reader["USERID"].ToString(),
+                Email = reader["EMAIL"].ToString()
+            }, parameters);
+
+            return result.FirstOrDefault();
+        }
+
+        public void UpdateUserPassword(string userId, string newPassword)
+        {
+            string query = "UPDATE USERS SET PASSWORDHASH = :PASSWORDHASH WHERE USERID = :USERID";
+            var parameters = new OracleParameter[]
+            {
+                new OracleParameter("PASSWORDHASH", HashPassword(newPassword)),
+                new OracleParameter("USERID", userId)
+            };
+
+            ExecuteNonQuery(query, parameters);
+        }
 
         public void Edit(UserModel userModel)
         {
