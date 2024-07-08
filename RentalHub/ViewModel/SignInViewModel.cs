@@ -60,8 +60,14 @@ namespace RentalHub.ViewModel
         // Contructor
         public SignInViewModel()
         {
+            // Set default values for class variables
+            Username = string.Empty;
+            Password = new SecureString();
+            ErrorMessage = string.Empty;
+
             userRepository = new UserRepository();
 
+            // Configure commands
             SignInCommand = new RelayCommand(ExecuteSignInCommand, CanExecuteSignInCommand);
             OpenSignUpViewCommand = new RelayCommand(ExecuteOpenSignUpViewCommand);
             OpenResetPasswordViewCommand = new RelayCommand(ExecuteOpenResetPasswordViewCommand);

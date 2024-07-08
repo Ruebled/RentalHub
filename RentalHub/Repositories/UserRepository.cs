@@ -13,18 +13,36 @@ namespace RentalHub.Repositories
         public void Add(UserModel userModel)
         {
             string query = "INSERT INTO Users (UserID, Username, PasswordHash, Email, FullName, PhoneNumber, UserType, CreatedAt) " +
-                "VALUES (user_id_seq.NEXTVAL, :USERNAME, :PASSWORDHASH, :EMAIL, :FULLNAME, :PHONENUMBER, :USERTYPE, SYSTIMESTAMP);";
+                "VALUES (user_id_seq.NEXTVAL, :USERNAME, :PASSWORDHASH, :EMAIL, :FULLNAME, :PHONENUMBER, :USERTYPE, SYSTIMESTAMP)";
+
             var parameters = new OracleParameter[]
             {
                 new OracleParameter("USERNAME", userModel.Username),
-                new OracleParameter("PASSWORDHASH", HashPassword(userModel.PasswordHash)),
+                new OracleParameter("PASSWORDHASH", userModel.PasswordHash),
                 new OracleParameter("EMAIL", userModel.Email),
                 new OracleParameter("FULLNAME", userModel.FullName),
                 new OracleParameter("PHONENUMBER", userModel.PhoneNumber),
                 new OracleParameter("USERTYPE", userModel.UserType),
             };
-            ExecuteNonQuery(query, parameters);
+
+            try
+            {
+                ExecuteNonQuery(query, parameters);
+            }
+            catch (OracleException ex)
+            {
+                // Handle Oracle specific exceptions
+                Console.WriteLine($"Oracle Exception: {ex.Message}");
+                throw; // Rethrow the exception or handle as appropriate
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"Exception: {ex.Message}");
+                throw; // Rethrow the exception or handle as appropriate
+            }
         }
+
 
         public UserModel AuthenticateUser(NetworkCredential credential)
         {
