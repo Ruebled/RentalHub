@@ -1,7 +1,11 @@
-﻿using RentalHub.Model;
+﻿using Microsoft.Extensions.Configuration;
+
+using RentalHub.Model;
 using RentalHub.Repositories;
 
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 
@@ -11,6 +15,7 @@ namespace RentalHub.ViewModel
     {
         private string _usernameOrEmail;
         private string _errorMessage;
+        private string _statusMessage;
         private IUserRepository userRepository;
 
         public string UsernameOrEmail
@@ -30,6 +35,16 @@ namespace RentalHub.ViewModel
             {
                 _errorMessage = value;
                 OnPropertyChanged(nameof(ErrorMessage));
+            }
+        }
+
+        public string StatusMessage
+        {
+            get => _statusMessage;
+            set
+            {
+                _statusMessage = value;
+                OnPropertyChanged(nameof(StatusMessage));
             }
         }
 
@@ -92,12 +107,8 @@ namespace RentalHub.ViewModel
 
         private void ExecuteResetPasswordCommand(object obj)
         {
-            // Check if the UsernameOrEmail property is null or empty
-            //if (string.IsNullOrEmpty(UsernameOrEmail))
-            //{
-            //    ErrorMessage = "Username or Email cannot be empty.";
-            //}
             UserModel user;
+            StatusMessage = string.Empty;
 
             if (UsernameOrEmail.Contains('@'))
             {
@@ -119,18 +130,25 @@ namespace RentalHub.ViewModel
             string Password = PasswordGenerator.GeneratePassword(16);
             if (string.IsNullOrEmpty(Password))
             {
-                Debug.Print("Password Generator Generater an empty password");
+                Debug.Print("Password Generator generated an empty password");
                 return;
             }
 
-            userRepository.UpdateUserPassword(user.UserId, Password);
+            // Send new password to the user email
+            bool status = EmailSender.Instance.SendPasswordResetEmail(user.Email, Password);
 
-            // Put anywhere else
-            string smtpUsername = "";
-            string smtpPassword = "";
+            if (status)
+            {
+                // Update password in database
+                userRepository.UpdateUserPassword(user.UserId, Password);
 
-            EmailSender emailSender = new EmailSender(smtpUsername, smtpPassword);
-            emailSender.SendPasswordResetEmail(user.Email, Password + " " + userRepository.HashPassword(Password));
+                StatusMessage = "Password updated successfully\nCheck your email for the new password";
+            }
+            else
+            {
+                StatusMessage = "Password could not be generated\nCall in the support team";
+            }
+           
         }
     }
 }

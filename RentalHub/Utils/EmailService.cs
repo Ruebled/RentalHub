@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+
 using System.IO;
 using System.Net;
 using System.Net.Mail;
@@ -6,18 +7,31 @@ using System.Net.Mail;
 public class EmailSender
 {
     private readonly string _smtpServer = "smtp.gmail.com";
-    private readonly int _smtpPort = 587; // Gmail SMTP port for TLS
+    private readonly int _smtpPort = 587;
     private readonly string _smtpUsername;
     private readonly string _smtpPassword;
 
-    public EmailSender(string smtpUsername, string smtpPassword)
+    public static EmailSender Instance { get; private set; } = new EmailSender();
+
+    private EmailSender()
     {
-        _smtpUsername = smtpUsername;
-        _smtpPassword = smtpPassword;
+        var configBuilder = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+        IConfiguration configuration = configBuilder.Build();
+
+        _smtpUsername = configuration["SmtpSettings:SmtpUsername"] ?? "";
+        _smtpPassword = configuration["SmtpSettings:SmtpPassword"] ?? "";
     }
 
-    public void SendPasswordResetEmail(string toEmail, string newPassword)
+    public bool SendPasswordResetEmail(string toEmail, string newPassword)
     {
+        if(string.IsNullOrEmpty(_smtpUsername) || string.IsNullOrEmpty(_smtpPassword))
+        {
+            return false;
+        }
+
         string subject = "Password Reset for RentalHub Account";
         string body = $@"
             <html>
@@ -35,6 +49,8 @@ public class EmailSender
         ";
 
         SendEmail(toEmail, subject, body, null, true);
+
+        return true;
     }
 
     private void SendEmail(string toEmail, string subject, string body, string fromEmail = null, bool isHtml = true, string[] attachments = null, MailPriority priority = MailPriority.Normal)
