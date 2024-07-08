@@ -12,14 +12,48 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Title -->
-        <TextBlock Text="Support" FontSize="24" FontWeight="Bold" Margin="20"/>
+        <StackPanel Grid.Row="0" Margin="20">
+            <!-- Title -->
+            <TextBlock Text="Contact Support" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
 
-        <!-- Description -->
-        <TextBlock Text="If you need assistance, please contact our support team." Margin="20,10"/>
+            <!-- Description -->
+            <TextBlock Text="If you require assistance, questions or suggestion please contact us by filling the form bellow" 
+                       Margin="0,5,0,0"
+                       Width="500"
+                       HorizontalAlignment="Left"
+                       TextWrapping="Wrap" 
+                       />
+        </StackPanel>
+        
+        <!-- Support Panel -->
+        <StackPanel Grid.Row="1" Margin="10,10,0, 0">
+            <!-- Title -->
 
-        <!-- Contact Support Button -->
-        <Button Content="Contact Support" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20"
-                Command="{Binding ContactSupportCommand}"/>
+            <TextBlock Text="Title" 
+                       FontSize="15" 
+                       FontWeight="Bold" 
+                       Margin="0, 10, 0, 10" 
+                       HorizontalAlignment="Left"/>
+            <!-- Message Title -->
+            <TextBox x:Name="txtMessageTitle" 
+                     Width="200" 
+                     Margin="0,0,0,10" 
+                     HorizontalAlignment="Left"/>
+            
+            <TextBlock Text="Content" FontSize="15" FontWeight="Bold" Margin="0, 10, 0, 10" HorizontalAlignment="Left"/>
+
+            <!-- Full Message -->
+            <TextBox x:Name="txtFullMessage" 
+                     TextWrapping="Wrap" 
+                     VerticalScrollBarVisibility="Auto" 
+                     Height="100"
+                     Width="400"
+                     HorizontalAlignment="Left"
+                     Margin="0,0,0,10"/>
+
+            <!-- Submit Button -->
+            <Button Content="Submit" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100"
+                    Command="{Binding SubmitCommand}"/>
+        </StackPanel>
     </Grid>
 </UserControl>
