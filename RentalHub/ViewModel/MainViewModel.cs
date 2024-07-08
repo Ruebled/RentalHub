@@ -83,11 +83,11 @@ namespace RentalHub.ViewModel
             _currentUserAccount = new UserAccountModel();
 
             // Initialise commands
-            ShowHomeViewCommand = new ViewModelCommand(ExecuteShowHomeViewCommand);
-            ShowSearchViewCommand = new ViewModelCommand(ExecuteShowSearchViewCommand);
-            ShowBookingsViewCommand = new ViewModelCommand(ExecuteShowBookingsViewCommand);
-            ShowProfileViewCommand = new ViewModelCommand(ExecuteShowProfileViewCommand);
-            ShowSupportViewCommand = new ViewModelCommand(ExecuteShowSupportViewCommand);
+            ShowHomeViewCommand = new RelayCommand(ExecuteShowHomeViewCommand);
+            ShowSearchViewCommand = new RelayCommand(ExecuteShowSearchViewCommand);
+            ShowBookingsViewCommand = new RelayCommand(ExecuteShowBookingsViewCommand);
+            ShowProfileViewCommand = new RelayCommand(ExecuteShowProfileViewCommand);
+            ShowSupportViewCommand = new RelayCommand(ExecuteShowSupportViewCommand);
 
             // Default view
             ExecuteShowHomeViewCommand(null);

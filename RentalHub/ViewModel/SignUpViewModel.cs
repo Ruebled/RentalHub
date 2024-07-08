@@ -96,7 +96,7 @@ namespace RentalHub.ViewModel
         public SignUpViewModel()
         {
             SignUpCommand = new RelayCommand(ExecuteSignUpCommand, CanExecuteSignUpCommand);
-            OpenSignInViewCommand = new ViewModelCommand(ExecuteOpenSignInViewCommand);
+            OpenSignInViewCommand = new RelayCommand(ExecuteOpenSignInViewCommand);
         }
 
         private void ExecuteSignUpCommand(object obj)
