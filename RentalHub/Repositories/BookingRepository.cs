@@ -9,7 +9,7 @@ public class BookingRepository : RepositoryBase
         string query = @"
             SELECT 
                 BOOKINGS.BOOKINGID, 
-                USERS.FULLNAME, 
+                USERS.FIRSTNAME||' '||USERS.LASTNAME AS FULLNAME, 
                 APARTMENTS.NAME, 
                 BOOKINGS.CHECKINDATE, 
                 BOOKINGS.CHECKOUTDATE, 

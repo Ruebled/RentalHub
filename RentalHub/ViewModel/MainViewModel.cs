@@ -149,7 +149,7 @@ namespace RentalHub.ViewModel
                 CurrentUserAccont = new UserAccountModel()
                 {
                     Username = User.Username,
-                    DisplayName = $"{User.FullName}",
+                    DisplayName = $"{User.FirstName}" + " " + $"{User.LastName}",
                     ProfilePicture = ProfilePhotoRetrieved
                 };
             }

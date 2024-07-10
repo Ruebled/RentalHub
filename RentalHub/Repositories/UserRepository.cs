@@ -12,17 +12,19 @@ namespace RentalHub.Repositories
     {
         public void Add(UserModel userModel)
         {
-            string query = "INSERT INTO Users (UserID, Username, PasswordHash, Email, FullName, PhoneNumber, UserType, CreatedAt) " +
-                "VALUES (user_id_seq.NEXTVAL, :USERNAME, :PASSWORDHASH, :EMAIL, :FULLNAME, :PHONENUMBER, :USERTYPE, SYSTIMESTAMP)";
+            string query = "INSERT INTO Users (UserID, FirstName, LastName, Username, PasswordHash, Email, PhoneNumber, UserType, ProfileImageId, CreatedAt) " +
+                "VALUES (user_id_seq.NEXTVAL, :FIRSTNAME, :LASTNAME, :USERNAME, :PASSWORDHASH, :EMAIL, :PHONENUMBER, :USERTYPE, :PROFILEIMAGEID, SYSTIMESTAMP)";
 
             var parameters = new OracleParameter[]
             {
+                new OracleParameter("FIRSTNAME", userModel.FirstName),
+                new OracleParameter("LASTNAME", userModel.LastName),
                 new OracleParameter("USERNAME", userModel.Username),
                 new OracleParameter("PASSWORDHASH", userModel.PasswordHash),
                 new OracleParameter("EMAIL", userModel.Email),
-                new OracleParameter("FULLNAME", userModel.FullName),
                 new OracleParameter("PHONENUMBER", userModel.PhoneNumber),
                 new OracleParameter("USERTYPE", userModel.UserType),
+                new OracleParameter("PROFILEIMAGEID", userModel.ImageID),
             };
 
             try
@@ -56,10 +58,11 @@ namespace RentalHub.Repositories
             var result = ExecuteQuery(query, reader => new UserModel
             {
                 UserId = reader["USERID"]?.ToString(),
+                FirstName = reader["FIRSTNAME"]?.ToString(),
+                LastName = reader["LASTNAME"]?.ToString(),
                 Username = reader["USERNAME"]?.ToString(),
                 PasswordHash = reader["PASSWORDHASH"]?.ToString(),
                 Email = reader["EMAIL"]?.ToString(),
-                FullName = reader["FULLNAME"]?.ToString(),
                 PhoneNumber = reader["PHONENUMBER"]?.ToString(),
                 UserType = reader["USERTYPE"]?.ToString(),
                 ImageID = reader["PROFILEIMAGEID"]?.ToString(),
@@ -96,10 +99,11 @@ namespace RentalHub.Repositories
             var result = ExecuteQuery(query, reader => new UserModel
             {
                 UserId = reader["USERID"].ToString(),
+                FirstName = reader["FIRSTNAME"].ToString(),
+                LastName = reader["LASTNAME"].ToString(),
                 Username = reader["USERNAME"].ToString(),
                 PasswordHash = reader["PASSWORDHASH"].ToString(),
                 Email = reader["EMAIL"].ToString(),
-                FullName = reader["FULLNAME"].ToString(),
                 PhoneNumber = reader["PHONENUMBER"].ToString(),
                 UserType = reader["USERTYPE"].ToString(),
                 ImageID = reader["PROFILEIMAGEID"].ToString(),
@@ -126,6 +130,18 @@ namespace RentalHub.Repositories
 
             return result.FirstOrDefault();
         }
+
+        public List<string> GetAllUsernames()
+        {
+            // Define the SQL query
+            string query = "SELECT USERNAME FROM USERS";
+
+            // Execute the query and retrieve usernames
+            var usernames = ExecuteQuery(query, reader => reader["USERNAME"].ToString());
+
+            return usernames.ToList();
+        }
+
 
         public void UpdateUserPassword(string userId, string newPassword)
         {

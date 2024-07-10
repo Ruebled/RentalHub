@@ -5,25 +5,56 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RentalHub.View"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
-        <!-- Profile Picture -->
-        <Image Source="{Binding ProfilePicture}" Width="100" Height="100" Margin="20"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-        <!-- User Name -->
-        <TextBlock Text="{Binding UserName}" FontSize="24" FontWeight="Bold" Margin="20,0,0,10"/>
+        <!-- Title -->
+        <TextBlock Text="User Profile" FontSize="24" FontWeight="Bold" Margin="20"/>
 
-        <!-- Email -->
-        <TextBlock Text="{Binding Email}" FontSize="16" Margin="20,0,0,10"/>
+        <!-- User Information -->
+        <StackPanel Grid.Row="1" Margin="20">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Username:" FontWeight="Bold" Width="100"/>
+                <TextBox Text="{Binding UserModel.Username, Mode=TwoWay}" IsReadOnly="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,0,10"/>
+            </StackPanel>
 
-        <!-- Address -->
-        <TextBlock Text="{Binding Address}" FontSize="16" Margin="20,0,0,10"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Email:" FontWeight="Bold" Width="100"/>
+                <TextBox Text="{Binding UserModel.Email, Mode=TwoWay}" IsReadOnly="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,0,10"/>
+            </StackPanel>
 
-        <!-- Edit Profile Button -->
-        <Button Content="Edit Profile" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20"
-                Command="{Binding EditProfileCommand}"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Full Name:" FontWeight="Bold" Width="100"/>
+                <TextBox Text="{Binding UserModel.FullName, Mode=TwoWay}" IsReadOnly="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,0,10"/>
+            </StackPanel>
 
-        <!-- Other profile information or controls can be added here -->
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Phone Number:" FontWeight="Bold" Width="100"/>
+                <TextBox Text="{Binding UserModel.PhoneNumber, Mode=TwoWay}" IsReadOnly="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,0,10"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="User Type:" FontWeight="Bold" Width="100"/>
+                <TextBox Text="{Binding UserModel.UserType, Mode=TwoWay}" IsReadOnly="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,0,10"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Registration Date:" FontWeight="Bold" Width="100"/>
+                <TextBox Text="{Binding UserModel.CreateDate, Mode=TwoWay}" IsReadOnly="True" Margin="0,0,0,10"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,0,0,20">
+            <Button Content="Edit" Command="{Binding EditCommand}" Width="100"/>
+            <Button Content="Save" Command="{Binding SaveCommand}" Width="100" Margin="10,0,0,0" Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Margin="10,0,0,0" Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </StackPanel>
     </Grid>
 </UserControl>
-

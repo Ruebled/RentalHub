@@ -22,6 +22,13 @@ namespace RentalHub.ViewModel
         private string _errorMessage;
         private string _statusMessage;
 
+        private bool _isUsernameValid       = true;
+        private bool _isPasswordValid       = true;
+        private bool _isFirstNameValid      = true;
+        private bool _isLastNameValid       = true;
+        private bool _isEmailValid          = true;
+        private bool _isPhoneNumberValid    = true;
+
         private IUserRepository userRepository;
 
         // Properties
@@ -31,6 +38,7 @@ namespace RentalHub.ViewModel
             set
             {
                 _username = value;
+                _isUsernameValid = false;
                 OnPropertyChanged(nameof(Username));
             }
         }
@@ -41,6 +49,7 @@ namespace RentalHub.ViewModel
             set
             {
                 _password = value;
+                _isPasswordValid = false;
                 OnPropertyChanged(nameof(Password));
             }
         }
@@ -51,6 +60,7 @@ namespace RentalHub.ViewModel
             set
             {
                 _firstName = value;
+                _isFirstNameValid = false;
                 OnPropertyChanged(nameof(FirstName));
             }
         }
@@ -61,6 +71,7 @@ namespace RentalHub.ViewModel
             set
             {
                 _lastName = value;
+                _isLastNameValid = false;
                 OnPropertyChanged(nameof(LastName));
             }
         }
@@ -70,6 +81,7 @@ namespace RentalHub.ViewModel
             set
             {
                 _email = value;
+                _isEmailValid = false;
                 OnPropertyChanged(nameof(Email));
             }
         }
@@ -80,6 +92,7 @@ namespace RentalHub.ViewModel
             set
             {
                 _phonenumber = value;
+                _isPhoneNumberValid = false;
                 OnPropertyChanged(nameof(Phonenumber));
             }
         }
@@ -164,14 +177,25 @@ namespace RentalHub.ViewModel
             System.Net.NetworkCredential userCredential = new System.Net.NetworkCredential(Username, Password);
 
             userModel.Username = Username;
+            userModel.FirstName = FirstName;
+            userModel.LastName = LastName;
             userModel.PasswordHash = userRepository.HashPassword(userCredential.Password);
             userModel.Email = Email;
             userModel.PhoneNumber = Phonenumber;
-            userModel.FullName = FirstName + " " + LastName;
             userModel.UserType = Usertype;
             userModel.ImageID = Profilephotoid;
 
             userRepository.Add(userModel);
+
+            // Reset data
+            Username = "";
+            FirstName = "";
+            LastName = "";
+            Password.Clear();
+            Email = "";
+            Phonenumber = "";
+            Usertype = "Guest";
+            Profilephotoid = "1";
 
             // Set Status Message to successfull
             StatusMessage = "User Added Successfully";
@@ -179,23 +203,45 @@ namespace RentalHub.ViewModel
 
         private bool CanExecuteSignUpCommand(object obj)
         {
-            bool status = 
-                !CheckUsername(Username, out _errorMessage) ||
-                !CheckPassword(Password, out _errorMessage) ||
-                !CheckFirstName(FirstName, out _errorMessage) ||
-                !CheckLastName(LastName, out _errorMessage) ||
-                !CheckEmail(Email, out _errorMessage) ||
-                !CheckPhoneNumber(Phonenumber, out _errorMessage);
+            bool isValid = true;
+
+            // Check each field individually and update errorMessage only if validation fails
+            if (!_isUsernameValid && !CheckUsername(Username, out _errorMessage))
+            {
+                isValid = false;
+            }
+            else if (!_isPasswordValid && !CheckPassword(Password, out _errorMessage))
+            {
+                isValid = false;
+            }
+            else if (!_isFirstNameValid && !CheckFirstName(FirstName, out _errorMessage))
+            {
+                isValid = false;
+            }
+            else if (!_isLastNameValid && !CheckLastName(LastName, out _errorMessage))
+            {
+                isValid = false;
+            }
+            else if (!_isEmailValid && !CheckEmail(Email, out _errorMessage))
+            {
+                isValid = false;
+            }
+            else if (!_isPhoneNumberValid && !CheckPhoneNumber(Phonenumber, out _errorMessage))
+            {
+                isValid = false;
+            }
 
             OnPropertyChanged(nameof(ErrorMessage));
 
-            return !status;
+            return isValid;
         }
 
-        private static bool CheckUsername(string username, out string errorMessage)
+
+        private bool CheckUsername(string username, out string errorMessage)
         {
             if (string.IsNullOrEmpty(username))
             {
+                _isUsernameValid = true;
                 errorMessage = string.Empty;
                 return false;
             }
@@ -213,16 +259,23 @@ namespace RentalHub.ViewModel
                 return false;
             }
 
+            if(userRepository.GetByUsername(username) != null)
+            {
+                errorMessage = "Username already exist";
+                return false;
+            }
+
             errorMessage = string.Empty;
             return true;
         }
 
-        private static bool CheckPassword(SecureString password, out string errorMessage)
+        private bool CheckPassword(SecureString password, out string errorMessage)
         {
             errorMessage = string.Empty;
 
             if (password == null || password.Length == 0)
             {
+                _isPasswordValid = true;
                 errorMessage = string.Empty;
                 return false;
             }
@@ -279,17 +332,18 @@ namespace RentalHub.ViewModel
             return true;
         }
 
-        private static bool CheckFirstName(string firstName, out string errorMessage)
+        private bool CheckFirstName(string firstName, out string errorMessage)
         {
             if (string.IsNullOrEmpty(firstName))
             {
+                _isFirstNameValid = true;
                 errorMessage = string.Empty;
                 return false;
             }
 
-            if (firstName.Length < 2 || firstName.Length > 50)
+            if (firstName.Length < 3 || firstName.Length > 50)
             {
-                errorMessage = "First name must be between 2 and 50 characters.";
+                errorMessage = "First name must be between 3 and 50 characters.";
                 return false;
             }
 
@@ -304,17 +358,18 @@ namespace RentalHub.ViewModel
             return true;
         }
 
-        private static bool CheckLastName(string lastName, out string errorMessage)
+        private bool CheckLastName(string lastName, out string errorMessage)
         {
             if (string.IsNullOrEmpty(lastName))
             {
+                _isLastNameValid = true;
                 errorMessage = string.Empty;
                 return false;
             }
 
-            if (lastName.Length < 2 || lastName.Length > 50)
+            if (lastName.Length < 3 || lastName.Length > 50)
             {
-                errorMessage = "Last name must be between 2 and 50 characters.";
+                errorMessage = "Last name must be between 3 and 50 characters.";
                 return false;
             }
 
@@ -329,36 +384,48 @@ namespace RentalHub.ViewModel
             return true;
         }
 
-
-        private static bool CheckEmail(string email, out string errorMessage)
+        private bool CheckEmail(string email, out string errorMessage)
         {
             if (string.IsNullOrEmpty(email))
             {
+                _isEmailValid = true;
                 errorMessage = string.Empty;
                 return false;
             }
 
             string emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
 
-            if (Regex.IsMatch(email, emailPattern))
-            {
-                errorMessage = string.Empty;
-                return true;
-            }
-            else
+            if (!Regex.IsMatch(email, emailPattern))
             {
                 errorMessage = "Invalid email format.";
                 return false;
             }
+
+            if (userRepository.GetByEmail(email) != null)
+            {
+                errorMessage = "Email already used";
+                return false;
+            }
+
+            errorMessage = string.Empty;
+            return true;
         }
 
-        private static bool CheckPhoneNumber(string phoneNumber, out string errorMessage)
+        private bool CheckPhoneNumber(string phoneNumber, out string errorMessage)
         {
             errorMessage = string.Empty;
 
             if (string.IsNullOrEmpty(phoneNumber))
             {
-                errorMessage = string.Empty;
+                _isPhoneNumberValid = true;
+                errorMessage = "";
+                return false;
+            }
+
+            // Check for invalid characters
+            if (phoneNumber.Any(c => !char.IsDigit(c) && c != '-' && c != '+'))
+            {
+                errorMessage = "Phone number should only contain digits, hyphens (-), or a leading plus sign (+).";
                 return false;
             }
 
@@ -381,6 +448,23 @@ namespace RentalHub.ViewModel
             else if (digitsOnly.StartsWith("40") && (digitsOnly.Length != 11 && digitsOnly.Length != 13))
             {
                 errorMessage = "Invalid phone number length for international format (should be 11 or 13 digits).";
+                return false;
+            }
+
+            // Check hyphen format
+            if (phoneNumber.Count(c => c == '-') > 2)
+            {
+                errorMessage = "Invalid hyphen format. Only two hyphen (-) allowed.";
+                return false;
+            }
+            else if (phoneNumber.Contains("--"))
+            {
+                errorMessage = "Invalid hyphen format. Only one consecutive hyphen (-) allowed.";
+                return false;
+            }
+            else if (phoneNumber.EndsWith("-"))
+            {
+                errorMessage = "Hyphen (-) should not be at the end of the phone number.";
                 return false;
             }
 

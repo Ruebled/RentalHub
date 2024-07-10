@@ -17,15 +17,15 @@ public class ImageRepository : RepositoryBase
         _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
     }
 
-    public BitmapImage GetImageById(int imageId)
+    public BitmapImage GetImageById(int UserImageId)
     {
-        if(imageId < 0)
+        if(UserImageId < 0)
         {
             return null;
         }
 
-        string query = "SELECT Image FROM Images WHERE ImageID = :ImageID";
-        OracleParameter parameter = new OracleParameter("ImageID", imageId);
+        string query = "SELECT Image FROM UserImages WHERE UserImageID = :UserImageId";
+        OracleParameter parameter = new OracleParameter("UserImageID", UserImageId);
 
         try
         {
