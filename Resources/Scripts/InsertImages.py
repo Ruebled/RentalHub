@@ -22,8 +22,8 @@ def insert_images_into_oracle(images):
         for image in images:
             filename, image_data = image
             cursor.execute("""
-                INSERT INTO IMAGES (IMAGEID, IMAGE)
-                VALUES (IMAGE_ID_SEQ.NEXTVAL, :blob_data)
+                INSERT INTO USERIMAGES (USERIMAGEID, IMAGE)
+                VALUES (USERIMAGE_ID_SEQ.NEXTVAL, :blob_data)
             """, {'blob_data': image_data})
             print(f"Inserted {filename} into the database.")
         
@@ -39,6 +39,6 @@ def insert_images_into_oracle(images):
         connection.close()
 
 if __name__ == "__main__":
-    folder_path = "./Images"
+    folder_path = "./UserImages"
     images = read_images_from_folder(folder_path)
     insert_images_into_oracle(images)
