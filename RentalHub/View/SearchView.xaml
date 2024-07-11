@@ -7,7 +7,6 @@
              d:DataContext="{d:DesignInstance Type=viewmodel:SearchViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,46 +14,82 @@
         </Grid.RowDefinitions>
 
         <!-- Search bar area -->
-        <Border Grid.Row="0" Margin="10">
-            <StackPanel Orientation="Horizontal">
-                <TextBox x:Name="SearchTextBox"
-                         Width="300" Height="30"
-                         Margin="5"
-                         Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-                <Button Content="Search"
-                        Width="100" Height="30"
-                        Margin="5"
-                        Command="{Binding SearchCommand}"/>
-            </StackPanel>
+        <Border Grid.Row="0" BorderBrush="Gray" BorderThickness="1" Margin="5">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- City Input -->
+                <StackPanel Grid.Column="0" Orientation="Vertical" Margin="5">
+                    <TextBlock Text="City" FontSize="20"/>
+                    <TextBox x:Name="SearchTextBox"
+                             Width="300" Height="30"
+                             Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                </StackPanel>
+
+                <!-- Check In Date -->
+                <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5">
+                    <TextBlock Text="Check In" FontSize="20"/>
+                    <DatePicker Style="{StaticResource DatePickerStyleCustom}"
+                                SelectedDate="{Binding CheckInDay, UpdateSourceTrigger=PropertyChanged}"
+                                DisplayDateStart="{Binding MinDate}"
+                                DisplayDateEnd="{Binding MaxDate}"
+                                Focusable="False"
+                                Width="120" Height="30">
+                    </DatePicker>
+                </StackPanel>
+
+                <!-- Check Out Date -->
+                <StackPanel Grid.Column="2" Orientation="Vertical" Margin="5">
+                    <TextBlock Text="Check Out" FontSize="20"/>
+                    <DatePicker Style="{StaticResource DatePickerStyleCustom}"
+                                SelectedDate="{Binding CheckOutDay, UpdateSourceTrigger=PropertyChanged}"
+                                DisplayDateStart="{Binding MinDate}"
+                                DisplayDateEnd="{Binding MaxDate}"
+                                Focusable="False"
+                                Width="120" Height="30"/>
+                </StackPanel>
+                <!-- Search Button -->
+                <StackPanel Grid.Column="3" Orientation="Vertical" Margin="8" VerticalAlignment="Bottom">
+                    <Button Content="Search"
+                            Width="100" Height="30"
+                            Command="{Binding SearchCommand}">
+                    </Button>
+                </StackPanel>
+            </Grid>
         </Border>
 
-        <!-- Results display area -->
-        <Border Grid.Row="1" Margin="10">
-            <ListBox x:Name="ResultsListBox"
-                     ItemsSource="{Binding SearchResults}"
-                     Margin="5"
-                     BorderThickness="0"
-                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     ScrollViewer.CanContentScroll="False"
-                     VirtualizingStackPanel.IsVirtualizing="True">
-                <ListBox.ItemTemplate>
 
+    <!-- Results display area -->
+        <Border Grid.Row="1">
+            <ListBox x:Name="ResultsListBox"
+                    ItemsSource="{Binding SearchResults}"
+                    Margin="5"
+                    BorderThickness="0"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.CanContentScroll="False"
+                    VirtualizingStackPanel.IsVirtualizing="True">
+                <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="5">
                             <Image Source="{Binding ImageUrl}"
-                                   Width="250"
-                                   Height="200"
-                                   Margin="5"/>
+                                Width="250"
+                                Height="200"
+                                Margin="5"/>
                             <StackPanel>
                                 <TextBlock Text="{Binding Name}"
-                                           FontWeight="Bold"
-                                           FontSize="25"/>
+                                        FontWeight="Bold"
+                                        FontSize="25"/>
                                 <TextBlock Text="{Binding Description}"
-                                           Width="400"
-                                           FontSize="20"/>
+                                        Width="400"
+                                        FontSize="20"/>
                                 <TextBlock Text="{Binding PricePerNight}"
-                                           FontSize="28"/>
+                                        FontSize="28"/>
                                 <Button Content="View Details" Click="Button_View_Details_Click"/>
                             </StackPanel>
                         </StackPanel>

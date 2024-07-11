@@ -12,13 +12,13 @@ namespace RentalHub.Repositories
 {
     public class ApartmentRepository : RepositoryBase
     {
-        public List<ApartmentModel> GetApartments(string partialName)
+        public List<ApartmentModel> GetApartments(string partialCityName)
         {
-            string query = "SELECT * FROM APARTMENTS WHERE LOWER(NAME) LIKE LOWER(:PARTIALNAME)";
+            string query = "SELECT * FROM APARTMENTS WHERE LOWER(NAME) LIKE LOWER(:PARTIALCITYNAME)";
 
             var parameters = new OracleParameter[]
             {
-                new OracleParameter("PARTIALNAME", "%" + partialName + "%")
+                new OracleParameter("PARTIALNAME", "%" + partialCityName + "%")
             };
 
             var results = ExecuteQuery(query, reader => new ApartmentModel
@@ -27,18 +27,11 @@ namespace RentalHub.Repositories
                 HostID = reader["HOSTID"].ToString(),
                 Name = reader["NAME"].ToString(),
                 Description = reader["DESCRIPTION"].ToString(),
-                AddresLine1 = reader["ADDRESSLINE1"].ToString(),
-                AddresLine2 = reader["ADDRESSLINE2"].ToString(),
-                CityID = reader["CITYID"].ToString(),
-                StateID = reader["STATEID"].ToString(),
+                AddresLine = reader["ADDRESSLINE"].ToString(),
                 CountryID = reader["COUNTRYID"].ToString(),
-                ZipCodeID = reader["ZIPCODEID"].ToString(),
-                Latitude = reader["LATITUDE"].ToString(),
-                Longitude = reader["LONGITUDE"].ToString(),
-                PricePerNight = reader["PRICEPERNIGHT"].ToString(),
-                MaxGuests = reader["MAXGUESTS"].ToString(),
-                ImageUrl = "https://images.pexels.com/photos/276592/pexels-photo-276592.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-            }, parameters);
+                ZipCode = reader["ZIPCODE"].ToString(),
+                PricePerNight = reader["PRICEPERNIGHT"].ToString()
+                }, parameters);
 
             return results.ToList();
         }

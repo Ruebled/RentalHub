@@ -8,6 +8,7 @@
                 <ResourceDictionary Source="/Themes/LightTheme.xaml" />
                 <ResourceDictionary Source="/Themes/ButtonStyles.xaml" />
                 <ResourceDictionary Source="/Themes/CustomScrollbar.xaml" />
+                <ResourceDictionary Source="/Themes/CustomDatePicker.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

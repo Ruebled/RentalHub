@@ -24,5 +24,14 @@ namespace RentalHub.View
         {
 
         }
+
+        private void OpenCalendar_Click(object sender, RoutedEventArgs e)
+        {
+            DatePicker datePicker = sender as DatePicker;
+            if (datePicker != null)
+            {
+                datePicker.IsDropDownOpen = true;
+            }
+        }
     }
 }
