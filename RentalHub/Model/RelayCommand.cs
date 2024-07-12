@@ -24,6 +24,7 @@ namespace RentalHub.Model
             _execute(parameter);
         }
 
+
         public event EventHandler CanExecuteChanged
         {
             add => CommandManager.RequerySuggested += value;

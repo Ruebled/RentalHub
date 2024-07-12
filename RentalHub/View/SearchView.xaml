@@ -35,7 +35,7 @@
                 <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5">
                     <TextBlock Text="Check In" FontSize="20"/>
                     <DatePicker Style="{StaticResource DatePickerStyleCustom}"
-                                SelectedDate="{Binding CheckInDay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedDate="{Binding CheckInDate, UpdateSourceTrigger=PropertyChanged}"
                                 DisplayDateStart="{Binding MinDate}"
                                 DisplayDateEnd="{Binding MaxDate}"
                                 Focusable="False"
@@ -47,7 +47,7 @@
                 <StackPanel Grid.Column="2" Orientation="Vertical" Margin="5">
                     <TextBlock Text="Check Out" FontSize="20"/>
                     <DatePicker Style="{StaticResource DatePickerStyleCustom}"
-                                SelectedDate="{Binding CheckOutDay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedDate="{Binding CheckOutDate, UpdateSourceTrigger=PropertyChanged}"
                                 DisplayDateStart="{Binding MinDate}"
                                 DisplayDateEnd="{Binding MaxDate}"
                                 Focusable="False"

@@ -12,8 +12,8 @@ namespace RentalHub.ViewModel
         public ObservableCollection<ApartmentModel> SearchResults { get; set; }
 
         private string _searchQuery;
-        private DateTime _checkinday;
-        private DateTime _checkoutday;
+        private DateTime _checkindate;
+        private DateTime _checkoutdate;
         private DateTime _minDate;
         private DateTime _maxDate;
 
@@ -52,34 +52,39 @@ namespace RentalHub.ViewModel
                 {
                     _searchQuery = value;
                     OnPropertyChanged(nameof(SearchQuery));
+                    OnSearchQueryChanged();
                 }
             }
         }
 
-        public DateTime CheckInDay
+        public DateTime CheckInDate
         {
-            get => _checkinday;
+            get => _checkindate;
             set
             {
-                if (_checkinday != value)
+                if (_checkindate != value)
                 {
-                    _checkinday = value;
-                    OnPropertyChanged(nameof(CheckInDay));
+                    _checkindate = value;
+                    OnPropertyChanged(nameof(CheckInDate));
                     UpdateCheckOutDay();
+                    CommandManager.InvalidateRequerySuggested();
+                    OnSearchQueryChanged();
                 }
             }
         }
 
-        public DateTime CheckOutDay
+        public DateTime CheckOutDate
         {
-            get => _checkoutday;
+            get => _checkoutdate;
             set
             {
-                if (_checkoutday != value)
+                if (_checkoutdate != value)
                 {
-                    _checkoutday = value;
-                    OnPropertyChanged(nameof(CheckOutDay));
+                    _checkoutdate = value;
+                    OnPropertyChanged(nameof(CheckOutDate));
                     UpdateCheckOutDay();
+                    CommandManager.InvalidateRequerySuggested();
+                    OnSearchQueryChanged();
                 }
             }
         }
@@ -88,17 +93,21 @@ namespace RentalHub.ViewModel
 
         public SearchViewModel()
         {
+            SearchResults = new ObservableCollection<ApartmentModel>();
+
             // Set Min and Max dates for the calendar at hand
             MinDate = DateTime.Now.Date;
             MaxDate = DateTime.Now.Date.AddYears(1);
 
-            // Set default checkin & checkout days (today and tomorrow)
-            CheckInDay = DateTime.Now.Date;
-            CheckOutDay = DateTime.Now.Date.AddDays(1);
+            // Set default check-in & check-out days (today and tomorrow)
+            CheckInDate = DateTime.Now.Date;
+            CheckOutDate = DateTime.Now.Date.AddDays(1);
 
-            SearchResults = new ObservableCollection<ApartmentModel>();
 
             SearchCommand = new RelayCommand(ExecuteSearchCommand, CanExecuteSearchCommand);
+
+            // Set Search Query to a value to trigger the search
+            SearchQuery = string.Empty;
         }
 
         private void ExecuteSearchCommand(object obj)
@@ -107,7 +116,7 @@ namespace RentalHub.ViewModel
             SearchResults.Clear();
 
             ApartmentRepository apartmentRepository = new ApartmentRepository();
-            var results = apartmentRepository.GetApartments(SearchQuery);
+            var results = apartmentRepository.GetApartmentsByCityAndDays(SearchQuery, CheckInDate, CheckOutDate);
 
             foreach (var apartment in results)
             {
@@ -118,20 +127,28 @@ namespace RentalHub.ViewModel
         private bool CanExecuteSearchCommand(object obj)
         {
             // Ensure valid check-in and check-out dates
-            if (_checkinday == DateTime.MinValue || _checkoutday == DateTime.MinValue)
+            if (_checkindate == DateTime.MinValue || _checkoutdate == DateTime.MinValue)
             {
                 return false;
             }
 
             // Check if check-in date is before check-out date
-            return _checkinday < _checkoutday;
+            return _checkindate < _checkoutdate;
         }
 
         private void UpdateCheckOutDay()
         {
-            if (_checkinday >= _checkoutday)
+            if (_checkindate >= _checkoutdate)
             {
-                CheckOutDay = _checkinday.AddDays(1);
+                CheckOutDate = _checkindate.AddDays(1);
+            }
+        }
+
+        private void OnSearchQueryChanged()
+        {
+            if (CanExecuteSearchCommand(null))
+            {
+                ExecuteSearchCommand(null);
             }
         }
     }

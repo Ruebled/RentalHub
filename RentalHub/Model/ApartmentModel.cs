@@ -8,8 +8,9 @@ namespace RentalHub.Model
         public string? HostID { get; set; }
         public string? Name { get; set; }
         public string? Description {  get; set; }
-        public string? AddresLine {  get; set; }
-        public string? CountryID { get; set; }
+        public string? AddressLine {  get; set; }
+        public string? CityID { get; set; }
+        public string? CityName { get; set; }
         public string? ZipCode {  get; set; }
         public string? PricePerNight { get; set; }
         public BitmapImage? MainImage { get; set; }
