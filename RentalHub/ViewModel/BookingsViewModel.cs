@@ -52,8 +52,8 @@ namespace RentalHub.ViewModel
             Bookings = new ObservableCollection<BookingModel>();
             LoadBookings();
 
-            AddBookingCommand = new RelayCommand(AddBookingExecute);
-            EditBookingCommand = new RelayCommand(EditBookingExecute, CanEditBookingExecute);
+            AddBookingCommand = new RelayCommand<object>(AddBookingExecute);
+            EditBookingCommand = new RelayCommand<object>(EditBookingExecute, CanEditBookingExecute);
         }
 
         private async Task LoadBookings()

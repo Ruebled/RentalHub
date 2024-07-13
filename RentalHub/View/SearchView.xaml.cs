@@ -19,19 +19,5 @@ namespace RentalHub.View
             InitializeComponent();
             DataContext = new SearchViewModel(); // Set the DataContext to an instance of SearchViewModel
         }
-
-        private void Button_View_Details_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void OpenCalendar_Click(object sender, RoutedEventArgs e)
-        {
-            DatePicker datePicker = sender as DatePicker;
-            if (datePicker != null)
-            {
-                datePicker.IsDropDownOpen = true;
-            }
-        }
     }
 }

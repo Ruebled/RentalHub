@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModel="clr-namespace:RentalHub.ViewModel"
-        xmlns:local="clr-namespace:RentalHub.View"
+        xmlns:local="clr-namespace:RentalHub.View" d:DataContext="{d:DesignInstance Type=viewModel:MainViewModel}"
         mc:Ignorable="d"
         Title="MainView"
         Height="800" 
@@ -34,6 +34,10 @@
 
         <DataTemplate DataType="{x:Type viewModel:SupportViewModel}">
             <local:SupportView/>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type viewModel:ApartmentViewModel}">
+            <local:ApartmentView/>
         </DataTemplate>
     </Window.Resources>
 
@@ -212,7 +216,7 @@
                                        Height="10"/>
                             </Button>
 
-                            <TextBlock Text="{Binding CurrentUserAccont.DisplayName}"
+                            <TextBlock Text="{Binding CurrentUserAccount.DisplayName}"
                                    Foreground="{StaticResource TextBrush}"
                                    FontSize="12"
                                    VerticalAlignment="Center"/>
@@ -222,7 +226,7 @@
                                      StrokeThickness="1"
                                      Margin="10,0,10,0">
                                 <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{Binding CurrentUserAccont.ProfilePicture}"
+                                    <ImageBrush ImageSource="{Binding CurrentUserAccount.ProfilePicture}"
                                                 Stretch="Uniform"
                                                 AlignmentX="Center"
                                                 AlignmentY="Center">

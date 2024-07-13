@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
 
         <!-- Search bar area -->
-        <Border Grid.Row="0" BorderBrush="Gray" BorderThickness="1" Margin="5">
+        <Border Grid.Row="0" BorderBrush="Gray" BorderThickness="0" Margin="0" HorizontalAlignment="Center">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -64,35 +64,184 @@
         </Border>
 
 
-    <!-- Results display area -->
+        <!-- Results display area -->
         <Border Grid.Row="1">
             <ListBox x:Name="ResultsListBox"
-                    ItemsSource="{Binding SearchResults}"
-                    Margin="5"
-                    BorderThickness="0"
-                    ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                    ScrollViewer.CanContentScroll="False"
-                    VirtualizingStackPanel.IsVirtualizing="True">
+                     ItemsSource="{Binding SearchResults}"
+                     Margin="0, 10, 0, 10"
+                     BorderThickness="0"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.CanContentScroll="False"
+                     VirtualizingStackPanel.IsVirtualizing="True">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Margin="5">
-                            <Image Source="{Binding ImageUrl}"
-                                Width="250"
-                                Height="200"
-                                Margin="5"/>
-                            <StackPanel>
-                                <TextBlock Text="{Binding Name}"
-                                        FontWeight="Bold"
-                                        FontSize="25"/>
-                                <TextBlock Text="{Binding Description}"
-                                        Width="400"
-                                        FontSize="20"/>
-                                <TextBlock Text="{Binding PricePerNight}"
-                                        FontSize="28"/>
-                                <Button Content="View Details" Click="Button_View_Details_Click"/>
-                            </StackPanel>
-                        </StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Main apartment image box -->
+                            <Rectangle Grid.Column="0"
+                                           Height="170"
+                                           Width="220"
+                                           Stroke="{StaticResource PrimaryBrush}"
+                                           StrokeThickness="2"
+                                           Margin="0, 0, 20, 0">
+                                <Rectangle.Fill>
+                                    <ImageBrush ImageSource="{Binding MainPhotoURL}"
+                                                Stretch="UniformToFill"
+                                                AlignmentX="Center"
+                                                AlignmentY="Center">
+                                        <ImageBrush.RelativeTransform>
+                                            <ScaleTransform ScaleX="-1" 
+                                                            CenterX="0.49"/>
+                                        </ImageBrush.RelativeTransform>
+                                    </ImageBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+
+                            <!-- Apartment Title/Description/Address which include main info -->
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <!-- Name -->
+                                    <RowDefinition Height="*"/>
+                                    <!-- Description -->
+                                    <RowDefinition Height="Auto"/>
+                                    <!-- AddressLine -->
+                                </Grid.RowDefinitions>
+
+                                <!-- Name -->
+                                <TextBlock Grid.Row="0" 
+                                           Text="{Binding Name}"
+                                           FontWeight="Bold" 
+                                           FontSize="25" 
+                                           Margin="0"/>
+
+                                <!-- Description -->
+                                <TextBlock Grid.Row="1" 
+                                           Text="{Binding Description}" 
+                                           FontSize="25" 
+                                           Margin="0"/>
+
+                                <!-- AddressLine -->
+                                <StackPanel Grid.Row="2"
+                                            Orientation="Vertical">
+                                    <TextBlock Grid.Row="2"
+                                               Text="AddressLine: "
+                                               FontSize="22"
+                                               FontStyle="Normal"/>
+                                    <TextBlock Grid.Row="2"
+                                               Text="{Binding AddressLine}"
+                                               VerticalAlignment="Bottom"
+                                               FontSize="20"
+                                               Margin="12, 0, 0, 6"
+                                               FontStyle="Italic"/>
+                                </StackPanel>
+
+                            </Grid>
+
+
+                            <!-- Rating and see more button of the apartment -->
+                            <Grid Grid.Column="2"
+                                  Margin="0, 0, 20, 0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <!-- Top element -->
+                                    <RowDefinition Height="*"/>
+                                    <!-- Center element -->
+                                    <RowDefinition Height="Auto"/>
+                                    <!-- Bottom element -->
+                                </Grid.RowDefinitions>
+
+                                <!-- Top Element -->
+                                <Border Grid.Row="0" 
+                                        BorderThickness="0" 
+                                        BorderBrush="Gray">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- Left column for rating details -->
+                                            <ColumnDefinition Width="*"/>
+                                            <!-- Right column for average rating -->
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Left StackPanel for Rating Details -->
+                                        <StackPanel Grid.Column="0" VerticalAlignment="Top" Orientation="Vertical">
+                                            <TextBlock Text="Rating" FontSize="24" HorizontalAlignment="Left"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Reviews: "
+                                                           FontSize="18"/>
+                                                <TextBlock Text="{Binding NumberOfReviews}"
+                                                           FontSize="18"/>
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <!-- Right Grid for Average Rating -->
+                                        <Grid Grid.Column="1" 
+                                              HorizontalAlignment="Right"
+                                              VerticalAlignment="Center"
+                                              Margin="0">
+                                            <!-- Rectangle for Rating -->
+                                            <Rectangle Width="40"
+                                                       Height="40"
+                                                       RadiusX="10"
+                                                       RadiusY="10"
+                                                       Fill="{StaticResource SecondaryBrush}"/>
+
+                                            <!-- TextBlock for Average Rating -->
+                                            <TextBlock Text="{Binding AverageRating}"
+                                                       Foreground="{StaticResource TextBrush}"
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center"
+                                                       FontSize="20"
+                                                       FontWeight="Bold"/>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Center Element (Price Per Night Block) -->
+                                <Border Grid.Row="1" BorderThickness="0" BorderBrush="Gray">
+                                    <StackPanel Orientation="Horizontal"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Text="Price Per Night: " 
+                                                   FontSize="20"
+                                                   FontStyle="Normal"/>
+                                        <TextBlock Text="{Binding PricePerNight}"
+                                                   FontStyle="Italic"
+                                                   
+                                                   FontSize="20"/>
+                                        <TextBlock Text="€"
+                                                   FontSize="20"
+                                                   FontStyle="Italic"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Bottom Element (See More Button) -->
+                                <Border Grid.Row="2" BorderThickness="0" BorderBrush="Gray">
+                                    <Button Width="100"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Right"
+                                            Margin="0, 0, 8, 8"
+                                            BorderThickness="0"
+                                            Command="{Binding DataContext.ViewDetailsCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                            CommandParameter="{Binding}">
+                                        <TextBlock Text="See More"
+                                                   FontSize="20"
+                                                   Foreground="{StaticResource TextBrush}"/>
+                                    </Button>
+                                </Border>
+                            </Grid>
+
+                        </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

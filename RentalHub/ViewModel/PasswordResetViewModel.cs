@@ -4,8 +4,6 @@ using RentalHub.Model;
 using RentalHub.Repositories;
 
 using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 
@@ -55,8 +53,8 @@ namespace RentalHub.ViewModel
         {
             userRepository = new UserRepository();
 
-            ResetPasswordCommand = new RelayCommand(ExecuteResetPasswordCommand, CanExectuteResetPasswordCommand);
-            OpenSignInViewCommand = new RelayCommand(ExecuteOpenSignInViewCommand);
+            ResetPasswordCommand = new RelayCommand<object>(ExecuteResetPasswordCommand, CanExectuteResetPasswordCommand);
+            OpenSignInViewCommand = new RelayCommand<object>(ExecuteOpenSignInViewCommand);
         }
 
         private void ExecuteOpenSignInViewCommand(object obj)

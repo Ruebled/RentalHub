@@ -14,11 +14,30 @@ namespace RentalHub.Repositories
     {
         public List<ApartmentModel> GetApartmentsByCity(string partialCityName)
         {
-            string query = "SELECT A.APARTMENTID, A.HOSTID, A.NAME, A.DESCRIPTION, A.ADDRESSLINE, A.CITYID, " +
-                "C.NAME AS CITYNAME, A.ZIPCODE, A.PRICEPERNIGHT, A.CREATEDAT " +
-                "FROM APARTMENTS A, CITIES C " +
-                "WHERE C.CITYID = A.CITYID " +
-                "AND LOWER(C.NAME) LIKE LOWER(:PARTIALNAME)";
+            string query = 
+                @"SELECT 
+                    A.APARTMENTID,
+                    A.HOSTID,
+                    A.NAME,
+                    A.DESCRIPTION,
+                    A.ADDRESSLINE,
+                    A.CITYID,
+                    C.NAME AS CITYNAME,
+                    A.ZIPCODE,
+                    A.PRICEPERNIGHT,
+                    A.SIZEINSQUAREFEET,
+                    A.MAINPHOTOURL,
+                    A.NUMBEROFROOMS,
+                    A.AVERAGERATING,
+                    A.NUMBEROFREVIEWS,
+                    A.HOUSERULES,
+                    A.CANCELLATIONPOLICY,
+                    A.CREATEDAT
+                  FROM APARTMENTS A, CITIES C
+                  WHERE 
+                    C.CITYID = A.CITYID
+                  AND 
+                    LOWER(C.NAME) LIKE LOWER(:PARTIALNAME)";
 
             var parameters = new OracleParameter[]
             {
@@ -35,7 +54,14 @@ namespace RentalHub.Repositories
                 CityID = reader["CITYID"].ToString(),
                 CityName = reader["CITYNAME"].ToString(),
                 ZipCode = reader["ZIPCODE"].ToString(),
-                PricePerNight = reader["PRICEPERNIGHT"].ToString()
+                PricePerNight = reader["PRICEPERNIGHT"].ToString(),
+                MainPhotoURL = reader["MAINPHOTOURL"].ToString(),
+                SizeInSquareFeet = reader["SIZEINSQUAREFEET"].ToString(),
+                NumberOfRooms = reader["NUMBEROFROOMS"].ToString(),
+                AverageRating = reader["AVERAGERATING"].ToString(),
+                NumberOfReviews = reader["NUMBEROFREVIEWS"].ToString(),
+                HouseRules = reader["HOUSERULES"].ToString(),
+                CancellationPolicy = reader["CANCELLATIONPOLICY"].ToString()
             }, parameters);
 
             return results.ToList();
@@ -44,28 +70,47 @@ namespace RentalHub.Repositories
         public List<ApartmentModel> GetApartmentsByCityAndDays(string partialCityName, DateTime checkInDate, DateTime checkOutDate)
         {
             string query =
-                "SELECT " +
-                "A.APARTMENTID, A.HOSTID, A.NAME, " +
-                "A.DESCRIPTION, A.ADDRESSLINE, A.CITYID, " +
-                "C.NAME AS CITYNAME, A.ZIPCODE, A.PRICEPERNIGHT, " +
-                "A.CREATEDAT " +
-                "FROM APARTMENTS A, CITIES C, BOOKINGS B " +
-                "WHERE C.CITYID = A.CITYID " +
-                "AND LOWER(C.NAME) LIKE LOWER(:PARTIALNAME) " +
-                "AND B.APARTMENTID = A.APARTMENTID " +
-                "AND " +
-                "((( " +
-                "B.CHECKINDATE >= TO_DATE(:CHECKINDATE, 'MM/DD/YYYY') " +
-                "AND " +
-                "B.CHECKINDATE >= TO_DATE(:CHECKOUTDATE, 'MM/DD/YYYY') " +
-                ")OR( " +
-                "B.CHECKOUTDATE <= TO_DATE(:CHECKINDATE, 'MM/DD/YYYY') " +
-                "AND " +
-                "B.CHECKOUTDATE <= TO_DATE(:CHECKOUTDATE, 'MM/DD/YYYY') " +
-                ")) " +
-                "OR " +
-                "B.STATUS LIKE '%Cancelled%' " +
-                ")";
+                @"SELECT 
+                    A.APARTMENTID,
+                    A.HOSTID,
+                    A.NAME,
+                    A.DESCRIPTION,
+                    A.ADDRESSLINE,
+                    A.CITYID,
+                    C.NAME AS CITYNAME,
+                    A.ZIPCODE,
+                    A.PRICEPERNIGHT,
+                    A.MAINPHOTOURL,
+                    A.SIZEINSQUAREFEET,
+                    A.NUMBEROFROOMS,
+                    A.AVERAGERATING,
+                    A.NUMBEROFREVIEWS,
+                    A.HOUSERULES,
+                    A.CANCELLATIONPOLICY,
+                    A.CREATEDAT
+                FROM APARTMENTS A, CITIES C, BOOKINGS B
+                WHERE 
+                    C.CITYID = A.CITYID
+                AND 
+                    LOWER(C.NAME) LIKE LOWER(:PARTIALNAME)
+                AND 
+                    B.APARTMENTID = A.APARTMENTID
+                AND
+                (
+                    (
+                        (
+                            B.CHECKINDATE >= TO_DATE(:CHECKINDATE, 'MM/DD/YYYY')
+                        AND
+                            B.CHECKINDATE >= TO_DATE(:CHECKOUTDATE, 'MM/DD/YYYY')
+                        )OR(
+                            B.CHECKOUTDATE <= TO_DATE(:CHECKINDATE, 'MM/DD/YYYY')
+                        AND
+                            B.CHECKOUTDATE <= TO_DATE(:CHECKOUTDATE, 'MM/DD/YYYY')
+                        )
+                    )
+                    OR
+                    B.STATUS LIKE '%Cancelled%'
+                )";
             var parameters = new OracleParameter[]
             {
                 new OracleParameter("PARTIALNAME", "%" + partialCityName + "%"),
@@ -83,8 +128,15 @@ namespace RentalHub.Repositories
                 CityID = reader["CITYID"].ToString(),
                 CityName = reader["CITYNAME"].ToString(),
                 ZipCode = reader["ZIPCODE"].ToString(),
-                PricePerNight = reader["PRICEPERNIGHT"].ToString()
-                }, parameters);
+                PricePerNight = reader["PRICEPERNIGHT"].ToString(),
+                MainPhotoURL = reader["MAINPHOTOURL"].ToString(),
+                SizeInSquareFeet = reader["SIZEINSQUAREFEET"].ToString(),
+                NumberOfRooms = reader["NUMBEROFROOMS"].ToString(),
+                AverageRating = reader["AVERAGERATING"].ToString(),
+                NumberOfReviews = reader["NUMBEROFREVIEWS"].ToString(),
+                HouseRules = reader["HOUSERULES"].ToString(),
+                CancellationPolicy = reader["CANCELLATIONPOLICY"].ToString()
+            }, parameters);
 
             return results.ToList();
         }

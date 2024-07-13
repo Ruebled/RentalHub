@@ -1,7 +1,6 @@
 ﻿using RentalHub.Model;
 using RentalHub.Repositories;
 
-using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -90,6 +89,7 @@ namespace RentalHub.ViewModel
         }
 
         public ICommand SearchCommand { get; set; }
+        public ICommand ViewDetailsCommand { get; set; }
 
         public SearchViewModel()
         {
@@ -103,11 +103,20 @@ namespace RentalHub.ViewModel
             CheckInDate = DateTime.Now.Date;
             CheckOutDate = DateTime.Now.Date.AddDays(1);
 
-
-            SearchCommand = new RelayCommand(ExecuteSearchCommand, CanExecuteSearchCommand);
+            // Setting Command object
+            ViewDetailsCommand = new RelayCommand<ApartmentModel>(ExecuteViewDetailsCommand);
+            SearchCommand = new RelayCommand<object>(ExecuteSearchCommand, CanExecuteSearchCommand);
 
             // Set Search Query to a value to trigger the search
             SearchQuery = string.Empty;
+        }
+
+        private void ExecuteViewDetailsCommand(ApartmentModel selectedApartment)
+        {
+            if (MainViewModel.Instance != null)
+            {
+                MainViewModel.Instance.PushView(new ApartmentViewModel(selectedApartment));
+            }
         }
 
         private void ExecuteSearchCommand(object obj)

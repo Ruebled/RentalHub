@@ -1,43 +1,3 @@
--- Drop tables if they exist
-BEGIN
-    FOR rec IN (SELECT table_name
-                FROM user_tables
-                WHERE table_name IN (
-                    'APARTMENT_AMENITIES', 'APARTMENT_IMAGES', 'PAYMENTS', 'REVIEWS', 
-                    'BOOKINGS', 'APARTMENTS', 'AMENITIES', 'USERS', 'CITIES', 'STATES', 
-                    'COUNTRIES', 'USERIMAGES', 'APARTMENT_MAIN_IMAGE'
-                ))
-    LOOP
-        BEGIN
-            EXECUTE IMMEDIATE 'DROP TABLE ' || rec.table_name || ' CASCADE CONSTRAINTS';
-        EXCEPTION
-            WHEN OTHERS THEN
-                DBMS_OUTPUT.PUT_LINE('Error dropping table ' || rec.table_name);
-        END;
-    END LOOP;
-END;
-/
-
--- Drop sequences if they exist
-BEGIN
-    FOR rec IN (SELECT sequence_name
-                FROM user_sequences
-                WHERE sequence_name IN (
-                    'USER_ID_SEQ', 'APARTMENT_ID_SEQ', 'BOOKING_ID_SEQ', 'REVIEW_ID_SEQ', 
-                    'PAYMENT_ID_SEQ', 'AMENITY_ID_SEQ', 'USERIMAGE_ID_SEQ', 'APARTMENT_IMAGE_ID_SEQ', 
-                    'CITY_ID_SEQ', 'STATE_ID_SEQ', 'COUNTRY_ID_SEQ', 'ZIPCODE_ID_SEQ', 'IMAGE_ID_SEQ',
-					'APARTMENT_MAIN_IMAGE_ID_SEQ'
-                ))
-    LOOP
-        BEGIN
-            EXECUTE IMMEDIATE 'DROP SEQUENCE ' || rec.sequence_name;
-        EXCEPTION
-            WHEN OTHERS THEN
-                DBMS_OUTPUT.PUT_LINE('Error dropping sequence ' || rec.sequence_name);
-        END;
-    END LOOP;
-END;
-/
 
 -- Create sequences
 CREATE SEQUENCE user_id_seq START WITH 1 INCREMENT BY 1;
@@ -45,13 +5,11 @@ CREATE SEQUENCE apartment_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE booking_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE review_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE payment_id_seq START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE amenity_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE userimage_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE apartment_image_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE city_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE state_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE country_id_seq START WITH 1 INCREMENT BY 1;
-CREATE SEQUENCE apartment_main_image_id_seq START WITH 1 INCREMENT BY 1;
 
 -- Create tables
 CREATE TABLE Countries (
@@ -100,27 +58,25 @@ CREATE TABLE Apartments (
     AddressLine VARCHAR2(255),
     CityID INT NOT NULL,
     ZipCode VARCHAR2(20) NOT NULL,
+    SizeInSquareFeet INT,
+    NumberOfRooms INT,
     PricePerNight NUMBER(10, 2) NOT NULL,
+    MainPhotoURL VARCHAR2(255),
+    AverageRating NUMBER(3, 2),
+    NumberOfReviews INT,
+    HouseRules CLOB,
+    CancellationPolicy VARCHAR2(255),
     CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (HostID) REFERENCES Users(UserID),
     FOREIGN KEY (CityID) REFERENCES Cities(CityID)
 );
 
-CREATE TABLE Apartment_Images (
+CREATE TABLE ApartmentImages (
     ApartmentImageID INT DEFAULT apartmentimage_id_seq.NEXTVAL PRIMARY KEY,
     ApartmentID INT NOT NULL,
-    Image BLOB NOT NULL,
+    PhotoUrl VARCHAR2(255) DEFAULT 'https://picsum.photos/200',
     UploadedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (ApartmentID) REFERENCES Apartments(ApartmentID)
-);
-
-CREATE TABLE Apartment_Main_Image (
-	ApartmentMainImageID INT DEFAULT apartment_main_image_id_seq.NEXTVAL PRIMARY KEY,
-	ApartmentID INT,
-	MainImageID INT,
-	SetDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	FOREIGN KEY (ApartmentID) REFERENCES Apartments(ApartmentID),
-	FOREIGN KEY (MainImageID) REFERENCES Apartment_Images(ApartmentImageID)
 );
 
 CREATE TABLE Bookings (
@@ -152,20 +108,6 @@ CREATE TABLE Payments (
     PaymentMethod VARCHAR2(20) CHECK (PaymentMethod IN ('Credit Card', 'PayPal', 'Bank Transfer', 'Cash')) NOT NULL,
     PaymentDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (BookingID) REFERENCES Bookings(BookingID)
-);
-
-CREATE TABLE Amenities (
-    AmenityID INT DEFAULT amenity_id_seq.NEXTVAL PRIMARY KEY,
-    Name VARCHAR2(100) NOT NULL UNIQUE,
-    Description CLOB
-);
-
-CREATE TABLE Apartment_Amenities (
-    ApartmentID INT NOT NULL,
-    AmenityID INT NOT NULL,
-    PRIMARY KEY (ApartmentID, AmenityID),
-    FOREIGN KEY (ApartmentID) REFERENCES Apartments(ApartmentID),
-    FOREIGN KEY (AmenityID) REFERENCES Amenities(AmenityID)
 );
 
 COMMIT;

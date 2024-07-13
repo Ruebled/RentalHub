@@ -1,16 +1,13 @@
 -- Truncate tables in the correct order
-TRUNCATE TABLE APARTMENTIMAGES;
-TRUNCATE TABLE Apartment_Amenities;
+TRUNCATE TABLE ApartmentImages;
 TRUNCATE TABLE Reviews;
 TRUNCATE TABLE Payments;
 TRUNCATE TABLE Bookings;
 TRUNCATE TABLE Apartments;
 TRUNCATE TABLE Users;
-TRUNCATE TABLE Amenities;
 TRUNCATE TABLE Cities;
 TRUNCATE TABLE States;
 TRUNCATE TABLE Countries;
-TRUNCATE TABLE Apartment_Main_Image;
 
 -- Reset sequences if needed (already provided earlier)
 ALTER SEQUENCE user_id_seq RESTART START WITH 1;
@@ -18,13 +15,11 @@ ALTER SEQUENCE apartment_id_seq RESTART START WITH 1;
 ALTER SEQUENCE booking_id_seq RESTART START WITH 1;
 ALTER SEQUENCE review_id_seq RESTART START WITH 1;
 ALTER SEQUENCE payment_id_seq RESTART START WITH 1;
-ALTER SEQUENCE amenity_id_seq RESTART START WITH 1;
 ALTER SEQUENCE userimage_id_seq RESTART START WITH 1;
 ALTER SEQUENCE apartment_image_id_seq RESTART START WITH 1;
 ALTER SEQUENCE city_id_seq RESTART START WITH 1;
 ALTER SEQUENCE state_id_seq RESTART START WITH 1;
 ALTER SEQUENCE country_id_seq RESTART START WITH 1;
-ALTER SEQUENCE apartment_main_image_id_seq RESTART START WITH 1;
 
 -- Commit the changes
 COMMIT;
@@ -120,33 +115,27 @@ INSERT INTO Users (UserID, FirstName, LastName, Username, PasswordHash, Email, P
 INSERT INTO Users (UserID, FirstName, LastName, Username, PasswordHash, Email, PhoneNumber, UserType, ProfileImageId, CreatedAt) VALUES (user_id_seq.NEXTVAL, 'Mia',     'Morris',  'mia_morris',    '7535d8f2d8c35d958995610f971287288ab5e8c82a3c4fdc2b6fb5d757a5b9f8', 'mia.morris@example.com',  	'+1987123678', 'Guest', 20, SYSTIMESTAMP);
 
 -- Insert sample data into Apartments table
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 1, 'Cozy Downtown Loft', 					'Modern loft in the heart of downtown', 			'123 Main Street',			1, '90001',   	250.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 2, 'Luxury Loft in Downtown', 			'Modern loft with stunning views', 					'123 Main St', 				2, '10001', 	250.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 3, 'Cozy Apartment near Park', 			'Comfortable apartment with park view', 			'456 Oak Ave',				3, 'M5V 3L9',  	150.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 4, 'Charming Studio in London', 			'Bright studio in central London', 					'789 Park Lane', 		 	8, 'H2Z 1J5',	180.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 5, 'Sunny Beach House', 					'Beachfront house with private access', 			'321 Ocean Blvd',			6, 'W1G 9DQ',	300.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 6, 'City Center Penthouse', 				'Luxurious penthouse with panoramic views', 		'101 High St', 				7, '3000',   	400.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 7, 'Elegant Apartment in Paris', 			'Classic Parisian apartment near Louvre', 			'456 Rue de Rivoli', 		8, '80331',   	280.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 8, 'Traditional Japanese House', 			'Authentic Japanese house with garden', 			'789 Sakura Lane', 			9, '75001', 	200.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 9, 'Modern Loft in São Paulo', 			'Spacious loft in the heart of São Paulo', 	    	'101 Paulista Ave', 		10,'100-0005',  220.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 10, 'Rustic Cabin in Bavaria', 			'Cozy cabin in the Bavarian countryside', 			'123 Black Forest Rd', 		11,'04578-000',	180.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 11, 'Luxury Apartment in Amsterdam', 		'Stylish apartment with canal view', 				'456 Prinsengracht', 		14,'90002',   	320.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 12, 'Seaside Villa in Seoul', 			'Villa with ocean view in Gangnam district', 		'789 Haeundae Rd',			15,'10002',    	450.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 13, 'Moscow Kremlin View Apartment', 		'Apartment overlooking the Kremlin', 				'101 Red Square', 			16,'M5V 3L8', 	280.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 14, 'Modern Apartment in Buenos Aires', 	'Chic apartment in Palermo district', 				'456 Avenida Santa Fe', 	17,'H2Z 1J6', 	200.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 15, 'Scandinavian Loft in Stockholm', 	'Minimalist loft in Stockholm city center', 		'789 Drottninggatan', 		18,'W1G 9DZ', 	300.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 16, 'Lakefront Chalet in Zurich', 		'Chalet with stunning views of Lake Zurich', 		'101 Bahnhofstrasse', 		19,'3001',   	350.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 17, 'Modern Apartment in Oslo', 			'Sleek apartment in Oslo city center', 				'456 Karl Johans gate', 	20,'80332',   	280.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 18, 'Beachfront Condo in Cancun', 		'Condo with direct beach access in Cancun', 		'123 Cancun Beach Blvd', 	11,'75002',  	400.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 19, 'Venetian Canal House', 				'Historic house along the canals of Venice', 		'456 Canal Grande', 		12,'100-0006',  300.00, SYSTIMESTAMP);
-INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, PricePerNight, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 20, 'Sydney Harbour View Apartment', 		'Apartment with panoramic views of Sydney Harbour', '789 Circular Quay', 		6, '04578-001', 380.00, SYSTIMESTAMP);
-
--- Insert Dummy Data into ApartmentImages 
--- write outside of this file
-INSERT INTO Apartment_Images (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartment_image_id_seq.NEXTVAL, 1,  EMPTY_BLOB(), SYSTIMESTAMP);
-
--- Insert data into ApartmentMainImage
-INSERT INTO Apartment_Main_Image (ApartmentMainImageID, ApartmentID, MainImageID, SetDate) VALUES (apartment_main_image_id_seq.NEXTVAL, 1, 1, SYSTIMESTAMP);
+-- Inserting data into Apartments table with MainPhotoURL set to NULL
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 1, 'Cozy Downtown Loft', 'Modern loft in the heart of downtown', 							'123 Main Street', 			1, '90001', 		800, 	3, 250.00, NULL, 4.5, 25, 'No smoking, no pets allowed.', 'Flexible', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 2, 'Luxury Loft in Downtown', 'Modern loft with stunning views', 							'456 High Street', 			2, '10002', 		1200, 	4, 350.00, NULL, 4.8, 30, 'Pets allowed with prior approval.', 'Moderate', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 3, 'Charming Beach Cottage', 'Quaint cottage steps from the ocean', 						'789 Seaside Ave', 			3, '90210', 		600, 	2, 180.00, NULL, 4.2, 15, 'No smoking, no parties allowed.', 'Strict', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 4, 'City Center Penthouse', 'Luxurious penthouse with panoramic views', 					'101 High St', 				7, '3000', 			1500, 	5, 400.00, NULL, 4.9, 40, 'No pets allowed. Quiet hours after 10 PM.', 'Strict', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 5, 'Sunny Beach House', 'Beachfront house with private access', 							'321 Ocean Blvd', 			6, 'W1G 9DQ', 		2000, 	6, 300.00, NULL, 4.7, 35, 'No smoking indoors. Pets allowed in designated areas.', 'Moderate', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 6, 'Elegant Apartment in Paris', 'Classic Parisian apartment near Louvre', 				'456 Rue de Rivoli', 		8, '80331', 		1000, 	4, 280.00, NULL, 4.6, 28, 'No pets allowed. No smoking indoors.', 'Flexible', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 7, 'Traditional Japanese House', 'Authentic Japanese house with garden', 					'789 Sakura Lane', 			9, '75001', 		1200, 	3, 200.00, NULL, 4.4, 20, 'No shoes inside the house. Respect quiet hours.', 'Moderate', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 8, 'Modern Loft in São Paulo', 'Spacious loft in the heart of São Paulo', 					'101 Paulista Ave', 		10, '100-0005', 	900, 	2, 220.00, NULL, 4.3, 22, 'No smoking indoors. Pets allowed with additional cleaning fee.', 'Flexible', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 9, 'Rustic Cabin in Bavaria', 'Cozy cabin in the Bavarian countryside', 					'123 Black Forest Rd', 		11, '04578-000', 	700, 	1, 180.00, NULL, 4.1, 18, 'No pets allowed. Quiet hours after 10 PM.', 'Strict', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 10, 'Luxury Apartment in Amsterdam', 'Stylish apartment with canal view', 					'456 Prinsengracht', 		14, '90002', 		1100, 	3, 320.00, NULL, 4.7, 30, 'No smoking indoors. Pets allowed with prior approval.', 'Moderate', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 11, 'Seaside Villa in Seoul', 'Villa with ocean view in Gangnam district', 				'789 Haeundae Rd', 			15, '10002', 		1800, 	4, 450.00, NULL, 4.9, 25, 'No pets allowed. No smoking indoors.', 'Strict', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 12, 'Moscow Kremlin View Apartment', 'Apartment overlooking the Kremlin', 					'101 Red Square', 			16, 'M5V 3L8', 		1000, 	3, 280.00, NULL, 4.6, 30, 'No smoking indoors. No parties allowed.', 'Flexible', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 13, 'Modern Apartment in Buenos Aires', 'Chic apartment in Palermo district', 				'456 Avenida Santa Fe', 	17, 'H2Z 1J6', 		900, 	2, 200.00, NULL, 4.4, 20, 'No pets allowed. No smoking indoors.', 'Moderate', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 14, 'Scandinavian Loft in Stockholm', 'Minimalist loft in Stockholm city center', 			'789 Drottninggatan', 		18, 'W1G 9DZ', 		1000, 	2, 300.00, NULL, 4.7, 25, 'No smoking indoors. Pets allowed with additional cleaning fee.', 'Moderate', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 15, 'Lakefront Chalet in Zurich', 'Chalet with stunning views of Lake Zurich', 			'101 Bahnhofstrasse', 		19, '3001', 		1500, 	4, 350.00, NULL, 4.8, 30, 'No pets allowed. No smoking indoors.', 'Strict', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 16, 'Modern Apartment in Oslo', 'Sleek apartment in Oslo city center', 					'456 Karl Johans gate', 	20, '80332', 		800, 	3, 280.00, NULL, 4.5, 28, 'No pets allowed. No smoking indoors.', 'Flexible', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 17, 'Beachfront Condo in Cancun', 'Condo with direct beach access in Cancun', 				'123 Cancun Beach Blvd', 	11, '75002', 		1400, 	4, 400.00, NULL, 4.9, 35, 'No pets allowed. No smoking indoors.', 'Strict', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 18, 'Venetian Canal House', 'Historic house along the canals of Venice', 					'456 Canal Grande', 		12, '100-0006', 	1200, 	3, 300.00, NULL, 4.6, 30, 'No smoking indoors. Pets allowed with prior approval.', 'Moderate', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 19, 'Sydney Harbour View Apartment', 'Apartment with panoramic views of Sydney Harbour', 	'789 Circular Quay', 		6, '04578-001', 	1100, 	3, 380.00, NULL, 4.8, 32, 'No pets allowed. No smoking indoors.', 'Strict', SYSTIMESTAMP);
+INSERT INTO Apartments (ApartmentID, HostID, Name, Description, AddressLine, CityID, ZipCode, SizeInSquareFeet, NumberOfRooms, PricePerNight, MainPhotoURL, AverageRating, NumberOfReviews, HouseRules, CancellationPolicy, CreatedAt) VALUES (apartment_id_seq.NEXTVAL, 20, 'Penthouse in Tokyo Shibuya', 	'Luxurious penthouse with rooftop garden', 				'1-2-3 Shibuya', 			10, '150-0002', 	2000, 	5, 500.00, NULL, 4.9, 40, 'No smoking indoors. No pets allowed. Quiet hours after 10 PM.', 'Flexible', SYSTIMESTAMP);
 
 -- Insert sample data into Bookings table
 INSERT INTO Bookings (BookingID, GuestID, ApartmentID, CheckInDate, CheckOutDate, TotalPrice, Status, CreatedAt) VALUES (booking_id_seq.NEXTVAL, 2, 1, TO_DATE('2024-07-01', 'YYYY-MM-DD'), TO_DATE('2024-07-05', 'YYYY-MM-DD'), 1000.00, 'Active', SYSTIMESTAMP);
@@ -213,149 +202,6 @@ INSERT INTO Payments (PaymentID, BookingID, Amount, PaymentMethod, PaymentDate) 
 INSERT INTO Payments (PaymentID, BookingID, Amount, PaymentMethod, PaymentDate) VALUES (payment_id_seq.NEXTVAL, 16, 950.00, 'PayPal', SYSTIMESTAMP);
 INSERT INTO Payments (PaymentID, BookingID, Amount, PaymentMethod, PaymentDate) VALUES (payment_id_seq.NEXTVAL, 18, 1650.00, 'Bank Transfer', SYSTIMESTAMP);
 INSERT INTO Payments (PaymentID, BookingID, Amount, PaymentMethod, PaymentDate) VALUES (payment_id_seq.NEXTVAL, 20, 1600.00, 'Credit Card', SYSTIMESTAMP);
-
--- Insert sample data into Amenities table
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'WiFi', 'High-speed internet access');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Parking', 'On-site parking available');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Pool', 'Outdoor swimming pool');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Gym', 'Fitness center with modern equipment');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Kitchen', 'Fully equipped kitchen with appliances');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Air Conditioning', 'Central air conditioning');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Heating', 'Central heating system');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'TV', 'Flat-screen TV with cable channels');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Laundry', 'Washer and dryer available');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Pet Friendly', 'Pets allowed on premises');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Smoking Allowed', 'Designated smoking areas');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Balcony', 'Private balcony with views');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Security', '24/7 security surveillance');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Concierge', 'Concierge service available');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Spa', 'On-site spa and wellness facilities');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Barbecue', 'Outdoor barbecue grills');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Elevator', 'Elevator access to all floors');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Wheelchair Accessible', 'Accessible rooms and facilities');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Bicycle Parking', 'Secure bicycle parking');
-INSERT INTO Amenities (AmenityID, Name, Description) VALUES (amenity_id_seq.NEXTVAL, 'Children Playground', 'Play area for children');
-
--- Insert sample data into Apartment_Amenities table
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (1, 1);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (1, 2);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (1, 4);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (1, 5);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (1, 6);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (2, 1);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (2, 3);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (2, 4);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (2, 5);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (2, 8);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (3, 1);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (3, 2);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (3, 3);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (3, 5);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (3, 9);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (4, 1);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (4, 3);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (4, 4);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (4, 6);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (4, 7);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (5, 2);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (5, 4);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (5, 5);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (5, 6);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (5, 10);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (6, 1);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (6, 2);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (6, 4);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (6, 5); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (6, 11);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (7, 1);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (7, 2);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (7, 3);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (7, 5);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (7, 12);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (8, 1);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (8, 2);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (8, 3); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (8, 4); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (8, 13);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (9, 1); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (9, 2); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (9, 3); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (9, 5); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (9, 14);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (10, 1); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (10, 2); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (10, 3); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (10, 4); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (10, 15);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (11, 1); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (11, 2); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (11, 4); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (11, 5); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (11, 16);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (12, 1); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (12, 2); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (12, 3); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (12, 4); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (12, 17);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (13, 1);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (13, 2); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (13, 3); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (13, 5); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (13, 18);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (14, 1);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (14, 2); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (14, 3); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (14, 4); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (14, 19);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (15, 1); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (15, 2);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (15, 4); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (15, 5); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (15, 20);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (16, 1); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (16, 2);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (16, 3); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (16, 5); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (17, 1);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (17, 2);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (17, 3); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (17, 4); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (18, 1);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (18, 2); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (18, 3); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (18, 5); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (19, 1); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (19, 2); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (19, 3); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (19, 4);
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (20, 1); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (20, 2); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (20, 4); 
-INSERT INTO Apartment_Amenities (ApartmentID, AmenityID) VALUES (20, 5);
-
--- Insert sample data into Photos table
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 1,  EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 2,  EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 3,  EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 4,  EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 5,  EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 6,  EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 7,  EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 8,  EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 9,  EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 10, EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 11, EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 12, EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 13, EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 14, EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 15, EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 16, EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 17, EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 18, EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 19, EMPTY_BLOB(), SYSTIMESTAMP);
--- INSERT INTO ApartmentImages (ApartmentImageID, ApartmentID, Image, UploadedAt) VALUES (apartmentimage_id_seq.NEXTVAL, 20, EMPTY_BLOB(), SYSTIMESTAMP);
-
-
 
 COMMIT;
 

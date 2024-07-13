@@ -9,10 +9,14 @@ namespace RentalHub.ViewModel
 {
     public class MainViewModel: ViewModelBase
     {
+        // Static fields
+        public static MainViewModel Instance { get; set; }
+        private static Stack<ViewModelBase> ViewsStack = new Stack<ViewModelBase>();
+
         // Fields
+        private ViewModelBase _currentChildView;
         private UserModel _user;
         private UserAccountModel? _currentUserAccount;
-        private ViewModelBase _currentChildView;
         private string _caption;
         private string _icon_source;
 
@@ -28,23 +32,26 @@ namespace RentalHub.ViewModel
                 OnPropertyChanged(nameof(User));
             }
         }
-        public UserAccountModel CurrentUserAccont
+        public UserAccountModel CurrentUserAccount
         {
             get { return _currentUserAccount; }
             set 
             { 
                 _currentUserAccount = value; 
-                OnPropertyChanged(nameof(CurrentUserAccont));
+                OnPropertyChanged(nameof(CurrentUserAccount));
             }
         }
 
-        public ViewModelBase CurrentChildView 
-        { 
+        public ViewModelBase CurrentChildView
+        {
             get => _currentChildView;
             set
             {
-                _currentChildView = value;
-                OnPropertyChanged(nameof(CurrentChildView));
+                if (_currentChildView != value)
+                {
+                    _currentChildView = value;
+                    OnPropertyChanged(nameof(CurrentChildView));
+                }
             }
         }
 
@@ -77,22 +84,48 @@ namespace RentalHub.ViewModel
 
         public MainViewModel(UserModel user)
         {
+            // Ensure static reference to this class
+            Instance = this;
+
             User = user;
+
+            // Init View Stack
+            ViewsStack = new Stack<ViewModelBase>();
 
             _userRepository = new UserRepository();
             _currentUserAccount = new UserAccountModel();
 
             // Initialise commands
-            ShowHomeViewCommand = new RelayCommand(ExecuteShowHomeViewCommand);
-            ShowSearchViewCommand = new RelayCommand(ExecuteShowSearchViewCommand);
-            ShowBookingsViewCommand = new RelayCommand(ExecuteShowBookingsViewCommand);
-            ShowProfileViewCommand = new RelayCommand(ExecuteShowProfileViewCommand);
-            ShowSupportViewCommand = new RelayCommand(ExecuteShowSupportViewCommand);
+            ShowHomeViewCommand = new RelayCommand<object>(ExecuteShowHomeViewCommand);
+            ShowSearchViewCommand = new RelayCommand<object>(ExecuteShowSearchViewCommand);
+            ShowBookingsViewCommand = new RelayCommand<object>(ExecuteShowBookingsViewCommand);
+            ShowProfileViewCommand = new RelayCommand<object>(ExecuteShowProfileViewCommand);
+            ShowSupportViewCommand = new RelayCommand<object>(ExecuteShowSupportViewCommand);
 
             // Default view
             ExecuteShowHomeViewCommand(null);
 
+            CurrentChildView ??= new HomeViewModel();
+
             LoadCurrentUserData();
+        }
+
+        public void PushView(ViewModelBase viewToApply)
+        {
+            ViewsStack.Push(CurrentChildView);
+            CurrentChildView = viewToApply;
+        }
+
+        public void PopView()
+        {
+            if (ViewsStack.TryPop(out ViewModelBase? previousView))
+            {
+                CurrentChildView = previousView;
+            }
+            else
+            {
+                throw new Exception("No views left in the stack");
+            }
         }
 
         private void ExecuteShowSearchViewCommand(object obj)
@@ -146,7 +179,7 @@ namespace RentalHub.ViewModel
 
             if (User!=null)
             {
-                CurrentUserAccont = new UserAccountModel()
+                CurrentUserAccount = new UserAccountModel()
                 {
                     Username = User.Username,
                     DisplayName = $"{User.FirstName}" + " " + $"{User.LastName}",

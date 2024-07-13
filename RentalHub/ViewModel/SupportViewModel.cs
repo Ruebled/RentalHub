@@ -15,7 +15,7 @@ namespace RentalHub.ViewModel
         public SupportViewModel()
         {
             // Initialize commands
-            ContactSupportCommand = new RelayCommand(ContactSupportExecute, CanContactSupportExecute);
+            ContactSupportCommand = new RelayCommand<object>(ContactSupportExecute, CanContactSupportExecute);
         }
 
         private void ContactSupportExecute(object obj)

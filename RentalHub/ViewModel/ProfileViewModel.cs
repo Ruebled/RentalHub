@@ -38,7 +38,7 @@ namespace RentalHub.ViewModel
             Email = "john.doe@example.com";
             ProfilePicture = "Images/profile.jpg"; // Example path to profile picture
 
-            EditProfileCommand = new RelayCommand(EditProfileExecute, CanEditProfileExecute);
+            EditProfileCommand = new RelayCommand<object>(EditProfileExecute, CanEditProfileExecute);
         }
 
         private void EditProfileExecute(object obj)

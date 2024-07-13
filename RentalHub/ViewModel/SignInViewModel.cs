@@ -68,9 +68,9 @@ namespace RentalHub.ViewModel
             userRepository = new UserRepository();
 
             // Configure commands
-            SignInCommand = new RelayCommand(ExecuteSignInCommand, CanExecuteSignInCommand);
-            OpenSignUpViewCommand = new RelayCommand(ExecuteOpenSignUpViewCommand);
-            OpenResetPasswordViewCommand = new RelayCommand(ExecuteOpenResetPasswordViewCommand);
+            SignInCommand = new RelayCommand<object>(ExecuteSignInCommand, CanExecuteSignInCommand);
+            OpenSignUpViewCommand = new RelayCommand<object>(ExecuteOpenSignUpViewCommand);
+            OpenResetPasswordViewCommand = new RelayCommand<object>(ExecuteOpenResetPasswordViewCommand);
         }
 
         private void ExecuteOpenResetPasswordViewCommand(object obj)

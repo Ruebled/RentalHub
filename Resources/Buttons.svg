@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
-     inkscape:zoom="4.0265009"
-     inkscape:cx="191.23304"
-     inkscape:cy="506.02249"
+     inkscape:zoom="16.106004"
+     inkscape:cx="115.67115"
+     inkscape:cy="486.93023"
      inkscape:window-width="1920"
      inkscape:window-height="1013"
      inkscape:window-x="-9"
@@ -76,5 +76,16 @@
        inkscape:export-filename="..\RentalHub\Icons\arrow_icon.png"
        inkscape:export-xdpi="200"
        inkscape:export-ydpi="200" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.765;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:12;paint-order:markers stroke fill"
+       d="m 34.834773,127.3962 h -6.308209 l 3.078508,-1.77738"
+       id="path5"
+       inkscape:export-filename="BackArrow.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.765;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:12;paint-order:markers stroke fill;fill-opacity:1;stroke-opacity:1"
+       d="m 34.835855,127.39285 h -6.308209 l 3.078508,1.77738"
+       id="path5-4" />
   </g>
 </svg>

@@ -159,8 +159,8 @@ namespace RentalHub.ViewModel
             userRepository = new UserRepository();
 
             // Set Up triggerable commands
-            SignUpCommand = new RelayCommand(ExecuteSignUpCommand, CanExecuteSignUpCommand);
-            OpenSignInViewCommand = new RelayCommand(ExecuteOpenSignInViewCommand);
+            SignUpCommand = new RelayCommand<object>(ExecuteSignUpCommand, CanExecuteSignUpCommand);
+            OpenSignInViewCommand = new RelayCommand<object>(ExecuteOpenSignInViewCommand);
         }
         private void ExecuteOpenSignInViewCommand(object obj)
         {
