@@ -204,28 +204,3 @@ INSERT INTO Payments (PaymentID, BookingID, Amount, PaymentMethod, PaymentDate) 
 INSERT INTO Payments (PaymentID, BookingID, Amount, PaymentMethod, PaymentDate) VALUES (payment_id_seq.NEXTVAL, 20, 1600.00, 'Credit Card', SYSTIMESTAMP);
 
 COMMIT;
-
-
--- Original passwords (before hashing):
--- john_doe: password1
--- jane_smith: password2
--- michael_brown: password3
--- emily_jones: password4
--- chris_evans: password5
--- sophia_adams: password6
--- matthew_clark: password7
--- olivia_wilson: password8
--- samuel_jackson: password9
--- sarah_adams: password10
--- daniel_smith: password11
--- hannah_wilson: password12
--- james_johnson: password13
--- lily_martin: password14
--- william_taylor: password15
--- mia_thompson: password16
--- jacob_mitchell: password17
--- ava_baker: password18
--- ethan_garcia: password19
--- mia_morris: password20
--- noah_robinson: password21
-

@@ -25,6 +25,7 @@ namespace RentalHub.ViewModel
                 {
                     _username = value;
                     OnPropertyChanged(nameof(Username));
+                    ErrorMessage = string.Empty;
                 }
             }
         }
@@ -37,9 +38,22 @@ namespace RentalHub.ViewModel
                 {
                     _password = value;
                     OnPropertyChanged(nameof(Password));
+                    ErrorMessage = string.Empty;
                 }
             }
         }
+
+        private bool _isTextBoxFocused;
+        public bool IsTextBoxFocused
+        {
+            get { return _isTextBoxFocused; }
+            set
+            {
+                _isTextBoxFocused = value;
+                OnPropertyChanged(nameof(IsTextBoxFocused));
+            }
+        }
+
         public string ErrorMessage
         {
             get => _errorMessage;
@@ -71,6 +85,8 @@ namespace RentalHub.ViewModel
             SignInCommand = new RelayCommand<object>(ExecuteSignInCommand, CanExecuteSignInCommand);
             OpenSignUpViewCommand = new RelayCommand<object>(ExecuteOpenSignUpViewCommand);
             OpenResetPasswordViewCommand = new RelayCommand<object>(ExecuteOpenResetPasswordViewCommand);
+
+            IsTextBoxFocused = true;
         }
 
         private void ExecuteOpenResetPasswordViewCommand(object obj)

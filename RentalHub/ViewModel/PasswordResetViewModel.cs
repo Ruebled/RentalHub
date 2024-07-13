@@ -16,6 +16,8 @@ namespace RentalHub.ViewModel
         private string _statusMessage;
         private IUserRepository userRepository;
 
+        private bool textChanged = false;
+
         public string UsernameOrEmail
         {
             get { return _usernameOrEmail; }
@@ -23,6 +25,7 @@ namespace RentalHub.ViewModel
             {
                 _usernameOrEmail = value;
                 OnPropertyChanged(nameof(UsernameOrEmail));
+                textChanged = true;
             }
         }
 
@@ -74,11 +77,16 @@ namespace RentalHub.ViewModel
                 return false;
             }
 
+            if (!textChanged)
+            {
+                return false;
+            }
+
             if (UsernameOrEmail.Contains("@"))
             {
                 if (Regex.IsMatch(UsernameOrEmail, emailPattern))
                 {
-                    ErrorMessage = string.Empty;
+                    ErrorMessage = string.Empty; 
                     return true;
                 }
                 else
@@ -103,6 +111,7 @@ namespace RentalHub.ViewModel
         }
 
 
+
         private void ExecuteResetPasswordCommand(object obj)
         {
             UserModel user;
@@ -120,6 +129,7 @@ namespace RentalHub.ViewModel
             if (user == null || user.UserId == null)
             {
                 ErrorMessage = "Unknown user";
+                textChanged = false;
                 return;
             }
             
@@ -139,14 +149,15 @@ namespace RentalHub.ViewModel
             {
                 // Update password in database
                 userRepository.UpdateUserPassword(user.UserId, Password);
-
+                textChanged = false;
                 StatusMessage = "Password updated successfully\nCheck your email for the new password";
             }
             else
             {
+                textChanged = false;
                 StatusMessage = "Password could not be generated\nCall in the support team";
             }
-           
+            UsernameOrEmail = string.Empty;
         }
     }
 }

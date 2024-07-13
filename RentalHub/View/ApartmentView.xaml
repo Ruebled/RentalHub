@@ -10,9 +10,11 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
+        <!-- Back button field -->
         <Grid Grid.Row="0" HorizontalAlignment="Left">
             <TextBlock Text="Back"
                        FontSize="20"
@@ -23,12 +25,35 @@
                 </TextBlock.InputBindings>
             </TextBlock>
         </Grid>
-        <StackPanel Grid.Row="1" 
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center">
-            <TextBlock Text="{Binding Name}"
-                   FontSize="30"
-                   FontWeight="Bold"/>
-        </StackPanel>
+
+        <!-- ScrollViewer wrapping StackPanel -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                <!-- Content within the StackPanel -->
+                <TextBlock Text="{Binding Name}"
+                           FontSize="30"
+                           FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+                <TextBlock Text="Info" FontSize="30" FontWeight="Bold"/>
+
+                <!-- Add more controls as needed -->
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

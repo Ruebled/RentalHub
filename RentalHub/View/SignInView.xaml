@@ -4,10 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:customcontrols="clr-namespace:RentalHub.CustomControls"
-             xmlns:local="clr-namespace:RentalHub.View" 
-			 xmlns:viewmodel="clr-namespace:RentalHub.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:SignInViewModel}"
+             xmlns:local="clr-namespace:RentalHub.View"
+             xmlns:focus="clr-namespace:RentalHub.Utils"
+			 xmlns:viewmodel="clr-namespace:RentalHub.ViewModel" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+             d:DataContext="{d:DesignInstance Type=viewmodel:SignInViewModel}"
              mc:Ignorable="d"
              d:DesignHeight="550" d:DesignWidth="500">
+    <UserControl.InputBindings>
+        <KeyBinding Key="Enter" Command="{Binding SignInCommand}" />
+    </UserControl.InputBindings>
+    
     <Grid>
         <StackPanel Width="250"
                     Grid.Row="2"
@@ -18,11 +25,11 @@
             Height="150"/>
 
             <TextBlock Text="Username"
-                FontSize="12"
-                FontWeight="Medium"
-                FontFamily="Montserrat"
-                Margin="0,35,0,0"
-    />
+                       FontSize="12"
+                       FontWeight="Medium"
+                       FontFamily="Montserrat"
+                       Margin="0,35,0,0"
+                       Focusable="False"/>
             <TextBox x:Name="txtUser"
                      Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
                      FontSize="13"
@@ -32,27 +39,34 @@
                      Height="28"
                      VerticalContentAlignment="Center"
                      Margin="0,5,0,0"
-                     Padding="25,0,0,0">
+                     Padding="25,0,0,0"
+                     Focusable="True">
                 <TextBox.Background>
                     <VisualBrush Stretch="None" AlignmentX="Left">
                         <VisualBrush.Visual>
                             <Viewbox Width="20" Height="20">
                                 <Image Source="../Icons/username_icon_50x50.png"
-                    Width="20" Height="20"/>
+                                       Width="20" Height="20"
+                                       Focusable="False"/>
                             </Viewbox>
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </TextBox.Background>
+                <i:Interaction.Behaviors>
+                    <focus:FocusBehavior IsFocused="{Binding IsTextBoxFocused}" />
+                </i:Interaction.Behaviors>
             </TextBox>
 
             <TextBlock Text="Password"
                        FontSize="12"
                        FontWeight="Medium"
                        FontFamily="Montserrat"
-                       Margin="0,35,0,0"/>
+                       Margin="0,35,0,0"
+                       Focusable="False"/>
             <customcontrols:BindablePasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 Height="28"
-                                                Margin="0,5,0,0">
+                                                Margin="0,5,0,0"
+                                                Focusable="True">
 
             </customcontrols:BindablePasswordBox>
             <TextBlock Text="{Binding ErrorMessage}"
@@ -61,7 +75,8 @@
                        FontWeight="Medium"
                        FontFamily="Montserrat"
                        Margin="0,10,0,0"
-                       TextWrapping="Wrap"/>
+                       TextWrapping="Wrap"
+                       Focusable="False"/>
 
             <Button x:Name="btnLogin"
                     Command="{Binding SignInCommand}"
@@ -72,7 +87,9 @@
                     Cursor="Hand"
                     Grid.Column="2"
                     Margin="0,40,0,0"
-                    FocusVisualStyle="{x:Null}">
+                    FocusVisualStyle="{x:Null}"
+                    Focusable="True"
+                    Style="{StaticResource TrigButton}">
 
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
@@ -93,7 +110,8 @@
                            Foreground="DarkGray"
                            FontSize="12"
                            FontWeight="Medium"
-                           FontFamily="Montserrat"/>
+                           FontFamily="Montserrat"
+                           Focusable="False"/>
 
                 <TextBlock Text="Reset"
                            Foreground="White"
@@ -101,7 +119,8 @@
                            FontWeight="Medium"
                            FontFamily="Montserrat"
                            Cursor="Hand"
-                           Margin="8,0,0,0">
+                           Margin="8,0,0,0"
+                           Focusable="False">
                     <TextBlock.InputBindings>
                         <MouseBinding Command="{Binding OpenResetPasswordViewCommand}"
                                       MouseAction="LeftClick" />
@@ -115,7 +134,8 @@
                            Foreground="DarkGray"
                            FontSize="12"
                            FontWeight="Medium"
-                           FontFamily="Montserrat"/>
+                           FontFamily="Montserrat"
+                           Focusable="False"/>
 
                 <TextBlock Text="Sign Up"
                            Foreground="White"
@@ -123,7 +143,8 @@
                            FontWeight="Medium"
                            FontFamily="Montserrat"
                            Cursor="Hand"
-                           Margin="8,0,0,0">
+                           Margin="8,0,0,0"
+                           Focusable="False">
                     <TextBlock.InputBindings>
                         <MouseBinding Command="{Binding OpenSignUpViewCommand}"
                                       MouseAction="LeftClick" />

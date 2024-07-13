@@ -230,6 +230,15 @@ namespace RentalHub.ViewModel
             {
                 isValid = false;
             }
+            else if(string.IsNullOrEmpty(Username) || 
+                Password.Length==0 ||
+                string.IsNullOrEmpty(FirstName) ||
+                string.IsNullOrEmpty(LastName) ||
+                string.IsNullOrEmpty(Email) ||
+                string.IsNullOrEmpty(Phonenumber))
+            {
+                isValid = false;
+            }
 
             OnPropertyChanged(nameof(ErrorMessage));
 
