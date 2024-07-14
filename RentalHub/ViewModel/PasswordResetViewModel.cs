@@ -149,7 +149,7 @@ namespace RentalHub.ViewModel
             if (status)
             {
                 // Update password in database
-                userRepository.UpdateUserPassword(user.UserId, Password);
+                userRepository.UpdateUserPassword(user.UserId, PasswordHasher.HashPassword(Password));
                 textChanged = false;
                 StatusMessage = "Password updated successfully\nCheck your email for the new password";
             }

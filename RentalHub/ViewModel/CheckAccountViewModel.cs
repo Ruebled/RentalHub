@@ -11,7 +11,7 @@ namespace RentalHub.ViewModel
 
         private ViewModelBase _currentChildView;
         public event EventHandler<UserModel> LoginSuccessful;
-        public event EventHandler<(bool RememberMe, SecureString Password)> RememberMeCheckBoxChecked;
+        public event EventHandler<bool> RememberMeCheckBoxChecked;
         public CheckAccountViewModel()
         {
             Instance = this;
@@ -51,9 +51,9 @@ namespace RentalHub.ViewModel
             LoginSuccessful?.Invoke(this, user);
         }
 
-        public virtual void OnCheckBoxChecked(bool State, SecureString password)
+        public virtual void OnCheckBoxChecked(bool State)
         {
-            RememberMeCheckBoxChecked?.Invoke(this, (State, password));
+            RememberMeCheckBoxChecked?.Invoke(this, State);
         }
     }
 }

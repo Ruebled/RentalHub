@@ -174,12 +174,10 @@ namespace RentalHub.ViewModel
 
             UserModel userModel = new UserModel();
 
-            System.Net.NetworkCredential userCredential = new System.Net.NetworkCredential(Username, Password);
-
             userModel.Username = Username;
             userModel.FirstName = FirstName;
             userModel.LastName = LastName;
-            userModel.PasswordHash = userRepository.HashPassword(userCredential.Password);
+            userModel.PasswordHash = PasswordHasher.HashSecureString(Password);
             userModel.Email = Email;
             userModel.PhoneNumber = Phonenumber;
             userModel.UserType = Usertype;

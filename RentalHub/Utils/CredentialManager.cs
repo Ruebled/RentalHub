@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices;
-using System.Security;
 using System.Security.Cryptography;
+using System.Text;
 
 using Microsoft.Win32;
 
@@ -9,45 +8,55 @@ public static class CredentialManager
 {
     private const string CREDENTIALS_KEY = "Software\\RentalHub\\Credentials";
 
-    public static void SaveCredentials(string username, SecureString password)
+    public static void SaveCredentials(string username, string password)
     {
         try
         {
-            byte[] encryptedPassword = EncryptSecureString(password);
+            var encryptedPassword = Encrypt(password);
             var key = Registry.CurrentUser.CreateSubKey(CREDENTIALS_KEY);
-            key.SetValue("Username", username);
-            key.SetValue("Password", encryptedPassword);
+            if (key != null)
+            {
+                key.SetValue("Username", username);
+                key.SetValue("Password", encryptedPassword);
+                key.Close();
+            }
+            else
+            {
+                throw new Exception("Unable to create or open registry key.");
+            }
         }
         catch (Exception ex)
         {
-            // Log the exception (implement a logging mechanism if necessary)
-            Console.WriteLine("Error saving credentials: " + ex.Message);
+            Console.WriteLine($"Failed to save credentials: {ex.Message}");
+            // You may want to log the exception or handle it appropriately
         }
     }
 
-    public static (string Username, SecureString Password) RetrieveCredentials()
+    public static (string Username, string Password) RetrieveCredentials()
     {
         try
         {
             var key = Registry.CurrentUser.OpenSubKey(CREDENTIALS_KEY);
-            if (key == null) return (null, null);
-
-            var username = key.GetValue("Username") as string;
-            var encryptedPassword = key.GetValue("Password") as byte[];
-            if (username == null || encryptedPassword == null)
+            if (key != null)
             {
-                return (null, null);
-            }
+                var username = key.GetValue("Username") as string;
+                var encryptedPassword = key.GetValue("Password") as byte[];
+                key.Close();
 
-            var password = DecryptToSecureString(encryptedPassword);
-            return (username, password);
+                if (encryptedPassword != null)
+                {
+                    var password = Decrypt(encryptedPassword);
+                    return (username, password);
+                }
+            }
         }
         catch (Exception ex)
         {
-            // Log the exception (implement a logging mechanism if necessary)
-            Console.WriteLine("Error retrieving credentials: " + ex.Message);
-            return (null, null);
+            Console.WriteLine($"Failed to retrieve credentials: {ex.Message}");
+            // You may want to log the exception or handle it appropriately
         }
+
+        return (null, null); // Return null if credentials not found or error occurred
     }
 
     public static void ClearSavedCredentials()
@@ -59,53 +68,46 @@ public static class CredentialManager
             {
                 key.DeleteValue("Username", false);
                 key.DeleteValue("Password", false);
+                key.Close();
             }
         }
         catch (Exception ex)
         {
-            // Log the exception (implement a logging mechanism if necessary)
-            Console.WriteLine("Error clearing credentials: " + ex.Message);
+            Console.WriteLine($"Failed to clear saved credentials: {ex.Message}");
+            // You may want to log the exception or handle it appropriately
         }
     }
 
-    private static byte[] EncryptSecureString(SecureString secureString)
+    private static byte[] Encrypt(string plainText)
     {
-        IntPtr ptr = IntPtr.Zero;
         try
         {
-            ptr = Marshal.SecureStringToGlobalAllocUnicode(secureString);
-            byte[] bytes = new byte[secureString.Length * 2];
-            Marshal.Copy(ptr, bytes, 0, bytes.Length);
+            var bytes = Encoding.UTF8.GetBytes(plainText);
             return ProtectedData.Protect(bytes, null, DataProtectionScope.CurrentUser);
         }
-        finally
+        catch (Exception ex)
         {
-            if (ptr != IntPtr.Zero)
-            {
-                Marshal.ZeroFreeGlobalAllocUnicode(ptr);
-            }
+            Console.WriteLine($"Encryption failed: {ex.Message}");
+            throw; // Rethrow the exception or handle it according to your application's needs
         }
     }
 
-    private static SecureString DecryptToSecureString(byte[] encryptedData)
+    private static string Decrypt(byte[] encryptedData)
     {
         try
         {
-            byte[] bytes = ProtectedData.Unprotect(encryptedData, null, DataProtectionScope.CurrentUser);
-            SecureString secureString = new SecureString();
-            for (int i = 0; i < bytes.Length / 2; i++)
+            if (encryptedData == null)
             {
-                char c = BitConverter.ToChar(bytes, i * 2);
-                secureString.AppendChar(c);
+                return null; // Handle case where no encrypted data is found
             }
-            secureString.MakeReadOnly();
-            return secureString;
+
+            var bytes = ProtectedData.Unprotect(encryptedData, null, DataProtectionScope.CurrentUser);
+            return Encoding.UTF8.GetString(bytes);
         }
         catch (Exception ex)
         {
-            // Log the exception (implement a logging mechanism if necessary)
-            Console.WriteLine("Error decrypting secure string: " + ex.Message);
-            return null;
+            Console.WriteLine($"Decryption failed: {ex.Message}");
+            throw; // Rethrow the exception or handle it according to your application's needs
         }
     }
 }

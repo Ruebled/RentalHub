@@ -121,12 +121,12 @@ namespace RentalHub.ViewModel
 
         private void ExecuteSignInCommand(object obj)
         {
-
-            UserModel user = userRepository.AuthenticateUser(new System.Net.NetworkCredential(Username, Password));
+            string PasswordHashed = PasswordHasher.HashSecureString(Password);
+            UserModel user = userRepository.AuthenticateUser(Username, PasswordHashed);
             if (user != null)
             {
                 // Save credentials in case checkbox checked
-                CheckAccountViewModel.Instance.OnCheckBoxChecked(RememberMeCheck, Password/*SecureString*/);
+                CheckAccountViewModel.Instance.OnCheckBoxChecked(RememberMeCheck);
 
                 // Raise login successful event to mark opening of the main window
                 CheckAccountViewModel.Instance.OnLoginSuccessful(user);

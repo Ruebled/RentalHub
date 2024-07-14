@@ -3,8 +3,6 @@
 using RentalHub.Model;
 
 using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace RentalHub.Repositories
 {
@@ -113,13 +111,13 @@ namespace RentalHub.Repositories
         }
 
 
-        public UserModel AuthenticateUser(NetworkCredential credential)
+        public UserModel AuthenticateUser(string UserName, string Password)
         {
             string query = "SELECT * FROM USERS WHERE USERNAME = :USERNAME AND PASSWORDHASH = :PASSWORDHASH";
             var parameters = new OracleParameter[]
             {
-                new OracleParameter("USERNAME", credential.UserName),
-                new OracleParameter("PASSWORDHASH", HashPassword(credential.Password))
+                new OracleParameter("USERNAME", UserName),
+                new OracleParameter("PASSWORDHASH", Password)
             };
 
             var result = ExecuteQuery(query, reader => new UserModel
@@ -137,18 +135,6 @@ namespace RentalHub.Repositories
             }, parameters);
 
             return result.FirstOrDefault();
-        }
-
-        public string HashPassword(string input)
-        {
-            using SHA256 sha256Hash = SHA256.Create();
-            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                builder.Append(bytes[i].ToString("x2"));
-            }
-            return builder.ToString();
         }
 
         public UserModel? GetByUsername(string username)
@@ -215,7 +201,7 @@ namespace RentalHub.Repositories
             string query = "UPDATE USERS SET PASSWORDHASH = :PASSWORDHASH WHERE USERID = :USERID";
             var parameters = new OracleParameter[]
             {
-                new OracleParameter("PASSWORDHASH", HashPassword(newPassword)),
+                new OracleParameter("PASSWORDHASH", newPassword),
                 new OracleParameter("USERID", userId)
             };
 

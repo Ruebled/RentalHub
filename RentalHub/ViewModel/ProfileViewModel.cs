@@ -308,15 +308,14 @@ namespace RentalHub.ViewModel
         {
             if (User != null)
             {
-                System.Net.NetworkCredential userCredential = new System.Net.NetworkCredential(Username, Password);
 
                 User.Username = Username;
                 User.FirstName = FirstName;
                 User.LastName = LastName;
-                // Update password only if it's not null or empty
-                if (!string.IsNullOrEmpty(userCredential.Password))
+                // Update password only if it's not empty
+                if (Password.Length != 0)
                 {
-                    User.PasswordHash = _userRepository.HashPassword(userCredential.Password);
+                    User.PasswordHash = PasswordHasher.HashSecureString(Password);
                 }
                 else
                 {

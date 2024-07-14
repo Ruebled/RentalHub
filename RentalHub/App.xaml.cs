@@ -30,7 +30,7 @@ namespace RentalHub
         protected void ApplicationStart(object sender, StartupEventArgs e)
         {
             // Attempt to retrieve saved credentials
-            (string savedUsername, SecureString savedPassword) = CredentialManager.RetrieveCredentials();
+            (string savedUsername, string savedPassword) = CredentialManager.RetrieveCredentials();
 
             if (!string.IsNullOrEmpty(savedUsername) && savedPassword.Length != 0)
             {
@@ -44,11 +44,11 @@ namespace RentalHub
             }
         }
 
-        private void AuthenticateSavedCredentials(string username, SecureString savedPassword)
+        private void AuthenticateSavedCredentials(string username, string savedPassword)
         {
             try
             {
-                UserModel authenticatedUser = userRepository.AuthenticateUser(new NetworkCredential(username, savedPassword));
+                UserModel authenticatedUser = userRepository.AuthenticateUser(username, savedPassword);
 
                 if (authenticatedUser != null)
                 {
@@ -88,7 +88,7 @@ namespace RentalHub
                 // Save credentials if remember me is checked
                 if (rememberMe)
                 {
-                    CredentialManager.SaveCredentials(user.Username, securePassword);
+                    CredentialManager.SaveCredentials(user.Username, user.PasswordHash);
                 }
                 else
                 {
@@ -102,10 +102,9 @@ namespace RentalHub
                 checkAccountView.Close();
             };
 
-            checkAccountViewModel.RememberMeCheckBoxChecked += (s, args) =>
+            checkAccountViewModel.RememberMeCheckBoxChecked += (s, RememberMe) =>
             {
-                rememberMe = args.RememberMe;
-                securePassword = args.Password;
+                rememberMe = RememberMe;
             };
 
             checkAccountView.Show();
@@ -113,9 +112,10 @@ namespace RentalHub
 
         private void MainViewModel_LogoutRequested(object sender, EventArgs e)
         {
-            
 
-                InitializeLogin();
+            CredentialManager.ClearSavedCredentials();
+
+            InitializeLogin();
 
 
             // Close main window and reinitialize login
