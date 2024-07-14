@@ -45,6 +45,73 @@ namespace RentalHub.Repositories
             }
         }
 
+        public void Update(UserModel userModel)
+        {
+            // Check for null or empty values in mandatory fields (except PasswordHash)
+            if (string.IsNullOrEmpty(userModel.FirstName))
+                throw new ArgumentException("FirstName cannot be null or empty.");
+            if (string.IsNullOrEmpty(userModel.LastName))
+                throw new ArgumentException("LastName cannot be null or empty.");
+            if (string.IsNullOrEmpty(userModel.Email))
+                throw new ArgumentException("Email cannot be null or empty.");
+            if (string.IsNullOrEmpty(userModel.PhoneNumber))
+                throw new ArgumentException("PhoneNumber cannot be null or empty.");
+            if (string.IsNullOrEmpty(userModel.UserType))
+                throw new ArgumentException("UserType cannot be null or empty.");
+            if (string.IsNullOrEmpty(userModel.ImageID))
+                throw new ArgumentException("ProfileImageId cannot be null or empty.");
+
+            var setClauses = new List<string>();
+            var parameters = new List<OracleParameter>();
+
+            setClauses.Add("FirstName = :FIRSTNAME");
+            parameters.Add(new OracleParameter("FIRSTNAME", userModel.FirstName));
+
+            setClauses.Add("LastName = :LASTNAME");
+            parameters.Add(new OracleParameter("LASTNAME", userModel.LastName));
+
+            setClauses.Add("Email = :EMAIL");
+            parameters.Add(new OracleParameter("EMAIL", userModel.Email));
+
+            setClauses.Add("PhoneNumber = :PHONENUMBER");
+            parameters.Add(new OracleParameter("PHONENUMBER", userModel.PhoneNumber));
+
+            setClauses.Add("UserType = :USERTYPE");
+            parameters.Add(new OracleParameter("USERTYPE", userModel.UserType));
+
+            setClauses.Add("ProfileImageId = :PROFILEIMAGEID");
+            parameters.Add(new OracleParameter("PROFILEIMAGEID", userModel.ImageID));
+
+            // Conditionally add PasswordHash if it's not null or empty
+            if (!string.IsNullOrEmpty(userModel.PasswordHash))
+            {
+                setClauses.Add("PasswordHash = :PASSWORDHASH");
+                parameters.Add(new OracleParameter("PASSWORDHASH", userModel.PasswordHash));
+            }
+
+            string setClause = string.Join(", ", setClauses);
+            string query = $"UPDATE Users SET {setClause} WHERE UserID = :USERID";
+
+            parameters.Add(new OracleParameter("USERID", userModel.UserId)); // Assuming UserID is the primary key
+
+            try
+            {
+                ExecuteNonQuery(query, parameters.ToArray());
+            }
+            catch (OracleException ex)
+            {
+                // Handle Oracle specific exceptions
+                Console.WriteLine($"Oracle Exception: {ex.Message}");
+                throw; // Rethrow the exception or handle as appropriate
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"Exception: {ex.Message}");
+                throw; // Rethrow the exception or handle as appropriate
+            }
+        }
+
 
         public UserModel AuthenticateUser(NetworkCredential credential)
         {

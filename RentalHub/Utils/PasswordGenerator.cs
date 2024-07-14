@@ -5,6 +5,19 @@ namespace RentalHub.Utils
 {
     public class PasswordGenerator
     {
+        public static string GenerateCode()
+        {
+            const string digits = "0123456789";
+            var code = new StringBuilder(6);
+
+            for (int i = 0; i < 6; i++)
+            {
+                code.Append(digits[RandomNumberGenerator.GetInt32(digits.Length)]);
+            }
+
+            return code.ToString();
+        }
+
         public static string GeneratePassword(int length)
         {
             const string uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

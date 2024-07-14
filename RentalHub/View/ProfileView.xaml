@@ -14,8 +14,9 @@
         <utils:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <utils:BooleanToStringConverter x:Key="BooleanToStringConverter"/>
         <utils:BooleanToInvisibleConverter x:Key="BooleanToInvisibleConverter"/>
+        <utils:BooleanToGridLengthConverter x:Key="BooleanToGridLengthConverter"/>
     </UserControl.Resources>
-    
+
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid>
             <Grid.RowDefinitions>
@@ -33,11 +34,11 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="{Binding IsReadOnly, Converter={StaticResource BooleanToGridLengthConverter}}"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    
+
                     <!-- First and last names -->
                     <Grid Grid.Row="0">
                         <Grid>
@@ -64,13 +65,14 @@
                                    FontSize="12"
                                    FontWeight="Medium"/>
                                 <TextBox x:Name="txtLastName"
-                                     Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     BorderThickness="0, 0, 0, 1"
-                                     Focusable="True"/>
+                                         IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
+                                         Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         BorderThickness="0, 0, 0, 1"
+                                         Focusable="True"/>
                             </StackPanel>
                         </Grid>
                     </Grid>
-                    
+
                     <!-- Username Field -->
                     <Grid Grid.Row="1">
                         <StackPanel Orientation="Vertical"
@@ -79,12 +81,13 @@
                                    FontSize="12"
                                    FontWeight="Medium"/>
                             <TextBox x:Name="txtUsername"
+                                     IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
                                      Text="{Binding Username}"
                                      BorderThickness="0, 0, 0, 1"
                                      Focusable="True"/>
                         </StackPanel>
                     </Grid>
-                    
+
                     <!-- Password field -->
                     <Grid Grid.Row="2"
                           Visibility="{Binding IsReadOnly, Converter={StaticResource BooleanToInvisibleConverter}}">
@@ -99,7 +102,7 @@
                                      Focusable="True"/>
                         </StackPanel>
                     </Grid>
-                    
+
                     <!-- Email -->
                     <Grid Grid.Row="3">
                         <StackPanel Orientation="Vertical"
@@ -108,12 +111,13 @@
                                    FontSize="12"
                                    FontWeight="Medium"/>
                             <TextBox x:Name="txtEmail"
+                                     IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
                                      Text="{Binding Email}"
                                      BorderThickness="0, 0, 0, 1"
                                      Focusable="True"/>
                         </StackPanel>
                     </Grid>
-                    
+
                     <!-- Phone Number fill field -->
                     <Grid Grid.Row="4">
                         <StackPanel Orientation="Vertical"
@@ -122,43 +126,78 @@
                                    FontSize="12"
                                    FontWeight="Medium"/>
                             <TextBox x:Name="txtPhoneNumber"
+                                     IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
                                      Text="{Binding Phonenumber}"
                                      BorderThickness="0, 0, 0, 1"
                                      Focusable="True"/>
                         </StackPanel>
                     </Grid>
                 </Grid>
-                
+
                 <!-- User image -->
-                <Grid Grid.Column="1"
-                      VerticalAlignment="Top">
-                    <Ellipse Height="200" Width="200"
-                             Stroke="{StaticResource AccentBrush}"
-                             StrokeThickness="1"
-                             Margin="0,50,0,0">
-                        <Ellipse.Fill>
-                            <ImageBrush ImageSource="{Binding ProfilePicture}"
-                                        Stretch="Uniform"
-                                        AlignmentX="Center"
-                                        AlignmentY="Center">
-                                <ImageBrush.RelativeTransform>
-                                    <ScaleTransform ScaleX="1" 
-                                                    CenterX="0.49"/>
-                                </ImageBrush.RelativeTransform>
-                            </ImageBrush>
-                        </Ellipse.Fill>
-                    </Ellipse>
-                </Grid>
+                <StackPanel Grid.Column="1"
+                            Orientation="Vertical">
+                    <Grid VerticalAlignment="Top">
+                        <Ellipse Height="200" Width="200"
+                                 Stroke="{StaticResource AccentBrush}"
+                                 StrokeThickness="1"
+                                 Margin="0,50,0,0">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{Binding ProfilePicture}"
+                                            Stretch="Uniform"
+                                            AlignmentX="Center"
+                                            AlignmentY="Center">
+                                    <ImageBrush.RelativeTransform>
+                                        <ScaleTransform ScaleX="1" 
+                                                        CenterX="0.49"/>
+                                    </ImageBrush.RelativeTransform>
+                                </ImageBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Grid>
+
+                    <TextBlock Text="{Binding StatusMessage}"
+                               Foreground="{StaticResource PrimaryBrush}"
+                               FontSize="18"
+                               TextAlignment="Center"/>
+                </StackPanel>
             </Grid>
-          
+
 
             <!-- Buttons -->
-            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,0,0,20">
-                <Button Content="Edit" Command="{Binding EditProfileCommand}" Width="100" Margin="10,0,0,0"/>
-                <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Margin="10,0,0,0"/>
-                <Button Content="Save" Command="{Binding SaveCommand}" Width="100" Margin="10,0,0,0"/>
-            </StackPanel>
+            <Grid Grid.Row="1" Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Buttons aligned to the left -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <Button Command="{Binding EditSaveProfileCommand}" 
+                            Width="100"
+                            Margin="0">
+                        <TextBlock Text="{Binding EditSaveButtonText}"
+                                   FontSize="12"/>
+                    </Button>
+                    <Button Content="Cancel" 
+                            Command="{Binding CancelEditProfileCommand}" 
+                            Width="100" 
+                            Margin="10,0,0,0"
+                            Background="{StaticResource AccentBrush}"
+                            Visibility="{Binding IsReadOnly, Converter={StaticResource BooleanToInvisibleConverter}}"
+                            />
+                </StackPanel>
+
+                <!-- Delete Profile button aligned to the right -->
+                <Button Grid.Column="1" 
+                        Command="{Binding DeleteProfileCommand}" 
+                        Width="100"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Right">
+                    <TextBlock Text="Delete Profile"
+                               FontSize="12"/>
+                </Button>
+            </Grid>
         </Grid>
     </ScrollViewer>
-
 </UserControl>

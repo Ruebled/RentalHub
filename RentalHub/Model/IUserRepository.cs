@@ -7,6 +7,7 @@ namespace RentalHub.Model
         UserModel AuthenticateUser(NetworkCredential credential);
 
         void Add(UserModel userModel);
+        void Update(UserModel userModel);
         void Edit(UserModel userModel);
         void Remove(UserModel userModel);
 

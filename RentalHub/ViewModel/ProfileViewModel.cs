@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Primitives;
+﻿using RentalHub.Model;
+using RentalHub.Repositories;
+using RentalHub.Utils;
+using RentalHub.View;
 
-using RentalHub.Model;
-
+using System.Diagnostics;
 using System.IO;
 using System.Security;
 using System.Windows;
@@ -13,6 +15,7 @@ namespace RentalHub.ViewModel
     public class ProfileViewModel : ViewModelBase
     {
         private UserModel _user;
+        private IUserRepository _userRepository;
 
         public UserModel User
         {
@@ -45,8 +48,6 @@ namespace RentalHub.ViewModel
         private bool _isLastNameValid = true;
         private bool _isEmailValid = true;
         private bool _isPhoneNumberValid = true;
-
-        private IUserRepository userRepository;
 
         // Properties
         public string Username
@@ -172,71 +173,234 @@ namespace RentalHub.ViewModel
             }
         }
 
-        public ICommand EditProfileCommand { get; set; }
-        public ICommand SaveEditProfileCommand { get; set; }
+        private string _editSaveButtonText;
+        public string EditSaveButtonText
+        {
+            get => _editSaveButtonText;
+            set
+            {
+                _editSaveButtonText = value;
+                OnPropertyChanged(nameof(EditSaveButtonText));
+            }
+        }
+
+        public ICommand EditSaveProfileCommand { get; set; }
         public ICommand CancelEditProfileCommand { get; set; }
         public ICommand DeleteProfileCommand { get; set; }
 
-        public ProfileViewModel(UserModel user)
+        public ProfileViewModel(UserModel userReceived)
         {
+            // Init a userRepository instance
+            _userRepository = new UserRepository();
             // Initialize properties and commands here
-            _user = user;
-            LoadUserProfileImage(user);
-            FirstName = user.FirstName ?? "";
-            LastName = user.LastName ?? "";
-            Username = user.Username ?? "";
-            Password = new SecureString();
-            Email = user.Email ?? "";
-            Phonenumber = user.PhoneNumber ?? "";
-            Usertype = user.UserType ?? "";
-            CreateDate = user.CreateDate ?? "";
+            User = userReceived;
+            // Set Default state for the window from the User Received Data
+            RestoreUserSettingsState(User);
 
+            // Set Edit State 
             IsReadOnly = true;
+            EditSaveButtonText = "Edit";
 
-            EditProfileCommand = new RelayCommand<object>(EditProfileExecute, CanEditProfileExecute);
-            SaveEditProfileCommand = new RelayCommand<object>(ExecuteSaveEditProfile, CanExecuteSaveEditProfile);
-            CancelEditProfileCommand = new RelayCommand<object>(ExecuteCancelEditProfile, CanExecuteCancelEditProfile);
-            DeleteProfileCommand = new RelayCommand<object>(ExecuteDeleteProfile, CanExecuteDeleteProfile);
+            EditSaveProfileCommand = new RelayCommand<object>(EditSaveProfileExecute);
+            CancelEditProfileCommand = new RelayCommand<object>(ExecuteCancelEditProfile);
+            DeleteProfileCommand = new RelayCommand<object>(ExecuteDeleteProfile);
         }
 
-        private void EditProfileExecute(object obj)
+        private async void EditSaveProfileExecute(object obj)
         {
-            IsReadOnly = false;
+            if (!IsReadOnly)
+            {
+                // If we are in the edit mode
+
+                // Check if data has changed
+                if (!HasUserDataChanged())
+                {
+                    StatusMessage = "No changes detected.";
+                    await UpdateStatusMessageAsync(StatusMessage);
+                    IsReadOnly = true;
+                    EditSaveButtonText = "Edit";
+                    return;
+                }
+
+                // Generate validation code
+                string validationCode = PasswordGenerator.GenerateCode();
+                if (string.IsNullOrEmpty(validationCode))
+                {
+                    StatusMessage = "Failed to generate validation code.";
+                    await UpdateStatusMessageAsync(StatusMessage);
+                    Debug.Print("Password Generator generated an empty code");
+                    return;
+                }
+
+                // Send validation code to the user's email
+                bool status = EmailSender.Instance.SendValidationCodeEmail(User.Email, validationCode);
+
+                if (!status)
+                {
+                    StatusMessage = "Failed to send validation code to email.";
+                    await UpdateStatusMessageAsync(StatusMessage);
+                    return;
+                }
+
+                string codeFromUser = GetConfirmationCodeFromUser();
+
+                if (codeFromUser == validationCode)
+                {
+                    UpdateUserSettings();
+                    StatusMessage = "User Updated Successfully";
+                    await UpdateStatusMessageAsync(StatusMessage);
+                }
+                else
+                {
+                    RestoreUserSettingsState(User);
+                    StatusMessage = "Validation code mismatch. Changes reverted.";
+                    await UpdateStatusMessageAsync(StatusMessage);
+                }
+
+                IsReadOnly = true;
+                EditSaveButtonText = "Edit";
+            }
+            else
+            {
+                // If we are in the view mode, switch to edit mode
+                IsReadOnly = false;
+                EditSaveButtonText = "Save";
+                StatusMessage = "Edit mode enabled.";
+                await UpdateStatusMessageAsync(StatusMessage);
+            }
         }
 
-        private bool CanEditProfileExecute(object arg)
+        private bool HasUserDataChanged()
         {
-            return true;
+            return _user.FirstName != FirstName ||
+                   _user.LastName != LastName ||
+                   _user.Username != Username ||
+                   _user.Email != Email ||
+                   _user.PhoneNumber != Phonenumber ||
+                   _user.ImageID != Profilephotoid ||
+                   (_password.Length > 0 && !string.IsNullOrEmpty(new System.Net.NetworkCredential(string.Empty, Password).Password));
         }
 
-        private void ExecuteSaveEditProfile(object obj)
+
+
+        private void RestoreUserSettingsState(UserModel LocalUser)
         {
-            throw new NotImplementedException();
+            if (LocalUser != null)
+            {
+                LoadUserProfileImage(User);
+                FirstName = User.FirstName ?? "";
+                LastName = User.LastName ?? "";
+                Username = User.Username ?? "";
+                Password = new SecureString();
+                Email = User.Email ?? "";
+                Phonenumber = User.PhoneNumber ?? "";
+                Usertype = User.UserType ?? "";
+                Profilephotoid = User.ImageID ?? "";
+                CreateDate = User.CreateDate ?? "";
+            }
+            else
+            {
+                throw new Exception("User received is null something was changed");
+            }
         }
 
-        private bool CanExecuteSaveEditProfile(object arg)
+        private void UpdateUserSettings()
         {
-            throw new NotImplementedException();
+            if (User != null)
+            {
+                System.Net.NetworkCredential userCredential = new System.Net.NetworkCredential(Username, Password);
+
+                User.Username = Username;
+                User.FirstName = FirstName;
+                User.LastName = LastName;
+                // Update password only if it's not null or empty
+                if (!string.IsNullOrEmpty(userCredential.Password))
+                {
+                    User.PasswordHash = _userRepository.HashPassword(userCredential.Password);
+                }
+                else
+                {
+                    User.PasswordHash = null;
+                }
+                User.Email = Email;
+                User.PhoneNumber = Phonenumber;
+                User.UserType = Usertype;
+                User.ImageID = Profilephotoid;
+
+                // Update User data
+                _userRepository.Update(User);
+
+                StatusMessage = "User Updated Successfully";
+                UpdateStatusMessageAsync(StatusMessage);
+            }
+            else
+            {
+                throw new Exception("Something really messy happened");
+            }
+        }
+
+
+        private string GetConfirmationCodeFromUser()
+        {
+            string confirmationCode = string.Empty;
+
+            InputDialogWindow inputDialog = new InputDialogWindow();
+            bool? result = inputDialog.ShowDialog();
+
+            if (result == true) // User clicked OK
+            {
+                var viewModel = inputDialog.DataContext as InputDialogWindowViewModel;
+                if (viewModel != null)
+                {
+                    confirmationCode = viewModel.UserInput;
+                }
+            }
+
+            return confirmationCode;
         }
 
         private void ExecuteCancelEditProfile(object obj)
         {
-            throw new NotImplementedException();
+            IsReadOnly = true;
+            EditSaveButtonText = "Edit";
         }
 
-        private bool CanExecuteCancelEditProfile(object arg)
+        private async void ExecuteDeleteProfile(object obj)
         {
-            throw new NotImplementedException();
-        }
+            // Generate validation code
+            string validationCode = PasswordGenerator.GenerateCode();
+            if (string.IsNullOrEmpty(validationCode))
+            {
+                StatusMessage = "Failed to generate validation code.";
+                await UpdateStatusMessageAsync(StatusMessage);
+                Debug.Print("Password Generator generated an empty code");
+                return;
+            }
 
-        private void ExecuteDeleteProfile(object obj)
-        {
-            throw new NotImplementedException();
-        }
+            // Send validation code to the user's email
+            bool status = EmailSender.Instance.SendDeletionConfirmationEmail(User.Email, validationCode);
 
-        private bool CanExecuteDeleteProfile(object arg)
-        {
-            throw new NotImplementedException();
+            if (!status)
+            {
+                StatusMessage = "Failed to send validation code to email.";
+                await UpdateStatusMessageAsync(StatusMessage);
+                return;
+            }
+
+            string codeFromUser = GetConfirmationCodeFromUser();
+
+            if (codeFromUser == validationCode)
+            {
+                UpdateUserSettings();
+                StatusMessage = "User Updated Successfully";
+                await UpdateStatusMessageAsync(StatusMessage);
+            }
+            else
+            {
+                RestoreUserSettingsState(User);
+                StatusMessage = "Validation code mismatch. Changes reverted.";
+                await UpdateStatusMessageAsync(StatusMessage);
+            }
         }
 
         private void LoadUserProfileImage(UserModel User)
@@ -266,6 +430,19 @@ namespace RentalHub.ViewModel
                 MessageBox.Show("Invalid Shithead appeared");
                 Application.Current.Shutdown();
             }
+        }
+
+        public async Task UpdateStatusMessageAsync(string message)
+        {
+            // Update StatusMessage
+            StatusMessage = message;
+
+            // Run a parallel task to clear StatusMessage after 5 seconds
+            await Task.Run(async () =>
+            {
+                await Task.Delay(5000); // 5 seconds delay
+                StatusMessage = string.Empty;
+            });
         }
 
         public BitmapImage ConvertPngToBitmapImage(string relativePath)

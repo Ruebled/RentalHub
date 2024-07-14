@@ -8,14 +8,14 @@ namespace RentalHub.Utils
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value is bool booleanValue)
-                return booleanValue ? Visibility.Visible : Visibility.Collapsed;
+                return booleanValue ? Visibility.Collapsed : Visibility.Visible;
             return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if (value is Visibility visibilityValue)
-                return visibilityValue == Visibility.Visible;
+                return visibilityValue == Visibility.Collapsed;
             return false;
         }
     }

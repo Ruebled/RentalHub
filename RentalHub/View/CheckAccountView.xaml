@@ -17,10 +17,6 @@
         MouseDown="Window_MouseDown"
         Icon="../Logo/Logo_100x100.png">
 
-    <!--<Window.DataContext>
-        <viewModel:CheckAccountViewModel/>
-    </Window.DataContext>-->
-    
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:SignInViewModel}">
             <local:SignInView/>

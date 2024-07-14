@@ -8,6 +8,14 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="MainWindow.xaml.cs" />
   </ItemGroup>
@@ -83,9 +91,9 @@
     <Resource Include="Icons\phone_number_icon_50x50.png" />
     <Resource Include="Icons\reset_icon_50x50.png" />
     <Resource Include="Icons\tenant_icon_50x50.png" />
-    <Resource Include="Logo\Logo_100x100.png">
+    <Content Include="Logo\Logo_100x100.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    </Content>
     <Resource Include="Themes\ButtonStyles.xaml" />
     <Resource Include="Themes\LightTheme.xaml" />
   </ItemGroup>
@@ -106,9 +114,9 @@
     <Content Include="Icons\username_icon_50x50.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Resource Include="Logo\RentalHub_Logo.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+    <Content Include="Logo\RentalHub_Logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
