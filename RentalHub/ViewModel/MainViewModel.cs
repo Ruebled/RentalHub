@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -75,12 +76,39 @@ namespace RentalHub.ViewModel
             } 
         }
 
+        private bool _isUserOptionActive;
+
+        public bool IsUserOptionActive
+        {
+            get => _isUserOptionActive;
+            set
+            {
+                _isUserOptionActive = value;
+                OnPropertyChanged(nameof(IsUserOptionActive));
+            }
+        }
+
+        private bool _userProfileOpened;
+        public bool UserProfileOpened
+        {
+            get => _userProfileOpened;
+            set
+            {
+                _userProfileOpened = value;
+                OnPropertyChanged(nameof(UserProfileOpened));
+            }
+        }
+
         //--> Commands
         public ICommand ShowHomeViewCommand { get; }
         public ICommand ShowSearchViewCommand { get; }
         public ICommand ShowBookingsViewCommand { get; }
         public ICommand ShowProfileViewCommand { get; }
         public ICommand ShowSupportViewCommand { get; }
+        public ICommand ToggleUserOption {  get; }
+        public ICommand UserLoggout {  get; }
+
+        public ICommand MouseLeftClickCommand { get; }
 
         public MainViewModel(UserModel user)
         {
@@ -102,12 +130,40 @@ namespace RentalHub.ViewModel
             ShowProfileViewCommand = new RelayCommand<object>(ExecuteShowProfileViewCommand);
             ShowSupportViewCommand = new RelayCommand<object>(ExecuteShowSupportViewCommand);
 
+            // Command which make the settings & loggout box visible and actionable
+            ToggleUserOption = new RelayCommand<object>(ExecuteToggleUserOption);
+
+            // Loggout option
+            UserLoggout = new RelayCommand<object>(ExecuteLogoutCommand);
+
+            // Hide user option on mouse click
+            MouseLeftClickCommand = new RelayCommand<object>(ExecuteHideUserOption);
+
             // Default view
             ExecuteShowHomeViewCommand(null);
 
             CurrentChildView ??= new HomeViewModel();
 
             LoadCurrentUserData();
+
+            IsUserOptionActive = false;
+            UserProfileOpened = false;
+        }
+
+        private void ExecuteHideUserOption(object obj)
+        {
+            IsUserOptionActive = false;
+        }
+
+        private void ExecuteLogoutCommand(object obj)
+        {
+            IsUserOptionActive = false;
+            throw new NotImplementedException();
+        }
+
+        private void ExecuteToggleUserOption(object obj)
+        {
+            IsUserOptionActive = !IsUserOptionActive;
         }
 
         public void PushView(ViewModelBase viewToApply)
@@ -133,6 +189,7 @@ namespace RentalHub.ViewModel
             CurrentChildView = new SearchViewModel();
             Caption = "Search";
             IconSource = "/Icons/search_icon.png";
+            UserProfileOpened = false;
         }
 
         private void ExecuteShowHomeViewCommand(object obj)
@@ -140,24 +197,32 @@ namespace RentalHub.ViewModel
             CurrentChildView = new HomeViewModel();
             Caption = "Dashboard";
             IconSource = "/Icons/home_icon.png";
+            UserProfileOpened = false;
         }
         private void ExecuteShowBookingsViewCommand(object obj)
         {
             CurrentChildView = new BookingsViewModel(User);
             Caption = "Bookings";
             IconSource = "/Icons/book_icon.png";
+            UserProfileOpened = false;
         }
         private void ExecuteShowProfileViewCommand(object obj)
         {
-            CurrentChildView = new ProfileViewModel();
-            Caption = "Profile";
-            IconSource = "/Icons/user_icon.png";
+            if (!UserProfileOpened)
+            {
+                CurrentChildView = new ProfileViewModel(User);
+                Caption = "Profile";
+                IconSource = "/Icons/user_icon.png";
+                UserProfileOpened = true;
+            }
+            IsUserOptionActive = false;
         }
         private void ExecuteShowSupportViewCommand(object obj)
         {
             CurrentChildView = new SupportViewModel();
             Caption = "Support";
             IconSource = "/Icons/support_icon.png";
+            UserProfileOpened = false;
         }
 
         private void LoadCurrentUserData()

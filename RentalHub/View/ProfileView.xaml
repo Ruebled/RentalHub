@@ -5,56 +5,160 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RentalHub.View"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+             d:DesignHeight="450" d:DesignWidth="600"
+             xmlns:utils="clr-namespace:RentalHub.Utils"
+             xmlns:viewmodel="clr-namespace:RentalHub.ViewModel"
+             d:DataContext="{d:DesignInstance Type=viewmodel:ProfileViewModel}">
 
-        <!-- Title -->
-        <TextBlock Text="User Profile" FontSize="24" FontWeight="Bold" Margin="20"/>
+    <UserControl.Resources>
+        <utils:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <utils:BooleanToStringConverter x:Key="BooleanToStringConverter"/>
+        <utils:BooleanToInvisibleConverter x:Key="BooleanToInvisibleConverter"/>
+    </UserControl.Resources>
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <!-- User Information -->
-        <StackPanel Grid.Row="1" Margin="20">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Username:" FontWeight="Bold" Width="100"/>
-                <TextBox Text="{Binding UserModel.Username, Mode=TwoWay}" IsReadOnly="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,0,10"/>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <!-- User info -->
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- First and last names -->
+                    <Grid Grid.Row="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0"
+                                        Orientation="Vertical"
+                                        Margin="10">
+                                <TextBlock Text="Last Name"
+                                   FontSize="12"
+                                   FontWeight="Medium"/>
+                                <TextBox x:Name="txtFirstName"
+                                         IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
+                                         Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         BorderThickness="0, 0, 0, 1"
+                                         Focusable="True"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1"
+                                        Orientation="Vertical"
+                                        Margin="10">
+                                <TextBlock Text="First Name"
+                                   FontSize="12"
+                                   FontWeight="Medium"/>
+                                <TextBox x:Name="txtLastName"
+                                     Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     BorderThickness="0, 0, 0, 1"
+                                     Focusable="True"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                    
+                    <!-- Username Field -->
+                    <Grid Grid.Row="1">
+                        <StackPanel Orientation="Vertical"
+                                    Margin="10">
+                            <TextBlock Text="Username"
+                                   FontSize="12"
+                                   FontWeight="Medium"/>
+                            <TextBox x:Name="txtUsername"
+                                     Text="{Binding Username}"
+                                     BorderThickness="0, 0, 0, 1"
+                                     Focusable="True"/>
+                        </StackPanel>
+                    </Grid>
+                    
+                    <!-- Password field -->
+                    <Grid Grid.Row="2"
+                          Visibility="{Binding IsReadOnly, Converter={StaticResource BooleanToInvisibleConverter}}">
+                        <StackPanel Orientation="Vertical"
+                                    Margin="10">
+                            <TextBlock Text="Password"
+                                   FontSize="12"
+                                   FontWeight="Medium"/>
+                            <TextBox x:Name="txtPassword"
+                                     Text="{Binding Password}"
+                                     BorderThickness="0, 0, 0, 1"
+                                     Focusable="True"/>
+                        </StackPanel>
+                    </Grid>
+                    
+                    <!-- Email -->
+                    <Grid Grid.Row="3">
+                        <StackPanel Orientation="Vertical"
+                                    Margin="10">
+                            <TextBlock Text="Email"
+                                   FontSize="12"
+                                   FontWeight="Medium"/>
+                            <TextBox x:Name="txtEmail"
+                                     Text="{Binding Email}"
+                                     BorderThickness="0, 0, 0, 1"
+                                     Focusable="True"/>
+                        </StackPanel>
+                    </Grid>
+                    
+                    <!-- Phone Number fill field -->
+                    <Grid Grid.Row="4">
+                        <StackPanel Orientation="Vertical"
+                                    Margin="10">
+                            <TextBlock Text="Phone Number"
+                                   FontSize="12"
+                                   FontWeight="Medium"/>
+                            <TextBox x:Name="txtPhoneNumber"
+                                     Text="{Binding Phonenumber}"
+                                     BorderThickness="0, 0, 0, 1"
+                                     Focusable="True"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                
+                <!-- User image -->
+                <Grid Grid.Column="1"
+                      VerticalAlignment="Top">
+                    <Ellipse Height="200" Width="200"
+                             Stroke="{StaticResource AccentBrush}"
+                             StrokeThickness="1"
+                             Margin="0,50,0,0">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding ProfilePicture}"
+                                        Stretch="Uniform"
+                                        AlignmentX="Center"
+                                        AlignmentY="Center">
+                                <ImageBrush.RelativeTransform>
+                                    <ScaleTransform ScaleX="1" 
+                                                    CenterX="0.49"/>
+                                </ImageBrush.RelativeTransform>
+                            </ImageBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                </Grid>
+            </Grid>
+          
+
+            <!-- Buttons -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,0,0,20">
+                <Button Content="Edit" Command="{Binding EditProfileCommand}" Width="100" Margin="10,0,0,0"/>
+                <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Margin="10,0,0,0"/>
+                <Button Content="Save" Command="{Binding SaveCommand}" Width="100" Margin="10,0,0,0"/>
             </StackPanel>
+        </Grid>
+    </ScrollViewer>
 
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Email:" FontWeight="Bold" Width="100"/>
-                <TextBox Text="{Binding UserModel.Email, Mode=TwoWay}" IsReadOnly="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,0,10"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Full Name:" FontWeight="Bold" Width="100"/>
-                <TextBox Text="{Binding UserModel.FullName, Mode=TwoWay}" IsReadOnly="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,0,10"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Phone Number:" FontWeight="Bold" Width="100"/>
-                <TextBox Text="{Binding UserModel.PhoneNumber, Mode=TwoWay}" IsReadOnly="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,0,10"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="User Type:" FontWeight="Bold" Width="100"/>
-                <TextBox Text="{Binding UserModel.UserType, Mode=TwoWay}" IsReadOnly="{Binding IsEditing, Converter={StaticResource InverseBooleanConverter}}" Margin="0,0,0,10"/>
-            </StackPanel>
-
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Registration Date:" FontWeight="Bold" Width="100"/>
-                <TextBox Text="{Binding UserModel.CreateDate, Mode=TwoWay}" IsReadOnly="True" Margin="0,0,0,10"/>
-            </StackPanel>
-        </StackPanel>
-
-        <!-- Buttons -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="20,0,0,20">
-            <Button Content="Edit" Command="{Binding EditCommand}" Width="100"/>
-            <Button Content="Save" Command="{Binding SaveCommand}" Width="100" Margin="10,0,0,0" Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Margin="10,0,0,0" Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        </StackPanel>
-    </Grid>
 </UserControl>

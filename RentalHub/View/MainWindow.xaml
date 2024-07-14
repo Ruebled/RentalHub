@@ -13,7 +13,8 @@
         Background="Transparent"
         AllowsTransparency="True"
         WindowStartupLocation="CenterScreen"
-        Icon="../Logo/Logo_100x100.png">
+        Icon="../Logo/Logo_100x100.png"
+        xmlns:utils="clr-namespace:RentalHub.Utils">
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
@@ -39,7 +40,14 @@
         <DataTemplate DataType="{x:Type viewModel:ApartmentViewModel}">
             <local:ApartmentView/>
         </DataTemplate>
+
+        <utils:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <utils:BooleanToStringConverter x:Key="BooleanToStringConverter"/>
     </Window.Resources>
+
+    <Window.InputBindings>
+        <MouseBinding MouseAction="LeftClick" Command="{Binding MouseLeftClickCommand}" />
+    </Window.InputBindings>
 
     <Border CornerRadius="10"
             BorderThickness="1">
@@ -105,7 +113,8 @@
 
                     <RadioButton Style="{StaticResource menuButton}"
                                  Tag="{StaticResource PrimaryBrush}"
-                                 Command="{Binding ShowProfileViewCommand}">
+                                 Command="{Binding ShowProfileViewCommand}"
+                                 IsChecked="{Binding UserProfileOpened,Converter={StaticResource BooleanToStringConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source ="/Icons/user_icon.png" Style="{StaticResource menuButtonIcon}"/>
                             <TextBlock Text="Profile" Style="{StaticResource menuButtonText}"/>
@@ -203,23 +212,43 @@
                                     FlowDirection="RightToLeft"
                                     VerticalAlignment="Center"
                                     Margin="0,0,10,0">
-
-                            <Button Style="{StaticResource iconButton}">
-                                <Button.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="Log Out"
-                                                  Click="LogOut_Click"/>
-                                        <!-- Add more MenuItems as needed -->
-                                    </ContextMenu>
-                                </Button.ContextMenu>
+                            <Button Style="{StaticResource iconButton}"
+                                    Command="{Binding ToggleUserOption}">
                                 <Image Source="../Icons/arrow_icon.png"
-                                       Height="10"/>
+                                           Height="10"/>
                             </Button>
 
+                            <Canvas>
+                                <Border BorderThickness="1"
+                                        Canvas.Top="30"
+                                        Canvas.Right="-45"
+                                        Background="Transparent"
+                                        Visibility="{Binding IsUserOptionActive, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                    <StackPanel Orientation="Vertical"
+                                                Panel.ZIndex="100">
+                                        <Button Command="{Binding ShowProfileViewCommand}"
+                                            Background="Transparent"
+                                            BorderThickness="0">
+                                            <TextBlock Text="Settings"
+                                                   FontSize="14"
+                                                   FontWeight="Bold"/>
+                                        </Button>
+
+                                        <Button Command="{Binding UserLoggout}"
+                                            Background="Transparent"
+                                            BorderThickness="0">
+                                            <TextBlock Text="Log Out"
+                                                   FontSize="14"
+                                                   FontWeight="Bold"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </Canvas>
+
                             <TextBlock Text="{Binding CurrentUserAccount.DisplayName}"
-                                   Foreground="{StaticResource TextBrush}"
-                                   FontSize="12"
-                                   VerticalAlignment="Center"/>
+                                       Foreground="{StaticResource TextBrush}"
+                                       FontSize="12"
+                                       VerticalAlignment="Center"/>
 
                             <Ellipse Height="35" Width="35"
                                      Stroke="{StaticResource AccentBrush}"
@@ -239,12 +268,17 @@
                             </Ellipse>
 
                         </StackPanel>
+
                     </Grid>
 
                     <!--Content section / Child views-->
                     <ContentControl Content="{Binding CurrentChildView}"
                                     Grid.Row="2"
-                                    Margin="25"/>
+                                    Margin="25">
+                        <ContentControl.InputBindings>
+                            <MouseBinding MouseAction="LeftClick" Command="{Binding MouseLeftClickCommand}" />
+                        </ContentControl.InputBindings>
+                    </ContentControl>
                 </Grid>
             </Border>
         </Grid>

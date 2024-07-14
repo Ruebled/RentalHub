@@ -4,36 +4,38 @@ using System.IO;
 using System.Net;
 using System.Net.Mail;
 
-public class EmailSender
+namespace RentalHub.Utils
 {
-    private readonly string _smtpServer = "smtp.gmail.com";
-    private readonly int _smtpPort = 587;
-    private readonly string _smtpUsername;
-    private readonly string _smtpPassword;
-
-    public static EmailSender Instance { get; private set; } = new EmailSender();
-
-    private EmailSender()
+    public class EmailSender
     {
-        var configBuilder = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+        private readonly string _smtpServer = "smtp.gmail.com";
+        private readonly int _smtpPort = 587;
+        private readonly string _smtpUsername;
+        private readonly string _smtpPassword;
 
-        IConfiguration configuration = configBuilder.Build();
+        public static EmailSender Instance { get; private set; } = new EmailSender();
 
-        _smtpUsername = configuration["SmtpSettings:SmtpUsername"] ?? "";
-        _smtpPassword = configuration["SmtpSettings:SmtpPassword"] ?? "";
-    }
-
-    public bool SendPasswordResetEmail(string toEmail, string newPassword)
-    {
-        if(string.IsNullOrEmpty(_smtpUsername) || string.IsNullOrEmpty(_smtpPassword))
+        private EmailSender()
         {
-            return false;
+            var configBuilder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+            IConfiguration configuration = configBuilder.Build();
+
+            _smtpUsername = configuration["SmtpSettings:SmtpUsername"] ?? "";
+            _smtpPassword = configuration["SmtpSettings:SmtpPassword"] ?? "";
         }
 
-        string subject = "Password Reset for RentalHub Account";
-        string body = $@"
+        public bool SendPasswordResetEmail(string toEmail, string newPassword)
+        {
+            if (string.IsNullOrEmpty(_smtpUsername) || string.IsNullOrEmpty(_smtpPassword))
+            {
+                return false;
+            }
+
+            string subject = "Password Reset for RentalHub Account";
+            string body = $@"
             <html>
             <body>
                 <h2>Password Reset for RentalHub</h2>
@@ -48,58 +50,59 @@ public class EmailSender
             </html>
         ";
 
-        SendEmail(toEmail, subject, body, null, true);
+            SendEmail(toEmail, subject, body, null, true);
 
-        return true;
-    }
+            return true;
+        }
 
-    private void SendEmail(string toEmail, string subject, string body, string fromEmail = null, bool isHtml = true, string[] attachments = null, MailPriority priority = MailPriority.Normal)
-    {
-        try
+        private void SendEmail(string toEmail, string subject, string body, string fromEmail = null, bool isHtml = true, string[] attachments = null, MailPriority priority = MailPriority.Normal)
         {
-            using (var smtpClient = new SmtpClient(_smtpServer, _smtpPort))
+            try
             {
-                smtpClient.EnableSsl = true; // Enable SSL/TLS
-                smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential(_smtpUsername, _smtpPassword);
-
-                using (var message = new MailMessage())
+                using (var smtpClient = new SmtpClient(_smtpServer, _smtpPort))
                 {
-                    message.From = new MailAddress(fromEmail ?? _smtpUsername);
-                    message.To.Add(new MailAddress(toEmail));
-                    message.Subject = subject;
-                    message.Body = body;
-                    message.IsBodyHtml = isHtml;
-                    message.Priority = priority;
+                    smtpClient.EnableSsl = true; // Enable SSL/TLS
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.Credentials = new NetworkCredential(_smtpUsername, _smtpPassword);
 
-                    // Attachments
-                    if (attachments != null)
+                    using (var message = new MailMessage())
                     {
-                        foreach (var attachmentPath in attachments)
+                        message.From = new MailAddress(fromEmail ?? _smtpUsername);
+                        message.To.Add(new MailAddress(toEmail));
+                        message.Subject = subject;
+                        message.Body = body;
+                        message.IsBodyHtml = isHtml;
+                        message.Priority = priority;
+
+                        // Attachments
+                        if (attachments != null)
                         {
-                            if (File.Exists(attachmentPath))
+                            foreach (var attachmentPath in attachments)
                             {
-                                var attachment = new Attachment(attachmentPath);
-                                message.Attachments.Add(attachment);
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Attachment file not found: {attachmentPath}");
+                                if (File.Exists(attachmentPath))
+                                {
+                                    var attachment = new Attachment(attachmentPath);
+                                    message.Attachments.Add(attachment);
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Attachment file not found: {attachmentPath}");
+                                }
                             }
                         }
-                    }
 
-                    smtpClient.Send(message);
-                    Console.WriteLine("Email sent successfully.");
+                        smtpClient.Send(message);
+                        Console.WriteLine("Email sent successfully.");
+                    }
                 }
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Failed to send email: {ex.Message}");
-            if (ex.InnerException != null)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                Console.WriteLine($"Failed to send email: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+                }
             }
         }
     }

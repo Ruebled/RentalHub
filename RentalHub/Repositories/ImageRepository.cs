@@ -3,7 +3,6 @@
 using RentalHub.Repositories;
 
 using System.Configuration;
-using System.Data;
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
