@@ -391,16 +391,26 @@ namespace RentalHub.ViewModel
 
             if (codeFromUser == validationCode)
             {
-                UpdateUserSettings();
-                StatusMessage = "User Updated Successfully";
+                DeleteUser();
+                StatusMessage = "User Deleted Successfully, soon will be prompted to login page...";
                 await UpdateStatusMessageAsync(StatusMessage);
+                Logout();
             }
             else
             {
-                RestoreUserSettingsState(User);
                 StatusMessage = "Validation code mismatch. Changes reverted.";
                 await UpdateStatusMessageAsync(StatusMessage);
             }
+        }
+
+        private void Logout()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void DeleteUser()
+        {
+            _userRepository.Remove(User);
         }
 
         private void LoadUserProfileImage(UserModel User)

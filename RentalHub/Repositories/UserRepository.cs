@@ -238,9 +238,16 @@ namespace RentalHub.Repositories
         }
 
 
-        public void Remove(UserModel userModel)
+        public void Remove(UserModel User)
         {
-            throw new NotImplementedException();
+            string query = "DELETE FROM Users WHERE UserId = :USERID";
+
+            var parameters = new OracleParameter[]
+            {
+                new OracleParameter("USERID", User.UserId)
+            };
+
+            ExecuteNonQuery(query, parameters);
         }
     }
 }

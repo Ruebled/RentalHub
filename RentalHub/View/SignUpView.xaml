@@ -84,8 +84,12 @@
                             <VisualBrush Stretch="None" AlignmentX="Left">
                                 <VisualBrush.Visual>
                                     <Viewbox Width="20" Height="20">
-                                        <Image Source="../Icons/username_icon_50x50.png"
-                                                    Width="20" Height="20"/>
+                                        <Image Source="../Icons/for_back_icon.png"
+                                               Width="20" Height="20">
+                                            <Image.RenderTransform>
+                                                <ScaleTransform ScaleX="-1"/>
+                                            </Image.RenderTransform>
+                                        </Image>
                                     </Viewbox>
                                 </VisualBrush.Visual>
                             </VisualBrush>
@@ -114,7 +118,7 @@
                             <VisualBrush Stretch="None" AlignmentX="Left">
                                 <VisualBrush.Visual>
                                     <Viewbox Width="20" Height="20">
-                                        <Image Source="../Icons/username_icon_50x50.png"
+                                        <Image Source="../Icons/for_back_icon.png"
                                                     Width="20" Height="20"/>
                                     </Viewbox>
                                 </VisualBrush.Visual>

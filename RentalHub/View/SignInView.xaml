@@ -78,6 +78,10 @@
                        TextWrapping="Wrap"
                        Focusable="False"/>
 
+            <CheckBox Content="Remember Me"
+                      Command="{Binding RememberPasswordCommand}"
+                      IsChecked="{Binding RememberMeCheck}"/>
+
             <Button x:Name="btnLogin"
                     Command="{Binding SignInCommand}"
                     BorderThickness="0"

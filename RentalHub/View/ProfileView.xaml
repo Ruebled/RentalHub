@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="600"
              xmlns:utils="clr-namespace:RentalHub.Utils"
-             xmlns:viewmodel="clr-namespace:RentalHub.ViewModel"
+             xmlns:viewmodel="clr-namespace:RentalHub.ViewModel" xmlns:customcontrols="clr-namespace:RentalHub.CustomControls"
              d:DataContext="{d:DesignInstance Type=viewmodel:ProfileViewModel}">
 
     <UserControl.Resources>
@@ -49,26 +49,57 @@
                             <StackPanel Grid.Column="0"
                                         Orientation="Vertical"
                                         Margin="10">
-                                <TextBlock Text="Last Name"
-                                   FontSize="12"
+                                <TextBlock Text="First Name"
+                                   FontSize="15"
                                    FontWeight="Medium"/>
                                 <TextBox x:Name="txtFirstName"
                                          IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
                                          Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          BorderThickness="0, 0, 0, 1"
-                                         Focusable="True"/>
+                                         FontSize="13"
+                                         Padding="25,0,0,0"
+                                         Focusable="True">
+                                    <TextBox.Background>
+                                        <VisualBrush Stretch="None" AlignmentX="Left">
+                                            <VisualBrush.Visual>
+                                                <Viewbox Width="20" Height="20">
+                                                    <Image Source="../Icons/for_back_icon.png"
+                                                           Width="20" Height="20">
+                                                        <Image.RenderTransform>
+                                                            <ScaleTransform ScaleX="-1"/>
+                                                        </Image.RenderTransform>
+                                                    </Image>
+                                                </Viewbox>
+
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </TextBox.Background>
+                                </TextBox>
                             </StackPanel>
                             <StackPanel Grid.Column="1"
                                         Orientation="Vertical"
                                         Margin="10">
-                                <TextBlock Text="First Name"
-                                   FontSize="12"
+                                <TextBlock Text="Last Name"
+                                   FontSize="15"
                                    FontWeight="Medium"/>
                                 <TextBox x:Name="txtLastName"
                                          IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
                                          Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          BorderThickness="0, 0, 0, 1"
-                                         Focusable="True"/>
+                                         FontSize="13"  
+                                         Padding="25,0,0,0"
+                                         Focusable="True">
+                                    <TextBox.Background>
+                                        <VisualBrush Stretch="None" AlignmentX="Left">
+                                            <VisualBrush.Visual>
+                                                <Viewbox Width="20" Height="20">
+                                                    <Image Source="../Icons/for_back_icon.png"
+                                                                    Width="20" Height="20"/>
+                                                </Viewbox>
+                                            </VisualBrush.Visual>
+                                        </VisualBrush>
+                                    </TextBox.Background>
+                                </TextBox>
                             </StackPanel>
                         </Grid>
                     </Grid>
@@ -78,13 +109,26 @@
                         <StackPanel Orientation="Vertical"
                                     Margin="10">
                             <TextBlock Text="Username"
-                                   FontSize="12"
+                                   FontSize="15"
                                    FontWeight="Medium"/>
                             <TextBox x:Name="txtUsername"
                                      IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
                                      Text="{Binding Username}"
                                      BorderThickness="0, 0, 0, 1"
-                                     Focusable="True"/>
+                                     FontSize="13"
+                                     Padding="25,0,0,0"
+                                     Focusable="True">
+                                <TextBox.Background>
+                                    <VisualBrush Stretch="None" AlignmentX="Left">
+                                        <VisualBrush.Visual>
+                                            <Viewbox Width="20" Height="20">
+                                                <Image Source="../Icons/username_icon_50x50.png"
+                                                        Width="20" Height="20"/>
+                                            </Viewbox>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </TextBox.Background>
+                            </TextBox>
                         </StackPanel>
                     </Grid>
 
@@ -94,12 +138,16 @@
                         <StackPanel Orientation="Vertical"
                                     Margin="10">
                             <TextBlock Text="Password"
-                                   FontSize="12"
-                                   FontWeight="Medium"/>
-                            <TextBox x:Name="txtPassword"
-                                     Text="{Binding Password}"
-                                     BorderThickness="0, 0, 0, 1"
-                                     Focusable="True"/>
+                                       FontSize="15"
+                                       FontWeight="Medium"
+                                       FontFamily="Montserrat"
+                                       Focusable="False"/>
+                            <customcontrols:BindablePasswordBox 
+                                    Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Height="25"
+                                    Margin="0,5,0,0"
+                                    Focusable="True">
+                            </customcontrols:BindablePasswordBox>
                         </StackPanel>
                     </Grid>
 
@@ -108,13 +156,25 @@
                         <StackPanel Orientation="Vertical"
                                     Margin="10">
                             <TextBlock Text="Email"
-                                   FontSize="12"
+                                   FontSize="15"
                                    FontWeight="Medium"/>
                             <TextBox x:Name="txtEmail"
                                      IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
                                      Text="{Binding Email}"
                                      BorderThickness="0, 0, 0, 1"
-                                     Focusable="True"/>
+                                     Padding="25,0,0,0"
+                                     Focusable="True">
+                                <TextBox.Background>
+                                    <VisualBrush Stretch="None" AlignmentX="Left">
+                                        <VisualBrush.Visual>
+                                            <Viewbox Width="20" Height="20">
+                                                <Image Source="../Icons/email_icon_50x50.png"
+                                                       Width="18" Height="18"/>
+                                            </Viewbox>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </TextBox.Background>
+                            </TextBox>
                         </StackPanel>
                     </Grid>
 
@@ -123,13 +183,25 @@
                         <StackPanel Orientation="Vertical"
                                     Margin="10">
                             <TextBlock Text="Phone Number"
-                                   FontSize="12"
+                                   FontSize="15"
                                    FontWeight="Medium"/>
                             <TextBox x:Name="txtPhoneNumber"
                                      IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
                                      Text="{Binding Phonenumber}"
                                      BorderThickness="0, 0, 0, 1"
-                                     Focusable="True"/>
+                                     Padding="25,0,0,0"
+                                     Focusable="True">
+                                <TextBox.Background>
+                                    <VisualBrush Stretch="None" AlignmentX="Left">
+                                        <VisualBrush.Visual>
+                                            <Viewbox Width="20" Height="20">
+                                                <Image Source="../Icons/phone_number_icon_50x50.png"
+                                                       Width="20" Height="20"/>
+                                            </Viewbox>
+                                        </VisualBrush.Visual>
+                                    </VisualBrush>
+                                </TextBox.Background>
+                            </TextBox>
                         </StackPanel>
                     </Grid>
                 </Grid>
@@ -175,7 +247,7 @@
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
                     <Button Command="{Binding EditSaveProfileCommand}" 
                             Width="100"
-                            Margin="0">
+                            Margin="10,0,0,0">
                         <TextBlock Text="{Binding EditSaveButtonText}"
                                    FontSize="12"/>
                     </Button>
@@ -192,7 +264,6 @@
                 <Button Grid.Column="1" 
                         Command="{Binding DeleteProfileCommand}" 
                         Width="100"
-                        Margin="10,0,0,0"
                         HorizontalAlignment="Right">
                     <TextBlock Text="Delete Profile"
                                FontSize="12"/>

@@ -64,12 +64,24 @@ namespace RentalHub.ViewModel
             }
         }
 
+        private bool _rememberMeCheck;
+        public bool RememberMeCheck
+        {
+            get => _rememberMeCheck;
+            set
+            {
+                if (_rememberMeCheck != value)
+                {
+                    _rememberMeCheck = value;
+                    OnPropertyChanged(nameof(RememberMeCheck));
+                }
+            }
+        }
+
         // -> Commands
         public ICommand SignInCommand { get; }
         public ICommand OpenSignUpViewCommand { get; }
         public ICommand OpenResetPasswordViewCommand { get; }
-        //public ICommand ShowPasswordCommand { get; }
-        //public ICommand RememberPasswordCommand { get; }
 
         // Contructor
         public SignInViewModel()
@@ -105,11 +117,18 @@ namespace RentalHub.ViewModel
             }
         }
  
+            
+
         private void ExecuteSignInCommand(object obj)
         {
+
             UserModel user = userRepository.AuthenticateUser(new System.Net.NetworkCredential(Username, Password));
             if (user != null)
             {
+                // Save credentials in case checkbox checked
+                CheckAccountViewModel.Instance.OnCheckBoxChecked(RememberMeCheck, Password/*SecureString*/);
+
+                // Raise login successful event to mark opening of the main window
                 CheckAccountViewModel.Instance.OnLoginSuccessful(user);
             }
             else

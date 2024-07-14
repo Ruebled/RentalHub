@@ -247,7 +247,8 @@
 
                             <TextBlock Text="{Binding CurrentUserAccount.DisplayName}"
                                        Foreground="{StaticResource TextBrush}"
-                                       FontSize="12"
+                                       FontSize="15"
+                                       FontWeight="Bold"
                                        VerticalAlignment="Center"/>
 
                             <Ellipse Height="35" Width="35"
