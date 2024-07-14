@@ -14,6 +14,8 @@ namespace RentalHub.ViewModel
         public static MainViewModel Instance { get; set; }
         private static Stack<ViewModelBase> ViewsStack = new Stack<ViewModelBase>();
 
+        public event EventHandler LogoutRequested;
+
         // Fields
         private ViewModelBase _currentChildView;
         private UserModel _user;
@@ -155,10 +157,14 @@ namespace RentalHub.ViewModel
             IsUserOptionActive = false;
         }
 
+        public event EventHandler OnLogout;
+
         private void ExecuteLogoutCommand(object obj)
         {
-            IsUserOptionActive = false;
-            throw new NotImplementedException();
+            _user = null;
+            _currentUserAccount = null;
+
+            LogoutRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void ExecuteToggleUserOption(object obj)

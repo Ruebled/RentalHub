@@ -1,7 +1,10 @@
-﻿using RentalHub.View;
+﻿using RentalHub.Model;
+using RentalHub.Repositories;
+using RentalHub.View;
 using RentalHub.ViewModel;
 
 using System;
+using System.Net;
 using System.Security;
 using System.Windows;
 
@@ -17,9 +20,59 @@ namespace RentalHub
         private bool rememberMe;
         private SecureString securePassword;
 
+        private UserRepository userRepository;
+
+        public App()
+        {
+            userRepository = new UserRepository();
+        }
+
         protected void ApplicationStart(object sender, StartupEventArgs e)
         {
-            InitializeLogin();
+            // Attempt to retrieve saved credentials
+            (string savedUsername, SecureString savedPassword) = CredentialManager.RetrieveCredentials();
+
+            if (!string.IsNullOrEmpty(savedUsername) && savedPassword.Length != 0)
+            {
+                // Saved credentials found, attempt authentication
+                AuthenticateSavedCredentials(savedUsername, savedPassword);
+            }
+            else
+            {
+                // No saved credentials found, initialize normal login flow
+                InitializeLogin();
+            }
+        }
+
+        private void AuthenticateSavedCredentials(string username, SecureString savedPassword)
+        {
+            try
+            {
+                UserModel authenticatedUser = userRepository.AuthenticateUser(new NetworkCredential(username, savedPassword));
+
+                if (authenticatedUser != null)
+                {
+                    // User authenticated successfully, proceed to main window
+                    mainViewModel = new MainViewModel(authenticatedUser);
+                    mainView = new MainWindow { DataContext = mainViewModel };
+
+                    // Register logout event
+                    mainViewModel.LogoutRequested += MainViewModel_LogoutRequested;
+
+                    mainView.Show();
+                }
+                else
+                {
+                    // Authentication failed, fallback to normal login flow
+                    InitializeLogin();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (if you have a logging mechanism)
+                MessageBox.Show("An error occurred during authentication: " + ex.Message);
+                InitializeLogin();
+            }
         }
 
         private void InitializeLogin()
@@ -32,25 +85,19 @@ namespace RentalHub
                 mainViewModel = new MainViewModel(user);
                 mainView = new MainWindow { DataContext = mainViewModel };
 
+                // Save credentials if remember me is checked
                 if (rememberMe)
                 {
-                    // Convert SecureString to plain text password for saving (if needed)
-                    string password = ConvertSecureStringToString(securePassword);
-
-                    // Save credentials if remember me is checked
-                    CredentialManager.SaveCredentials(user.Username, password);
+                    CredentialManager.SaveCredentials(user.Username, securePassword);
                 }
                 else
                 {
-                    // Clear saved credentials if remember me is not checked
                     CredentialManager.ClearSavedCredentials();
                 }
-                /* Unsubscribe before it causes application shutdown
-                 * which is not desired in this case
-                 */
-                checkAccountView.Closed -= CheckAccountView_Closed;
 
-                mainView.Closed += MainView_Closed;
+                // Register logout event
+                mainViewModel.LogoutRequested += MainViewModel_LogoutRequested;
+
                 mainView.Show();
                 checkAccountView.Close();
             };
@@ -61,31 +108,24 @@ namespace RentalHub
                 securePassword = args.Password;
             };
 
-            checkAccountView.Closed += CheckAccountView_Closed;
             checkAccountView.Show();
         }
 
-        private void CheckAccountView_Closed(object sender, EventArgs e)
+        private void MainViewModel_LogoutRequested(object sender, EventArgs e)
         {
-            Shutdown();
+            
+
+                InitializeLogin();
+
+
+            // Close main window and reinitialize login
+            mainView.Close();
         }
 
-        private void MainView_Closed(object sender, EventArgs e)
-        {
-            InitializeLogin();
-        }
-
-        private string ConvertSecureStringToString(SecureString secureString)
-        {
-            IntPtr ptr = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(secureString);
-            try
-            {
-                return System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ptr);
-            }
-            finally
-            {
-                System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
-            }
-        }
+        // Remove this method to ensure the application closes when the main window is closed
+        // private void MainView_Closed(object sender, EventArgs e)
+        // {
+        //     InitializeLogin();
+        // }
     }
 }

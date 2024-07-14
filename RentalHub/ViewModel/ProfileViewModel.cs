@@ -405,7 +405,7 @@ namespace RentalHub.ViewModel
 
         private void Logout()
         {
-            throw new NotImplementedException();
+            MainViewModel.Instance.UserLoggout.Execute(null);
         }
 
         private void DeleteUser()
