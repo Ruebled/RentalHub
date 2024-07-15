@@ -140,5 +140,41 @@ namespace RentalHub.Repositories
 
             return results.ToList();
         }
+
+        public List<ReviewModel> GetReviewsList(string apartmentId)
+        {
+            string query =
+                @"SELECT 
+                    R.REVIEWID, 
+                    R.BOOKINGID, 
+                    U.FIRSTNAME||' '||U.LASTNAME AS GUESTFULLNAME, 
+                    'FROM : '||B.CHECKINDATE||'  TO : '||B.CHECKOUTDATE AS PERIODOFSTAYING,
+                    R.RATING, 
+                    R.REVIEW, 
+                    R.CREATEDAT
+                  FROM REVIEWS R, BOOKINGS B, USERS U
+                    WHERE R.BOOKINGID = B.BOOKINGID
+                    AND B.APARTMENTID = :APARTMENTID
+                    AND U.USERID = B.GUESTID";
+
+            var parameters = new OracleParameter[]
+            {
+                new OracleParameter("APARTMENTID", apartmentId)
+            };
+
+            var results = ExecuteQuery(query, reader => new ReviewModel
+            {
+                ReviewId = reader["REVIEWID"].ToString(),
+                BookingId = reader["BOOKINGID"].ToString(),
+                UserFullName = reader["GUESTFULLNAME"].ToString(),
+                PeriodOfStaying = reader["PERIODOFSTAYING"].ToString(),
+                Rating = reader["RATING"].ToString(),
+                Review = reader["REVIEW"].ToString(),
+                CreateDate = reader["CREATEDAT"].ToString()
+            }, parameters);
+
+
+            return results.ToList();
+        }
     }
 }

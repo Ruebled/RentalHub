@@ -59,6 +59,8 @@ namespace RentalHub.ViewModel
 
             ResetPasswordCommand = new RelayCommand<object>(ExecuteResetPasswordCommand, CanExectuteResetPasswordCommand);
             OpenSignInViewCommand = new RelayCommand<object>(ExecuteOpenSignInViewCommand);
+
+            IsTextBoxFocused = true;
         }
 
         private void ExecuteOpenSignInViewCommand(object obj)
@@ -111,7 +113,16 @@ namespace RentalHub.ViewModel
             }
         }
 
-
+        private bool _isTextBoxFocused;
+        public bool IsTextBoxFocused
+        {
+            get { return _isTextBoxFocused; }
+            set
+            {
+                _isTextBoxFocused = value;
+                OnPropertyChanged(nameof(IsTextBoxFocused));
+            }
+        }
 
         private void ExecuteResetPasswordCommand(object obj)
         {

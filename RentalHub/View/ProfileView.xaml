@@ -50,13 +50,13 @@
                                         Orientation="Vertical"
                                         Margin="10">
                                 <TextBlock Text="First Name"
-                                   FontSize="15"
+                                   FontSize="20"
                                    FontWeight="Medium"/>
                                 <TextBox x:Name="txtFirstName"
                                          IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
                                          Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          BorderThickness="0, 0, 0, 1"
-                                         FontSize="13"
+                                         FontSize="18"
                                          Padding="25,0,0,0"
                                          Focusable="True">
                                     <TextBox.Background>
@@ -80,13 +80,13 @@
                                         Orientation="Vertical"
                                         Margin="10">
                                 <TextBlock Text="Last Name"
-                                   FontSize="15"
+                                   FontSize="20"
                                    FontWeight="Medium"/>
                                 <TextBox x:Name="txtLastName"
                                          IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
                                          Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          BorderThickness="0, 0, 0, 1"
-                                         FontSize="13"  
+                                         FontSize="18"  
                                          Padding="25,0,0,0"
                                          Focusable="True">
                                     <TextBox.Background>
@@ -109,13 +109,13 @@
                         <StackPanel Orientation="Vertical"
                                     Margin="10">
                             <TextBlock Text="Username"
-                                   FontSize="15"
+                                   FontSize="20"
                                    FontWeight="Medium"/>
                             <TextBox x:Name="txtUsername"
                                      IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
                                      Text="{Binding Username}"
                                      BorderThickness="0, 0, 0, 1"
-                                     FontSize="13"
+                                     FontSize="18"
                                      Padding="25,0,0,0"
                                      Focusable="True">
                                 <TextBox.Background>
@@ -138,13 +138,13 @@
                         <StackPanel Orientation="Vertical"
                                     Margin="10">
                             <TextBlock Text="Password"
-                                       FontSize="15"
+                                       FontSize="20"
                                        FontWeight="Medium"
                                        FontFamily="Montserrat"
                                        Focusable="False"/>
                             <customcontrols:BindablePasswordBox 
                                     Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    Height="25"
+                                    Height="30"
                                     Margin="0,5,0,0"
                                     Focusable="True">
                             </customcontrols:BindablePasswordBox>
@@ -156,13 +156,14 @@
                         <StackPanel Orientation="Vertical"
                                     Margin="10">
                             <TextBlock Text="Email"
-                                   FontSize="15"
+                                   FontSize="20"
                                    FontWeight="Medium"/>
                             <TextBox x:Name="txtEmail"
                                      IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
                                      Text="{Binding Email}"
                                      BorderThickness="0, 0, 0, 1"
                                      Padding="25,0,0,0"
+                                     FontSize="18"                                     
                                      Focusable="True">
                                 <TextBox.Background>
                                     <VisualBrush Stretch="None" AlignmentX="Left">
@@ -183,13 +184,14 @@
                         <StackPanel Orientation="Vertical"
                                     Margin="10">
                             <TextBlock Text="Phone Number"
-                                   FontSize="15"
+                                   FontSize="20"
                                    FontWeight="Medium"/>
                             <TextBox x:Name="txtPhoneNumber"
                                      IsReadOnly="{Binding IsReadOnly, Converter={StaticResource BooleanToStringConverter}}"
                                      Text="{Binding Phonenumber}"
                                      BorderThickness="0, 0, 0, 1"
                                      Padding="25,0,0,0"
+                                     FontSize="18"
                                      Focusable="True">
                                 <TextBox.Background>
                                     <VisualBrush Stretch="None" AlignmentX="Left">
@@ -220,8 +222,11 @@
                                             AlignmentX="Center"
                                             AlignmentY="Center">
                                     <ImageBrush.RelativeTransform>
-                                        <ScaleTransform ScaleX="1" 
-                                                        CenterX="0.49"/>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleX="1" 
+                                                            CenterX="0.49"/>
+                                            <TranslateTransform X="0.1" Y="0.05"/>
+                                        </TransformGroup>
                                     </ImageBrush.RelativeTransform>
                                 </ImageBrush>
                             </Ellipse.Fill>
@@ -245,28 +250,44 @@
 
                 <!-- Buttons aligned to the left -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal">
-                    <Button Command="{Binding EditSaveProfileCommand}" 
-                            Width="100"
-                            Margin="10,0,0,0">
-                        <TextBlock Text="{Binding EditSaveButtonText}"
-                                   FontSize="12"/>
-                    </Button>
-                    <Button Content="Cancel" 
-                            Command="{Binding CancelEditProfileCommand}" 
-                            Width="100" 
+                    <Button Command="{Binding EditSaveProfileCommand}"
                             Margin="10,0,0,0"
+                            Focusable="False">
+                        <TextBlock Text="{Binding EditSaveButtonText}"
+                                   FontSize="25"
+                                   Margin="30, 0"/>
+                    </Button>
+                    <Button Command="{Binding CancelEditProfileCommand}"
+                            Margin="10,0,0,0"
+                            Focusable="False"
                             Background="{StaticResource AccentBrush}"
-                            Visibility="{Binding IsReadOnly, Converter={StaticResource BooleanToInvisibleConverter}}"
-                            />
+                            Visibility="{Binding IsReadOnly, Converter={StaticResource BooleanToInvisibleConverter}}">
+                        <TextBlock Text="Cancel"
+                                   FontSize="25"
+                                   Margin="30, 0"/>
+                    </Button>
                 </StackPanel>
 
                 <!-- Delete Profile button aligned to the right -->
                 <Button Grid.Column="1" 
                         Command="{Binding DeleteProfileCommand}" 
-                        Width="100"
-                        HorizontalAlignment="Right">
+                        HorizontalAlignment="Right"
+                        Background="DarkRed"
+                        Foreground="{StaticResource TextBrush}"
+                        Focusable="False">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Style.Triggers>
+                                <!-- Button Style on focus -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="Red"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
                     <TextBlock Text="Delete Profile"
-                               FontSize="12"/>
+                               FontSize="25"
+                               Margin="20,0"/>
                 </Button>
             </Grid>
         </Grid>

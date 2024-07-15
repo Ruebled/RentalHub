@@ -137,6 +137,16 @@ namespace RentalHub.ViewModel
             }
         }
 
+        private bool _isTextBoxFocused;
+        public bool IsTextBoxFocused
+        {
+            get { return _isTextBoxFocused; }
+            set
+            {
+                _isTextBoxFocused = value;
+                OnPropertyChanged(nameof(IsTextBoxFocused));
+            }
+        }
 
         public ICommand SignUpCommand { get; }
         public ICommand OpenSignInViewCommand { get; }
@@ -161,6 +171,8 @@ namespace RentalHub.ViewModel
             // Set Up triggerable commands
             SignUpCommand = new RelayCommand<object>(ExecuteSignUpCommand, CanExecuteSignUpCommand);
             OpenSignInViewCommand = new RelayCommand<object>(ExecuteOpenSignInViewCommand);
+
+            IsTextBoxFocused = true;
         }
         private void ExecuteOpenSignInViewCommand(object obj)
         {

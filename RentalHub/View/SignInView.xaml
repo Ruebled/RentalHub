@@ -16,8 +16,7 @@
     </UserControl.InputBindings>
     
     <Grid>
-        <StackPanel Width="250"
-                    Grid.Row="2"
+        <StackPanel Width="280"
                     Orientation="Vertical"
                     Margin="0,35,0,0">
             <Image Source="../Logo/RentalHub_Logo.png"
@@ -25,14 +24,14 @@
             Height="150"/>
 
             <TextBlock Text="Username"
-                       FontSize="12"
+                       FontSize="17"
                        FontWeight="Medium"
                        FontFamily="Montserrat"
                        Margin="0,35,0,0"
                        Focusable="False"/>
             <TextBox x:Name="txtUser"
                      Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"
-                     FontSize="13"
+                     FontSize="15"
                      FontWeight="Medium"
                      FontFamily="Montserrat"
                      BorderThickness="0,0,0,1"
@@ -58,7 +57,7 @@
             </TextBox>
 
             <TextBlock Text="Password"
-                       FontSize="12"
+                       FontSize="17"
                        FontWeight="Medium"
                        FontFamily="Montserrat"
                        Margin="0,35,0,0"
@@ -69,31 +68,36 @@
                                                 Focusable="True">
 
             </customcontrols:BindablePasswordBox>
+            <CheckBox Command="{Binding RememberPasswordCommand}"
+                      IsChecked="{Binding RememberMeCheck}"
+                      Margin="0, 20, 0, 0"
+                      Focusable="False">
+                <TextBlock Text="Remember Me"
+                           FontSize="14"/>
+            </CheckBox>
             <TextBlock Text="{Binding ErrorMessage}"
                        Foreground="#D75960"
-                       FontSize="12"
+                       FontSize="14"
                        FontWeight="Medium"
                        FontFamily="Montserrat"
                        Margin="0,10,0,0"
                        TextWrapping="Wrap"
                        Focusable="False"/>
 
-            <CheckBox Content="Remember Me"
-                      Command="{Binding RememberPasswordCommand}"
-                      IsChecked="{Binding RememberMeCheck}"/>
-
+            
             <Button x:Name="btnLogin"
                     Command="{Binding SignInCommand}"
                     BorderThickness="0"
-                    Content="LOG IN"
-                    FontSize="16"
+                    FontSize="25"
                     FontFamily="Montserrat"
                     Cursor="Hand"
                     Grid.Column="2"
                     Margin="0,40,0,0"
                     FocusVisualStyle="{x:Null}"
-                    Focusable="True"
+                    Focusable="False"
                     Style="{StaticResource TrigButton}">
+                <TextBlock Text="LOG IN"
+                           FontSize="18"/>
 
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
@@ -112,14 +116,14 @@
                         Margin="0,10,0,0">
                 <TextBlock Text="Forgot Password?"
                            Foreground="DarkGray"
-                           FontSize="12"
+                           FontSize="14"
                            FontWeight="Medium"
                            FontFamily="Montserrat"
                            Focusable="False"/>
 
                 <TextBlock Text="Reset"
                            Foreground="White"
-                           FontSize="12"
+                           FontSize="14"
                            FontWeight="Medium"
                            FontFamily="Montserrat"
                            Cursor="Hand"
@@ -136,14 +140,14 @@
                         Margin="0,10,0,0">
                 <TextBlock Text="No account?"
                            Foreground="DarkGray"
-                           FontSize="12"
+                           FontSize="14"
                            FontWeight="Medium"
                            FontFamily="Montserrat"
                            Focusable="False"/>
 
                 <TextBlock Text="Sign Up"
                            Foreground="White"
-                           FontSize="12"
+                           FontSize="14"
                            FontWeight="Medium"
                            FontFamily="Montserrat"
                            Cursor="Hand"
