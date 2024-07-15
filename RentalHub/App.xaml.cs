@@ -3,8 +3,6 @@ using RentalHub.Repositories;
 using RentalHub.View;
 using RentalHub.ViewModel;
 
-using System;
-using System.Net;
 using System.Security;
 using System.Windows;
 
@@ -12,21 +10,24 @@ namespace RentalHub
 {
     public partial class App : Application
     {
+        // View models and views
         private CheckAccountViewModel checkAccountViewModel;
         private CheckAccountView checkAccountView;
         private MainViewModel mainViewModel;
         private MainWindow mainView;
 
-        private bool rememberMe;
-        private SecureString securePassword;
+        // Flags and secure storage
+        private bool rememberMe;  // Flag to remember user login
+        private SecureString securePassword;  // Securely store password if needed
 
-        private UserRepository userRepository;
+        private UserRepository userRepository;  // User repository for authentication
 
         public App()
         {
-            userRepository = new UserRepository();
+            userRepository = new UserRepository();  // Initialize the user repository
         }
 
+        // Application startup event handler
         protected void ApplicationStart(object sender, StartupEventArgs e)
         {
             // Attempt to retrieve saved credentials
@@ -44,6 +45,7 @@ namespace RentalHub
             }
         }
 
+        // Authenticate user with saved credentials
         private void AuthenticateSavedCredentials(string username, string savedPassword)
         {
             try
@@ -52,14 +54,8 @@ namespace RentalHub
 
                 if (authenticatedUser != null)
                 {
-                    // User authenticated successfully, proceed to main window
-                    mainViewModel = new MainViewModel(authenticatedUser);
-                    mainView = new MainWindow { DataContext = mainViewModel };
-
-                    // Register logout event
-                    mainViewModel.LogoutRequested += MainViewModel_LogoutRequested;
-
-                    mainView.Show();
+                    // User authenticated successfully, initialize main window
+                    InitializeMainWindow(authenticatedUser);
                 }
                 else
                 {
@@ -69,63 +65,75 @@ namespace RentalHub
             }
             catch (Exception ex)
             {
-                // Log the exception (if you have a logging mechanism)
+                // Log and show error message
                 MessageBox.Show("An error occurred during authentication: " + ex.Message);
                 InitializeLogin();
             }
         }
 
+        // Initialize the login view and handle its events
         private void InitializeLogin()
         {
             checkAccountViewModel = new CheckAccountViewModel();
             checkAccountView = new CheckAccountView { DataContext = checkAccountViewModel };
 
-            checkAccountViewModel.LoginSuccessful += (s, user) =>
-            {
-                mainViewModel = new MainViewModel(user);
-                mainView = new MainWindow { DataContext = mainViewModel };
+            // Subscribe to events from the login view model
+            checkAccountViewModel.LoginSuccessful += HandleLoginSuccess;
+            checkAccountViewModel.RememberMeCheckBoxChecked += HandleRememberMeCheckBoxChecked;
 
-                // Save credentials if remember me is checked
-                if (rememberMe)
-                {
-                    CredentialManager.SaveCredentials(user.Username, user.PasswordHash);
-                }
-                else
-                {
-                    CredentialManager.ClearSavedCredentials();
-                }
-
-                // Register logout event
-                mainViewModel.LogoutRequested += MainViewModel_LogoutRequested;
-
-                mainView.Show();
-                checkAccountView.Close();
-            };
-
-            checkAccountViewModel.RememberMeCheckBoxChecked += (s, RememberMe) =>
-            {
-                rememberMe = RememberMe;
-            };
-
+            // Show the login view
             checkAccountView.Show();
         }
 
-        private void MainViewModel_LogoutRequested(object sender, EventArgs e)
+        // Handle successful login event
+        private void HandleLoginSuccess(object sender, UserModel user)
         {
+            // Initialize main window with authenticated user
+            InitializeMainWindow(user);
 
+            // Save or clear credentials based on remember me option
+            if (rememberMe)
+            {
+                CredentialManager.SaveCredentials(user.Username, user.PasswordHash);
+            }
+            else
+            {
+                CredentialManager.ClearSavedCredentials();
+            }
+
+            // Close the login view
+            checkAccountView.Close();
+        }
+
+        // Initialize the main window with given user
+        private void InitializeMainWindow(UserModel user)
+        {
+            mainViewModel = new MainViewModel(user);
+            mainView = new MainWindow { DataContext = mainViewModel };
+
+            // Subscribe to logout event from main view model
+            mainViewModel.LogoutRequested += HandleLogoutRequested;
+
+            // Show the main window
+            mainView.Show();
+        }
+
+        // Handle logout requested event
+        private void HandleLogoutRequested(object sender, EventArgs e)
+        {
+            // Clear saved credentials and reinitialize login
             CredentialManager.ClearSavedCredentials();
-
             InitializeLogin();
 
-
-            // Close main window and reinitialize login
+            // Close the main window
             mainView.Close();
         }
 
-        // Remove this method to ensure the application closes when the main window is closed
-        // private void MainView_Closed(object sender, EventArgs e)
-        // {
-        //     InitializeLogin();
-        // }
+        // Handle remember me checkbox checked event
+        private void HandleRememberMeCheckBoxChecked(object sender, bool remember)
+        {
+            // Update rememberMe flag
+            rememberMe = remember;
+        }
     }
 }

@@ -109,6 +109,8 @@ namespace RentalHub.ViewModel
         public ICommand ShowSupportViewCommand { get; }
         public ICommand ToggleUserOption {  get; }
         public ICommand UserLoggout {  get; }
+        public ICommand OpenSetting {  get; }
+
 
         public ICommand MouseLeftClickCommand { get; }
 
@@ -140,6 +142,9 @@ namespace RentalHub.ViewModel
 
             // Hide user option on mouse click
             MouseLeftClickCommand = new RelayCommand<object>(ExecuteHideUserOption);
+
+            // Open settings from the user dropdown
+            OpenSetting = new RelayCommand<object>(ExecuteOpenSettings);
 
             // Default view
             ExecuteShowHomeViewCommand(null);
@@ -212,16 +217,25 @@ namespace RentalHub.ViewModel
             IconSource = "/Icons/book_icon.png";
             UserProfileOpened = false;
         }
-        private void ExecuteShowProfileViewCommand(object obj)
+
+        private void ExecuteOpenSettings(object obj)
         {
             if (!UserProfileOpened)
             {
-                CurrentChildView = new ProfileViewModel(User);
-                Caption = "Profile";
-                IconSource = "/Icons/user_icon.png";
                 UserProfileOpened = true;
+                ExecuteShowProfileViewCommand(obj);
             }
+        }
+
+        private void ExecuteShowProfileViewCommand(object obj)
+        {
+
+            CurrentChildView = new ProfileViewModel(User);
+            Caption = "Profile";
+            IconSource = "/Icons/user_icon.png";
+
             IsUserOptionActive = false;
+
         }
         private void ExecuteShowSupportViewCommand(object obj)
         {
