@@ -10,11 +10,12 @@
         WindowStartupLocation="CenterScreen">
 
     <!-- Set DataContext explicitly in XAML -->
+    <!-- Set DataContext explicitly in XAML -->
     <Window.DataContext>
         <viewModel:InputDialogWindowViewModel/>
     </Window.DataContext>
     <Window.InputBindings>
-        <KeyBinding Key="Enter" Command="{Binding OKCommand}" />
+        <KeyBinding Key="Enter" Command="{Binding OKCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
     </Window.InputBindings>
 
     <Window.Resources>
