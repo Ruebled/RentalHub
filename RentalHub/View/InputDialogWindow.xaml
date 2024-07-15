@@ -19,22 +19,25 @@
 
     <Window.Resources>
         <Style x:Key="CodeTextBoxStyle" TargetType="TextBox">
-            <Setter Property="Margin" Value="5,0,5,0"/>
+            <Setter Property="Margin" Value="0"/>
             <Setter Property="Width" Value="40"/>
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="Padding" Value="0"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="TextAlignment" Value="Center"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="3"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
             <Setter Property="Background" Value="{StaticResource BackgroundBrush}"/>
             <Setter Property="MaxLength" Value="1"/>
         </Style>
     </Window.Resources>
 
-    <Border BorderThickness="2">
-        <Grid Background="{StaticResource BackgroundBrush}">
-            <StackPanel Margin="10">
+    <Border BorderThickness="3"
+            Padding="10">
+        <Grid Background="Transparent">
+            <StackPanel Margin="0">
                 <TextBlock Text="Verify your email for the code to confirm your identity:" 
                            Margin="0 0 0 10"
                            TextWrapping="Wrap"
