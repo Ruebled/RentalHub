@@ -36,8 +36,8 @@ public class BookingRepository : RepositoryBase
             GuestId = reader["GUESTID"]?.ToString(),
             GuestName = reader["FULLNAME"]?.ToString(),
             ApartmentName = reader["NAME"]?.ToString(),
-            CheckInDate = reader["CHECKINDATE"]?.ToString(),
-            CheckOutDate = reader["CHECKOUTDATE"]?.ToString(),
+            CheckInDate = reader["CHECKINDATE"]?.ToString().Split(' ')[0],
+            CheckOutDate = reader["CHECKOUTDATE"]?.ToString().Split(' ')[0],
             TotalPrice = reader["TOTALPRICE"]?.ToString(),
             Status = reader["STATUS"]?.ToString(),
             CreateDate = reader["CREATEDAT"]?.ToString()
