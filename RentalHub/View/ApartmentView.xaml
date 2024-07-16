@@ -35,10 +35,30 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Apartment info + Apartment main photo & gallery -->
+                <!-- Apartment title + reviews and rating -->
                 <Grid Grid.Row="0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding ApartmentSelected.Name}" VerticalAlignment="Center" FontSize="30" FontWeight="Bold"/>
+
+                        <TextBlock Text="{Binding ApartmentSelected.AverageRating}" VerticalAlignment="Center" FontSize="30" FontWeight="Bold" Margin="20, 0, 0, 0"/>
+
+                        <Viewbox Width="30" Height="30" Margin="6, 0, 0, 0">
+                            <Image Source="../Icons/star_icon.png"/>
+                        </Viewbox>
+
+                        <StackPanel Orientation="Horizontal" Margin="10, 0, 0,0">
+                            <TextBlock Text="(Reviews" FontSize="20" FontStyle="Italic" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding ApartmentSelected.NumberOfReviews}" Margin="5, 0, 0,0"  FontSize="20" FontStyle="Italic" VerticalAlignment="Center"/>
+                            <TextBlock Text=")" FontSize="20" FontStyle="Italic" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+                
+                <!-- Apartment info + Apartment main photo & gallery -->
+                <Grid Grid.Row="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -48,21 +68,6 @@
                         <!-- Apartment main info -->
                         <StackPanel Orientation="Vertical"
                                     Grid.Column="0">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding ApartmentSelected.Name}" VerticalAlignment="Center" FontSize="30" FontWeight="Bold"/>
-
-                                <TextBlock Text="{Binding ApartmentSelected.AverageRating}" VerticalAlignment="Center" FontSize="30" FontWeight="Bold" Margin="20, 0, 0, 0"/>
-
-                                <Viewbox Width="30" Height="30">
-                                    <Image Source="../Icons/star_icon.png"/>
-                                </Viewbox>
-
-                                <StackPanel Orientation="Horizontal" Margin="10, 0, 0,0">
-                                    <TextBlock Text="(Reviews" FontSize="20" FontStyle="Italic" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding ApartmentSelected.NumberOfReviews}" Margin="5, 0, 0,0"  FontSize="20" FontStyle="Italic" VerticalAlignment="Center"/>
-                                    <TextBlock Text=")" FontSize="20" FontStyle="Italic" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </StackPanel>
 
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding ApartmentSelected.OwnerName}"
@@ -167,68 +172,66 @@
 
                         <!-- Calendar & image gallery etc-->
                         <StackPanel Orientation="Vertical"
-                Grid.Column="1"
-                HorizontalAlignment="Center"
-                Margin="0, 0, 20, 0">
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Center"
+                                    Margin="0, 0, 20, 0">
                             <!-- Main apartment image box -->
                             <Rectangle Width="480"
-                   Height="280"
-                   Stroke="{StaticResource PrimaryBrush}"
-                   StrokeThickness="2"
-                   Margin="0, 0, 0, 0">
+                                       Height="280"
+                                       Stroke="{StaticResource PrimaryBrush}"
+                                       StrokeThickness="2"
+                                       Margin="0, 0, 0, 0">
                                 <Rectangle.Fill>
                                     <ImageBrush ImageSource="{Binding ApartmentSelected.MainPhotoURL}"
-                            Stretch="UniformToFill"
-                            AlignmentX="Center"
-                            AlignmentY="Center">
+                                                Stretch="UniformToFill"
+                                                AlignmentX="Center"
+                                                AlignmentY="Center">
                                     </ImageBrush>
                                 </Rectangle.Fill>
                             </Rectangle>
 
                             <!-- Apartment Photos Gallery -->
-                            <ScrollViewer HorizontalScrollBarVisibility="Hidden"
-                      VerticalScrollBarVisibility="Disabled">
-                                <ListBox x:Name="PhotosListBox"
-                     ItemsSource="{Binding ApartmentPhotos}"
-                     BorderThickness="0"
-                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                     ScrollViewer.CanContentScroll="False"
-                     VirtualizingStackPanel.IsVirtualizing="True">
-                                    <ListBox.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ListBox.ItemsPanel>
-                                    <ListBox.ItemContainerStyle>
-                                        <Style TargetType="{x:Type ListBoxItem}">
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                            <Setter Property="BorderThickness" Value="0"/>
-                                            <Setter Property="BorderBrush" Value="{StaticResource TextBrush}"/>
-                                            <Setter Property="Margin" Value="5, 0, 5, 0"/>
-                                            <!-- Adjusted margin for horizontal spacing -->
-                                            <Setter Property="Padding" Value="5"/>
-                                        </Style>
-                                    </ListBox.ItemContainerStyle>
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="2">
-                                                <Image Source="{Binding PhotoURL}"
-                                   Height="100"
-                                   Width="Auto"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                            </ScrollViewer>
+                            <ListBox x:Name="PhotosListBox" Width="480"
+                                     ItemsSource="{Binding ApartmentPhotos}"
+                                     SelectedItem="{Binding SelectedPhoto}"
+                                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                                     ScrollViewer.CanContentScroll="False"
+                                     BorderThickness="0"
+                                     VirtualizingStackPanel.IsVirtualizing="True"
+                                     ScrollViewer.PanningMode="VerticalOnly">
+                                <i:Interaction.Behaviors>
+                                    <behaviors:HorizontalMouseWheelScrollBehavior/>
+                                </i:Interaction.Behaviors>
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ListBoxItem}">
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Setter Property="Margin" Value="5,0,5,0"/>
+                                        <Setter Property="Padding" Value="5"/>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderThickness="2">
+                                            <Image Source="{Binding PhotoURL}" Height="100" Width="Auto" Stretch="Uniform"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
                         </StackPanel>
                     </Grid>
                 </Grid>
 
 
                 <!-- User Reviews -->
-                <Grid Grid.Row="1" Margin="0, 50, 0, 0">
+                <Grid Grid.Row="2" Margin="0, 50, 0, 0">
                     <!-- User Reviews -->
                     <StackPanel Orientation="Vertical">
                         <TextBlock Text="Guest Reviews"
@@ -276,30 +279,20 @@
                                                            FontSize="25"
                                                            FontWeight="Bold"
                                                            Margin="5, 5, 0, 0"/>
-                                                <Grid Grid.Column="1"
-                                                      Margin="30, 0 , 0, 0">
-                                                    <!-- Rectangle for Rating -->
-                                                    <Rectangle Width="55"
-                                                               Height="30"
-                                                               RadiusX="12"
-                                                               RadiusY="12"
-                                                               Fill="{StaticResource SecondaryBrush}"/>
-
+                                                <Grid Grid.Column="1" Margin="50, 5 , 0, 0"
+                                                      VerticalAlignment="Center">
                                                     <!-- TextBlock for Rating -->
-                                                    <StackPanel Orientation="Horizontal"
-                                                                Margin="5, 0, 0, 0">
+                                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                         <TextBlock Text="{Binding Rating}"
                                                                    Foreground="{StaticResource TextBrush}"
                                                                    VerticalAlignment="Center"
                                                                    HorizontalAlignment="Center"
-                                                                   FontSize="20"
+                                                                   FontSize="25"
                                                                    FontWeight="Bold"/>
-                                                        <TextBlock Text=" / 5"
-                                                                   Foreground="{StaticResource TextBrush}"
-                                                                   VerticalAlignment="Center"
-                                                                   HorizontalAlignment="Center"
-                                                                   FontSize="20"
-                                                                   FontWeight="Bold"/>
+
+                                                        <Viewbox Width="30" Height="30" Margin="6, 0, 0, 0">
+                                                            <Image Source="../Icons/star_icon.png"/>
+                                                        </Viewbox>
                                                     </StackPanel>
                                                 </Grid>
                                             </Grid>

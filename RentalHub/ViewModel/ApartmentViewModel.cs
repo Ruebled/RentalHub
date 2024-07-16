@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Controls;
@@ -13,6 +12,7 @@ namespace RentalHub.ViewModel
     public class ApartmentViewModel : ViewModelBase
     {
         private ApartmentModel _apartmentSelected;
+        private PhotoModel _selectedPhoto;
 
         public ApartmentModel ApartmentSelected
         {
@@ -32,6 +32,25 @@ namespace RentalHub.ViewModel
         public ObservableCollection<CalendarDateRange> BlackoutDates { get; set; }
 
         public ICommand BackCommand { get; set; }
+
+        public PhotoModel SelectedPhoto
+        {
+            get => _selectedPhoto;
+            set
+            {
+                if (_selectedPhoto != value)
+                {
+                    _selectedPhoto = value;
+                    OnPropertyChanged(nameof(SelectedPhoto));
+                    // Update main photo URL when selected photo changes
+                    if (_selectedPhoto != null)
+                    {
+                        ApartmentSelected.MainPhotoURL = _selectedPhoto.PhotoURL;
+                        OnPropertyChanged(nameof(ApartmentSelected));
+                    }
+                }
+            }
+        }
 
         public ApartmentViewModel(ApartmentModel selectedApartment)
         {
@@ -93,7 +112,7 @@ namespace RentalHub.ViewModel
 
             foreach (var blocking in blockingBookings)
             {
-                if(blocking.CheckInDate == null || blocking.CheckOutDate == null)
+                if (blocking.CheckInDate == null || blocking.CheckOutDate == null)
                 {
                     throw new NotImplementedException();
                 }
