@@ -37,7 +37,7 @@ namespace RentalHub.Utils
             if (_scrollViewer != null)
             {
                 double delta = e.Delta;
-                double scrollAmount = 50; // Adjust as needed
+                double scrollAmount = -50; // Adjust as needed
                 _scrollViewer.ScrollToHorizontalOffset(_scrollViewer.HorizontalOffset + scrollAmount * Math.Sign(delta));
                 e.Handled = true;
             }

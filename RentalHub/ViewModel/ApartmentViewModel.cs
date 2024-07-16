@@ -32,6 +32,7 @@ namespace RentalHub.ViewModel
         public ObservableCollection<CalendarDateRange> BlackoutDates { get; set; }
 
         public ICommand BackCommand { get; set; }
+        public ICommand OpenBookingViewCommand {  get; set; }
 
         public PhotoModel SelectedPhoto
         {
@@ -70,6 +71,15 @@ namespace RentalHub.ViewModel
         private void InitializeCommands()
         {
             BackCommand = new RelayCommand<object>(ExecuteBackCommand);
+            OpenBookingViewCommand = new RelayCommand<object>(ExecuteOpenBookingViewCommand);
+        }
+
+        private void ExecuteOpenBookingViewCommand(object obj)
+        {
+            if (MainViewModel.Instance != null)
+            {
+                MainViewModel.Instance.PushView(new BookingCreateViewModel());
+            }
         }
 
         private void LoadApartmentDetails()
@@ -82,6 +92,13 @@ namespace RentalHub.ViewModel
         private void LoadPhotos()
         {
             ApartmentPhotos.Clear();
+            
+            // Load main photo too to stay in gallery an be selectable as the others
+            if (ApartmentSelected.MainPhotoURL != null)
+            {
+                ApartmentPhotos.Add(new PhotoModel { PhotoURL = ApartmentSelected.MainPhotoURL });
+            }
+
             var photos = ApartmentRepository.Instance.GetPhotosList(ApartmentSelected.ApartmentID);
 
             foreach (PhotoModel photo in photos)

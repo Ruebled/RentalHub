@@ -41,6 +41,10 @@
             <local:ApartmentView/>
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type viewModel:BookingCreateViewModel}">
+            <local:BookingCreateView/>
+        </DataTemplate>
+
         <utils:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <utils:BooleanToStringConverter x:Key="BooleanToStringConverter"/>
     </Window.Resources>
