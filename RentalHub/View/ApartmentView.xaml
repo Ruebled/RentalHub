@@ -20,7 +20,9 @@
         <Grid Grid.Row="0" HorizontalAlignment="Left">
             <TextBlock Text="Back"
                        FontSize="20"
-                       FontWeight="Bold">
+                       FontWeight="Bold"
+                       Cursor="Hand"
+                       >
                 <TextBlock.InputBindings>
                     <MouseBinding Command="{Binding BackCommand}"
                                   MouseAction="LeftClick" />

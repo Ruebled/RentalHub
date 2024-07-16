@@ -25,6 +25,7 @@
     <None Remove="Icons\arrow_icon.png" />
     <None Remove="Icons\back_arrow.png" />
     <None Remove="Icons\book_icon.png" />
+    <None Remove="Icons\construction.png" />
     <None Remove="Icons\email_icon_50x50.png" />
     <None Remove="Icons\for_back_icon.png" />
     <None Remove="Icons\home_icon.png" />
@@ -64,6 +65,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icons\book_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\construction.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icons\home_icon.png">

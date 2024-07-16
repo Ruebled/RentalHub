@@ -16,7 +16,8 @@
         <Grid Grid.Row="0" HorizontalAlignment="Left">
             <TextBlock Text="Back"
                    FontSize="20"
-                   FontWeight="Bold">
+                   FontWeight="Bold"
+                       Cursor="Hand">
                 <TextBlock.InputBindings>
                     <MouseBinding Command="{Binding BackCommand}"
                               MouseAction="LeftClick" />
@@ -24,8 +25,16 @@
             </TextBlock>
         </Grid>
 
-        <Grid Grid.Row="1">
-            
+        <Grid Grid.Row="1" VerticalAlignment="Center">
+            <StackPanel Orientation="Vertical">
+                <Image Source="../Icons/construction.png"
+                   Height="200"
+                   Width="200"/>
+                <TextBlock Text="PAGE UNDER CONSTRUCTION" FontSize="40"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="0, 50, 0, 0"/>
+            </StackPanel>
         </Grid>
 
     </Grid>

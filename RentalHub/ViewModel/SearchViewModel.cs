@@ -19,6 +19,26 @@ namespace RentalHub.ViewModel
         private DateTime _minDate;
         private DateTime _maxDate;
 
+        public DateTime MinDate
+        {
+            get => _minDate;
+            set
+            {
+                _minDate = value;
+                OnPropertyChanged(nameof(MinDate));
+            }
+        }
+
+        public DateTime MaxDate
+        {
+            get => _maxDate;
+            set
+            {
+                _maxDate = value;
+                OnPropertyChanged(nameof(MaxDate));
+            }
+        }
+
         // Search query property with update trigger
         private string _searchQuery;
         public string SearchQuery
@@ -62,6 +82,7 @@ namespace RentalHub.ViewModel
                 {
                     _checkOutDate = value;
                     OnPropertyChanged(nameof(CheckOutDate));
+                    UpdateCheckOutDate();
                     CommandManager.InvalidateRequerySuggested(); // Notify command manager for SearchCommand
                     OnSearchQueryChanged(); // Trigger search based on date change
                 }
@@ -96,8 +117,8 @@ namespace RentalHub.ViewModel
             CityOptions = new ObservableCollection<string>();
 
             // Set minimum and maximum date ranges
-            _minDate = DateTime.Now.Date;
-            _maxDate = _minDate.AddYears(1);
+            MinDate = DateTime.Now.Date;
+            MaxDate = _minDate.AddYears(1);
             CheckInDate = _minDate;
             CheckOutDate = _minDate.AddDays(1);
 
