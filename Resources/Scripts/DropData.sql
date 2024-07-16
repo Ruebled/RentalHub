@@ -5,7 +5,7 @@ BEGIN
                 WHERE table_name IN (
                     'APARTMENTIMAGES', 'PAYMENTS', 'REVIEWS', 
                     'BOOKINGS', 'APARTMENTS', 'USERS', 'CITIES', 'STATES', 
-                    'COUNTRIES', 'USERIMAGES'
+                    'COUNTRIES', 'USERIMAGES', 'SUPPORT'
                 ))
     LOOP
         BEGIN
@@ -25,7 +25,8 @@ BEGIN
                 WHERE sequence_name IN (
                     'USER_ID_SEQ', 'APARTMENT_ID_SEQ', 'BOOKING_ID_SEQ', 'REVIEW_ID_SEQ', 
                     'PAYMENT_ID_SEQ', 'USERIMAGE_ID_SEQ', 'APARTMENT_IMAGE_ID_SEQ', 
-                    'CITY_ID_SEQ', 'STATE_ID_SEQ', 'COUNTRY_ID_SEQ', 'ZIPCODE_ID_SEQ', 'IMAGE_ID_SEQ'
+                    'CITY_ID_SEQ', 'STATE_ID_SEQ', 'COUNTRY_ID_SEQ', 'ZIPCODE_ID_SEQ', 'IMAGE_ID_SEQ',
+					'SUPPORT_ID_SEQ'
                 ))
     LOOP
         BEGIN

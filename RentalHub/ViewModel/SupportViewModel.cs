@@ -1,41 +1,108 @@
 ﻿using RentalHub.Model;
-using RentalHub.ViewModel;
-
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
+using RentalHub.Repositories;
 using System.Windows.Input;
 
 namespace RentalHub.ViewModel
 {
-    public class SupportViewModel : ViewModelBase, INotifyPropertyChanged
+    public class SupportViewModel : ViewModelBase
     {
+        private UserModel _user;
+        public UserModel User
+        {
+            get => _user;
+            set
+            {
+                _user = value;
+                OnPropertyChanged(nameof(User));
+            }
+        }
+
+        private string _messageTitle;
+        public string MessageTitle
+        {
+            get => _messageTitle;
+            set
+            {
+                _messageTitle = value;
+                OnPropertyChanged(nameof(MessageTitle));
+            }
+        }
+
+        private string _message;
+        public string Message
+        {
+            get => _message;
+            set
+            {
+                _message = value;
+                OnPropertyChanged(nameof(Message));
+            }
+        }
+
+        private string _statusMessage;
+        public string StatusMessage
+        {
+            get => _statusMessage;
+            set
+            {
+                _statusMessage = value;
+                OnPropertyChanged(nameof(StatusMessage));
+            }
+        }
+
         public ICommand ContactSupportCommand { get; set; }
 
-        public SupportViewModel()
+        public SupportViewModel(UserModel User)
         {
+            _user = User;
+
             // Initialize commands
             ContactSupportCommand = new RelayCommand<object>(ContactSupportExecute, CanContactSupportExecute);
         }
 
         private void ContactSupportExecute(object obj)
         {
-            // Implement logic to contact support
-            MessageBox.Show("Contacting support...");
-            // Example: Navigate to a support page or open a support chat window
+            TicketModel ticket = new TicketModel();
+            ticket.UserId = User.UserId;
+            ticket.TicketTitle = MessageTitle;
+            ticket.TicketMessage = Message;
+
+            if(SupportRepository.Instance.InsertSupportTicket(ticket) == true)
+            {
+                StatusMessage = "Succesfully ticket delivery";
+                Task.Run(async () =>
+                {
+                    await Task.Delay(3000);
+                    StatusMessage = string.Empty;
+                });
+
+                MessageTitle = string.Empty;
+                Message = string.Empty;
+            }
+            else
+            {
+                StatusMessage = "Ticket couldn't be send";
+
+                Task.Run(async () =>
+                {
+                    await Task.Delay(4000);
+                    StatusMessage = string.Empty;
+                });
+            }
+
+
         }
 
         private bool CanContactSupportExecute(object obj)
         {
-            // Implement logic to determine if contacting support is allowed
-            return true; // For demonstration purposes, always allow contacting support
-        }
+            if (User== null 
+                || string.IsNullOrEmpty(_messageTitle) 
+                || string.IsNullOrEmpty(_message))
+            {
+                return false;
+            }
 
-        // Implement INotifyPropertyChanged interface for property change notification
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            return true;
         }
     }
 }

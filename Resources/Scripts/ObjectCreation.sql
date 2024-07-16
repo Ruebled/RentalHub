@@ -10,6 +10,7 @@ CREATE SEQUENCE apartment_image_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE city_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE state_id_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE country_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE support_id_seq START WITH 1 INCREMENT BY 1;
 
 -- Create tables
 CREATE TABLE Countries (
@@ -108,6 +109,15 @@ CREATE TABLE Payments (
     PaymentMethod VARCHAR2(20) CHECK (PaymentMethod IN ('Credit Card', 'PayPal', 'Bank Transfer', 'Cash')) NOT NULL,
     PaymentDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (BookingID) REFERENCES Bookings(BookingID)
+);
+
+CREATE TABLE Support(
+	TicketId INT DEFAULT support_id_seq.NEXTVAL PRIMARY KEY,
+	UserId INT NOT NULL,
+	TicketTitle VARCHAR2(50) NOT NULL, 
+	TicketMessage VARCHAR2(600) NOT NULL,
+	CreateDate DATE NOT NULL,
+	FOREIGN KEY (UserId) REFERENCES Users(UserId)
 );
 
 COMMIT;

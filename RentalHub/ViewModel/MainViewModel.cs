@@ -239,7 +239,7 @@ namespace RentalHub.ViewModel
         }
         private void ExecuteShowSupportViewCommand(object obj)
         {
-            CurrentChildView = new SupportViewModel();
+            CurrentChildView = new SupportViewModel(User);
             Caption = "Support";
             IconSource = "/Icons/support_icon.png";
             UserProfileOpened = false;
