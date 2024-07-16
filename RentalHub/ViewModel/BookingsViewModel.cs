@@ -61,7 +61,7 @@ namespace RentalHub.ViewModel
             Bookings.Clear();
 
             BookingRepository bookingRepository = new BookingRepository();
-            var results = await Task.Run(() => bookingRepository.RetrieveBookings(user.UserId));
+            var results = await Task.Run(() => bookingRepository.RetrieveBookingsOfUser(user.UserId));
 
             foreach (var booking in results)
             {

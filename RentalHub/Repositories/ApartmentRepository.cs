@@ -2,16 +2,14 @@
 
 using RentalHub.Model;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
 
 namespace RentalHub.Repositories
 {
     public class ApartmentRepository : RepositoryBase
     {
+        public static ApartmentRepository Instance = new ApartmentRepository();
+
         public List<ApartmentModel> GetApartmentsByCity(string partialCityName)
         {
             string query = 
@@ -73,10 +71,13 @@ namespace RentalHub.Repositories
                 @"SELECT 
                     A.APARTMENTID,
                     A.HOSTID,
+                    U.FIRSTNAME||' '||U.LASTNAME AS OWNERNAME,
                     A.NAME,
                     A.DESCRIPTION,
                     A.ADDRESSLINE,
                     A.CITYID,
+                    S.NAME AS STATE,
+                    CT.NAME AS COUNTRY,
                     C.NAME AS CITYNAME,
                     A.ZIPCODE,
                     A.PRICEPERNIGHT,
@@ -88,13 +89,25 @@ namespace RentalHub.Repositories
                     A.HOUSERULES,
                     A.CANCELLATIONPOLICY,
                     A.CREATEDAT
-                FROM APARTMENTS A, CITIES C, BOOKINGS B
+                FROM 
+                APARTMENTS A, 
+                CITIES C, 
+                BOOKINGS B,
+                STATES S,
+                COUNTRIES CT,
+                USERS U
                 WHERE 
                     C.CITYID = A.CITYID
+                AND 
+                    S.STATEID = C.STATEID
+                AND
+                    CT.COUNTRYID = S.COUNTRYID
                 AND 
                     LOWER(C.NAME) LIKE LOWER(:PARTIALNAME)
                 AND 
                     B.APARTMENTID = A.APARTMENTID
+                AND
+                    B.GUESTID = U.USERID
                 AND
                 (
                     (
@@ -120,22 +133,26 @@ namespace RentalHub.Repositories
 
             var results = ExecuteQuery(query, reader => new ApartmentModel
             {
-                ApartmentID = reader["APARTMENTID"].ToString(),
-                HostID = reader["HOSTID"].ToString(),
-                Name = reader["NAME"].ToString(),
-                Description = reader["DESCRIPTION"].ToString(),
-                AddressLine = reader["ADDRESSLINE"].ToString(),
-                CityID = reader["CITYID"].ToString(),
-                CityName = reader["CITYNAME"].ToString(),
-                ZipCode = reader["ZIPCODE"].ToString(),
-                PricePerNight = reader["PRICEPERNIGHT"].ToString(),
-                MainPhotoURL = reader["MAINPHOTOURL"].ToString(),
-                SizeInSquareFeet = reader["SIZEINSQUAREFEET"].ToString(),
-                NumberOfRooms = reader["NUMBEROFROOMS"].ToString(),
-                AverageRating = reader["AVERAGERATING"].ToString(),
-                NumberOfReviews = reader["NUMBEROFREVIEWS"].ToString(),
-                HouseRules = reader["HOUSERULES"].ToString(),
-                CancellationPolicy = reader["CANCELLATIONPOLICY"].ToString()
+                ApartmentID = reader["APARTMENTID"].ToString() ?? "",
+                HostID = reader["HOSTID"].ToString() ?? "",
+                OwnerName = reader["OWNERNAME"].ToString() ?? "",
+                Name = reader["NAME"].ToString() ?? "",
+                Description = reader["DESCRIPTION"].ToString() ?? "",
+                AddressLine = reader["ADDRESSLINE"].ToString() ?? "",
+                CityID = reader["CITYID"].ToString() ?? "",
+                State = reader["STATE"].ToString() ?? "",
+                Country = reader["COUNTRY"].ToString(),
+                CityName = reader["CITYNAME"].ToString() ?? "",
+                ZipCode = reader["ZIPCODE"].ToString() ?? "",
+                PricePerNight = reader["PRICEPERNIGHT"].ToString() ?? "",
+                MainPhotoURL = reader["MAINPHOTOURL"].ToString() ?? "",
+                SizeInSquareFeet = reader["SIZEINSQUAREFEET"].ToString() ?? "",
+                NumberOfRooms = reader["NUMBEROFROOMS"].ToString() ?? "",
+                AverageRating = reader["AVERAGERATING"].ToString() ?? "",
+                NumberOfReviews = reader["NUMBEROFREVIEWS"].ToString() ?? "",
+                HouseRules = reader["HOUSERULES"].ToString() ?? "",
+                CancellationPolicy = reader["CANCELLATIONPOLICY"].ToString() ?? "",
+                CreatedAt = reader["CREATEDAT"].ToString() ?? ""
             }, parameters);
 
             return results.ToList();
@@ -164,15 +181,36 @@ namespace RentalHub.Repositories
 
             var results = ExecuteQuery(query, reader => new ReviewModel
             {
-                ReviewId = reader["REVIEWID"].ToString(),
-                BookingId = reader["BOOKINGID"].ToString(),
-                UserFullName = reader["GUESTFULLNAME"].ToString(),
-                PeriodOfStaying = reader["PERIODOFSTAYING"].ToString(),
-                Rating = reader["RATING"].ToString(),
-                Review = reader["REVIEW"].ToString(),
-                CreateDate = reader["CREATEDAT"].ToString()
+                ReviewId = reader["REVIEWID"].ToString() ?? "",
+                BookingId = reader["BOOKINGID"].ToString() ?? "",
+                UserFullName = reader["GUESTFULLNAME"].ToString() ?? "",
+                PeriodOfStaying = reader["PERIODOFSTAYING"].ToString() ?? "",
+                Rating = reader["RATING"].ToString() ?? "",
+                Review = reader["REVIEW"].ToString() ?? "",
+                CreateDate = reader["CREATEDAT"].ToString() ?? ""
             }, parameters);
 
+
+            return results.ToList();
+        }
+
+        public List<PhotoModel> GetPhotosList(string? apartmentID)
+        {
+            string query = @"SELECT APARTMENTIMAGEID, PHOTOURL, UPLOADEDAT
+                             FROM APARTMENTIMAGES
+                             WHERE APARTMENTID = :APARTMENTID";
+
+            var parameters = new OracleParameter[]
+            {
+                new OracleParameter("APARTMENTID", apartmentID)
+            };
+
+            var results = ExecuteQuery(query, reader => new PhotoModel
+            {
+                ApartmentImageId = reader["APARTMENTIMAGEID"].ToString() ?? "",
+                PhotoURL = reader["PHOTOURL"].ToString() ?? "",
+                UploadedDate = reader["UPLOADEDAT"].ToString() ?? ""
+            }, parameters);
 
             return results.ToList();
         }

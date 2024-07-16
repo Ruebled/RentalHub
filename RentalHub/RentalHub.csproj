@@ -35,6 +35,7 @@
     <None Remove="Icons\phone_number_icon_50x50.png" />
     <None Remove="Icons\reset_icon_50x50.png" />
     <None Remove="Icons\search_icon.png" />
+    <None Remove="Icons\star_icon.png" />
     <None Remove="Icons\support_icon.png" />
     <None Remove="Icons\tenant_icon_50x50.png" />
     <None Remove="Icons\username_icon_50x50.png" />
@@ -75,6 +76,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icons\search_icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Icons\star_icon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icons\support_icon.png">

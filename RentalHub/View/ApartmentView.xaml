@@ -4,7 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:RentalHub.View" 
-             xmlns:viewmodel="clr-namespace:RentalHub.ViewModel" 
+             xmlns:viewmodel="clr-namespace:RentalHub.ViewModel"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:behaviors="clr-namespace:RentalHub.Utils"
              d:DataContext="{d:DesignInstance Type=viewmodel:ApartmentViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -33,144 +35,305 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                
-                <!-- Apartment info + Apartment main photo -->
+
+                <!-- Apartment info + Apartment main photo & gallery -->
                 <Grid Grid.Row="0">
-                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Apartment main info -->
+                        <StackPanel Orientation="Vertical"
+                                    Grid.Column="0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding ApartmentSelected.Name}" VerticalAlignment="Center" FontSize="30" FontWeight="Bold"/>
+
+                                <TextBlock Text="{Binding ApartmentSelected.AverageRating}" VerticalAlignment="Center" FontSize="30" FontWeight="Bold" Margin="20, 0, 0, 0"/>
+
+                                <Viewbox Width="30" Height="30">
+                                    <Image Source="../Icons/star_icon.png"/>
+                                </Viewbox>
+
+                                <StackPanel Orientation="Horizontal" Margin="10, 0, 0,0">
+                                    <TextBlock Text="(Reviews" FontSize="20" FontStyle="Italic" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding ApartmentSelected.NumberOfReviews}" Margin="5, 0, 0,0"  FontSize="20" FontStyle="Italic" VerticalAlignment="Center"/>
+                                    <TextBlock Text=")" FontSize="20" FontStyle="Italic" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding ApartmentSelected.OwnerName}"
+                                           FontSize="18"
+                                           FontStyle="Italic"/>
+
+                                <TextBlock Text="(Owner)"
+                                           FontStyle="Italic"
+                                           FontSize="18"
+                                           Margin="10, 0, 0, 0"/>
+                            </StackPanel>
+
+                            <TextBlock Text="{Binding ApartmentSelected.Description}"
+                                       TextWrapping="Wrap"
+                                       FontSize="20"
+                                       Margin="0, 30, 0, 30"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Vertical" Grid.Column="0">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Address"
+                                           FontWeight="Bold"
+                                           FontSize="17"/>
+                                        <StackPanel Orientation="Vertical"
+                                            Margin="20, 0, 0, 0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding ApartmentSelected.Country}" FontSize="15"/>
+                                                <TextBlock Text="," FontSize="15" Margin="5, 0"/>
+                                                <TextBlock Text="{Binding ApartmentSelected.State}" FontSize="15"/>
+                                                <TextBlock Text="," FontSize="15" Margin="5, 0"/>
+                                                <TextBlock Text="{Binding ApartmentSelected.CityName}" FontSize="15"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding ApartmentSelected.AddressLine}" FontSize="15"/>
+                                                <TextBlock Text="," FontSize="15" Margin="5, 0"/>
+                                                <TextBlock Text="{Binding ApartmentSelected.ZipCode}" FontSize="15"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+                                        <TextBlock Text="Number of Rooms" FontSize="18" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding ApartmentSelected.NumberOfRooms}" FontSize="18" Margin="10, 0, 0, 0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+                                        <TextBlock Text="Size In Square Feet" FontSize="18" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding ApartmentSelected.SizeInSquareFeet}" FontSize="18" Margin="10, 0, 0, 0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+                                        <TextBlock Text="Price Per Night" FontSize="18" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding ApartmentSelected.PricePerNight}" FontSize="18" Margin="10, 0, 0, 0"/>
+                                        <TextBlock Text="€" FontSize="18" Margin="1, 0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+                                        <TextBlock Text="Number of Rooms" FontSize="18" FontWeight="Bold"/>
+                                        <TextBlock Text="{Binding ApartmentSelected.NumberOfRooms}" FontSize="18" Margin="10, 0, 0, 0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Vertical" Margin="0, 20, 0,0">
+                                        <TextBlock Text="House Rules"
+                                           FontWeight="Bold"
+                                           FontSize="20"/>
+
+                                        <TextBlock Text="{Binding ApartmentSelected.HouseRules}"
+                                           Margin="10, 0, 0, 0"
+                                           FontSize="18"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Vertical" Margin="0, 30, 0,0">
+                                        <TextBlock Text="Cancellation Policy"
+                                           FontWeight="Bold"
+                                           FontSize="20"/>
+
+                                        <TextBlock Text="{Binding ApartmentSelected.CancellationPolicy}"
+                                           Margin="10, 0, 0, 0"
+                                           FontSize="18"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Grid.Column="1">
+                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                        <TextBlock Text="Reserved Dates Calendar"
+                                                   FontSize="16"
+                                                   FontWeight="Bold"/>
+                                        <Calendar x:Name="CalendarControl"
+                                                  DisplayDateStart="{Binding MinDate}"
+                                                  DisplayDateEnd="{Binding MaxDate}">
+                                            <i:Interaction.Behaviors>
+                                                <behaviors:CalendarBlackoutDatesBehavior BlackoutDates="{Binding BlackoutDates}"/>
+                                            </i:Interaction.Behaviors>
+                                        </Calendar>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+
+                        <!-- Calendar & image gallery etc-->
+                        <StackPanel Orientation="Vertical"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                Margin="0, 0, 20, 0">
+                            <!-- Main apartment image box -->
+                            <Rectangle Width="480"
+                   Height="280"
+                   Stroke="{StaticResource PrimaryBrush}"
+                   StrokeThickness="2"
+                   Margin="0, 0, 0, 0">
+                                <Rectangle.Fill>
+                                    <ImageBrush ImageSource="{Binding ApartmentSelected.MainPhotoURL}"
+                            Stretch="UniformToFill"
+                            AlignmentX="Center"
+                            AlignmentY="Center">
+                                    </ImageBrush>
+                                </Rectangle.Fill>
+                            </Rectangle>
+
+                            <!-- Apartment Photos Gallery -->
+                            <ScrollViewer HorizontalScrollBarVisibility="Hidden"
+                      VerticalScrollBarVisibility="Disabled">
+                                <ListBox x:Name="PhotosListBox"
+                     ItemsSource="{Binding ApartmentPhotos}"
+                     BorderThickness="0"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     ScrollViewer.CanContentScroll="False"
+                     VirtualizingStackPanel.IsVirtualizing="True">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ListBoxItem}">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="BorderBrush" Value="{StaticResource TextBrush}"/>
+                                            <Setter Property="Margin" Value="5, 0, 5, 0"/>
+                                            <!-- Adjusted margin for horizontal spacing -->
+                                            <Setter Property="Padding" Value="5"/>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="2">
+                                                <Image Source="{Binding PhotoURL}"
+                                   Height="100"
+                                   Width="Auto"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
-                
-                <!-- Apartment Photos Gallery -->
-                <ListBox x:Name="PhotosListBox"
-                         ItemsSource="{Binding ApartmentPhotos}"
-                         BorderThickness="0"
-                         Padding="0, 0, 21, 0"
-                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                         ScrollViewer.CanContentScroll="False"
-                         VirtualizingStackPanel.IsVirtualizing="True">
-                    <ListBox.ItemContainerStyle>
-                        <Style TargetType="{x:Type ListBoxItem}">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="BorderThickness" Value="1"/>
-                            <Setter Property="BorderBrush" Value="{StaticResource TextBrush}"/>
-                            <Setter Property="Margin" Value="0, 5, 0, 5"/>
-                            <Setter Property="Padding" Value="5"/>
-                        </Style>
-                    </ListBox.ItemContainerStyle>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="2">
-                                <Image Source="{Binding ImageURL}"
-                                       Height="100"
-                                       Width="100"/>
-                            </Border>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+
 
                 <!-- User Reviews -->
-                <TextBlock Text="Guest Reviews"
-                           FontSize="35"/>
-                
-                <Grid Grid.Row="2">
-                    <ListBox x:Name="ReviewsListBox"
-                             ItemsSource="{Binding ReviewsList}"
-                             BorderThickness="0"
-                             Padding="0, 0, 21, 0"
-                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                             ScrollViewer.CanContentScroll="False"
-                             VirtualizingStackPanel.IsVirtualizing="True">
-                        <ListBox.ItemContainerStyle>
-                            <Style TargetType="{x:Type ListBoxItem}">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="BorderThickness" Value="2"/>
-                                <Setter Property="BorderBrush" Value="{StaticResource TextBrush}"/>
-                                <Setter Property="Margin" Value="0, 5, 0, 5"/>
-                                <Setter Property="Padding" Value="5"/>
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    
-                                    <!-- Reviewer & Rating -->
-                                    <Grid Grid.Row="0">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" 
-                                                       Text="{Binding UserFullName}"
-                                                       FontSize="25"
-                                                       FontWeight="Bold"
-                                                       Margin="5, 5, 0, 0"/>
-                                            <Grid Grid.Column="1"
-                                                  Margin="30, 0 , 0, 0">
-                                                <!-- Rectangle for Rating -->
-                                                <Rectangle Width="55"
-                                                           Height="30"
-                                                           RadiusX="12"
-                                                           RadiusY="12"
-                                                           Fill="{StaticResource SecondaryBrush}"/>
+                <Grid Grid.Row="1" Margin="0, 50, 0, 0">
+                    <!-- User Reviews -->
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Guest Reviews"
+                                   FontSize="35"/>
 
-                                                <!-- TextBlock for Rating -->
-                                                <StackPanel Orientation="Horizontal"
-                                                            Margin="5, 0, 0, 0">
-                                                    <TextBlock Text="{Binding Rating}"
-                                                           Foreground="{StaticResource TextBrush}"
-                                                           VerticalAlignment="Center"
-                                                           HorizontalAlignment="Center"
-                                                           FontSize="20"
-                                                           FontWeight="Bold"/>
-                                                    <TextBlock Text=" / 5"
-                                                           Foreground="{StaticResource TextBrush}"
-                                                           VerticalAlignment="Center"
-                                                           HorizontalAlignment="Center"
-                                                           FontSize="20"
-                                                           FontWeight="Bold"/>
-                                                </StackPanel>
+                        <ListBox x:Name="ReviewsListBox"
+                                 ItemsSource="{Binding ReviewsList}"
+                                 Margin="0, 0, 20, 0"
+                                 IsEnabled="True"
+                                 Padding="0"
+                                 BorderThickness="0"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 ScrollViewer.CanContentScroll="False"
+                                 VirtualizingStackPanel.IsVirtualizing="True">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="BorderThickness" Value="2"/>
+                                    <Setter Property="BorderBrush" Value="{StaticResource TextBrush}"/>
+                                    <Setter Property="Padding" Value="5"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                    <Setter Property="Background" Value="{StaticResource BackgroundBrush}"/>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Reviewer & Rating -->
+                                        <Grid Grid.Row="0">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" 
+                                                           Text="{Binding UserFullName}"
+                                                           FontSize="25"
+                                                           FontWeight="Bold"
+                                                           Margin="5, 5, 0, 0"/>
+                                                <Grid Grid.Column="1"
+                                                      Margin="30, 0 , 0, 0">
+                                                    <!-- Rectangle for Rating -->
+                                                    <Rectangle Width="55"
+                                                               Height="30"
+                                                               RadiusX="12"
+                                                               RadiusY="12"
+                                                               Fill="{StaticResource SecondaryBrush}"/>
+
+                                                    <!-- TextBlock for Rating -->
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Margin="5, 0, 0, 0">
+                                                        <TextBlock Text="{Binding Rating}"
+                                                                   Foreground="{StaticResource TextBrush}"
+                                                                   VerticalAlignment="Center"
+                                                                   HorizontalAlignment="Center"
+                                                                   FontSize="20"
+                                                                   FontWeight="Bold"/>
+                                                        <TextBlock Text=" / 5"
+                                                                   Foreground="{StaticResource TextBrush}"
+                                                                   VerticalAlignment="Center"
+                                                                   HorizontalAlignment="Center"
+                                                                   FontSize="20"
+                                                                   FontWeight="Bold"/>
+                                                    </StackPanel>
+                                                </Grid>
                                             </Grid>
                                         </Grid>
-                                    </Grid>
-                                    
-                                    <!-- Period of staying -->
-                                    <Grid Grid.Row="1">
-                                        <StackPanel Orientation="Horizontal"
-                                                    Margin="5,0,0,0">
 
-                                            <TextBlock Text="{Binding PeriodOfStaying}"
-                                                       FontSize="15"
-                                                       Margin="0, 6, 0, 0"
-                                                       VerticalAlignment="Center"/>
-                                        </StackPanel>
+                                        <!-- Period of staying -->
+                                        <Grid Grid.Row="1">
+                                            <StackPanel Orientation="Horizontal"
+                                                        Margin="5,0,0,0">
+
+                                                <TextBlock Text="{Binding PeriodOfStaying}"
+                                                           FontSize="15"
+                                                           Margin="0, 6, 0, 0"
+                                                           VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid Grid.Row="2">
+                                            <StackPanel Orientation="Vertical">
+                                                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" 
+                                                           Margin="5, 15, 5, 15"
+                                                           Height="3"
+                                                           Foreground="{StaticResource AccentBrush}"/>
+                                                <TextBlock TextWrapping="Wrap"
+                                                           Text="{Binding Review}"
+                                                           FontSize="26"
+                                                           Margin="5, 0, 0, 20"/>
+                                            </StackPanel>
+                                        </Grid>
+
                                     </Grid>
-                                    <Grid Grid.Row="2">
-                                        <StackPanel Orientation="Vertical">
-                                        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" 
-                                                Margin="5, 15, 5, 15"
-                                                Height="3"
-                                                Foreground="{StaticResource AccentBrush}"/>
-                                        <TextBlock TextWrapping="Wrap"
-                                                   Text="{Binding Review}"
-                                                   FontSize="26"
-                                                   Margin="5, 0, 0, 20"/>
-                                        </StackPanel>
-                                    </Grid>
-                                    
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
                 </Grid>
             </Grid>
         </ScrollViewer>

@@ -124,8 +124,7 @@ namespace RentalHub.ViewModel
             // Clear previous results
             SearchResults.Clear();
 
-            ApartmentRepository apartmentRepository = new ApartmentRepository();
-            var results = apartmentRepository.GetApartmentsByCityAndDays(SearchQuery, CheckInDate, CheckOutDate);
+            var results = ApartmentRepository.Instance.GetApartmentsByCityAndDays(SearchQuery, CheckInDate, CheckOutDate);
 
             foreach (var apartment in results)
             {
