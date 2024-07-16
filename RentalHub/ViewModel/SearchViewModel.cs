@@ -1,47 +1,26 @@
 ﻿using RentalHub.Model;
 using RentalHub.Repositories;
 
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RentalHub.ViewModel
 {
     public class SearchViewModel : ViewModelBase
     {
+        // Properties for search results and date ranges
         public ObservableCollection<ApartmentModel> SearchResults { get; set; }
-
-        private string _searchQuery;
-        private DateTime _checkindate;
-        private DateTime _checkoutdate;
+        private DateTime _checkInDate;
+        private DateTime _checkOutDate;
         private DateTime _minDate;
         private DateTime _maxDate;
 
-        public DateTime MinDate
-        {
-            get => _minDate;
-            set
-            {
-                if (_minDate != value)
-                {
-                    _minDate = value;
-                    OnPropertyChanged(nameof(MinDate));
-                }
-            }
-        }
-
-        public DateTime MaxDate
-        {
-            get => _maxDate;
-            set
-            {
-                if (_maxDate != value)
-                {
-                    _maxDate = value;
-                    OnPropertyChanged(nameof(MaxDate));
-                }
-            }
-        }
-
+        // Search query property with update trigger
+        private string _searchQuery;
         public string SearchQuery
         {
             get => _searchQuery;
@@ -51,112 +30,166 @@ namespace RentalHub.ViewModel
                 {
                     _searchQuery = value;
                     OnPropertyChanged(nameof(SearchQuery));
-                    OnSearchQueryChanged();
+                    UpdateCityOptions(); // Update city options based on search query
+                    OnSearchQueryChanged(); // Trigger search based on query change
                 }
             }
         }
 
+        // Date properties with validation and update logic
         public DateTime CheckInDate
         {
-            get => _checkindate;
+            get => _checkInDate;
             set
             {
-                if (_checkindate != value)
+                if (_checkInDate != value)
                 {
-                    _checkindate = value;
+                    _checkInDate = value;
                     OnPropertyChanged(nameof(CheckInDate));
-                    UpdateCheckOutDay();
-                    CommandManager.InvalidateRequerySuggested();
-                    OnSearchQueryChanged();
+                    UpdateCheckOutDate();
+                    CommandManager.InvalidateRequerySuggested(); // Notify command manager for SearchCommand
+                    OnSearchQueryChanged(); // Trigger search based on date change
                 }
             }
         }
 
         public DateTime CheckOutDate
         {
-            get => _checkoutdate;
+            get => _checkOutDate;
             set
             {
-                if (_checkoutdate != value)
+                if (_checkOutDate != value)
                 {
-                    _checkoutdate = value;
+                    _checkOutDate = value;
                     OnPropertyChanged(nameof(CheckOutDate));
-                    UpdateCheckOutDay();
-                    CommandManager.InvalidateRequerySuggested();
-                    OnSearchQueryChanged();
+                    CommandManager.InvalidateRequerySuggested(); // Notify command manager for SearchCommand
+                    OnSearchQueryChanged(); // Trigger search based on date change
                 }
             }
         }
 
+        // Command properties for executing search and viewing details
         public ICommand SearchCommand { get; set; }
         public ICommand ViewDetailsCommand { get; set; }
+        public ICommand EnterCommand { get; set; }
 
+        // Collection for city options and visibility flag for city ListBox
+        public ObservableCollection<string> CityOptions { get; set; }
+        private bool _cityListBoxVisible;
+        public bool CityListBoxVisible
+        {
+            get => _cityListBoxVisible;
+            set
+            {
+                if (_cityListBoxVisible != value)
+                {
+                    _cityListBoxVisible = value;
+                    OnPropertyChanged(nameof(CityListBoxVisible));
+                }
+            }
+        }
+
+        // Constructor to initialize properties and commands
         public SearchViewModel()
         {
             SearchResults = new ObservableCollection<ApartmentModel>();
+            CityOptions = new ObservableCollection<string>();
 
-            // Set Min and Max dates for the calendar at hand
-            MinDate = DateTime.Now.Date;
-            MaxDate = DateTime.Now.Date.AddYears(1);
+            // Set minimum and maximum date ranges
+            _minDate = DateTime.Now.Date;
+            _maxDate = _minDate.AddYears(1);
+            CheckInDate = _minDate;
+            CheckOutDate = _minDate.AddDays(1);
 
-            // Set default check-in & check-out days (today and tomorrow)
-            CheckInDate = DateTime.Now.Date;
-            CheckOutDate = DateTime.Now.Date.AddDays(1);
-
-            // Setting Command object
-            ViewDetailsCommand = new RelayCommand<ApartmentModel>(ExecuteViewDetailsCommand);
+            // Initialize commands
             SearchCommand = new RelayCommand<object>(ExecuteSearchCommand, CanExecuteSearchCommand);
-
-            // Set Search Query to a value to trigger the search
-            SearchQuery = string.Empty;
+            EnterCommand = new RelayCommand<object>(ExecuteEnterCommand, CanExecuteSearchCommand);
+            ViewDetailsCommand = new RelayCommand<ApartmentModel>(ExecuteViewDetailsCommand);
         }
 
+        private void ExecuteEnterCommand(object obj)
+        {
+            CityListBoxVisible = false;
+            SearchCommand.Execute(null);
+        }
+
+
+
+        // Method to execute search based on current search query and date range
+        private void ExecuteSearchCommand(object obj)
+        {
+            SearchResults.Clear(); // Clear previous search results
+
+            // Call repository method to fetch apartments based on city and date range
+            var results = ApartmentRepository.Instance.GetApartmentsByCityAndDays(SearchQuery, CheckInDate, CheckOutDate);
+
+            foreach (var apartment in results)
+            {
+                SearchResults.Add(apartment); // Add fetched apartments to results collection
+            }
+        }
+
+        // Method to determine if search can be executed based on current date range validity
+        private bool CanExecuteSearchCommand(object obj)
+        {
+            return CheckInDate < CheckOutDate; // Ensure check-in is before check-out
+        }
+
+        // Method to handle viewing details of a selected apartment
         private void ExecuteViewDetailsCommand(ApartmentModel selectedApartment)
         {
+            // Example implementation to navigate to details view
             if (MainViewModel.Instance != null)
             {
                 MainViewModel.Instance.PushView(new ApartmentViewModel(selectedApartment));
             }
         }
 
-        private void ExecuteSearchCommand(object obj)
+        // Method to update check-out date if check-in date is adjusted
+        private void UpdateCheckOutDate()
         {
-            // Clear previous results
-            SearchResults.Clear();
-
-            var results = ApartmentRepository.Instance.GetApartmentsByCityAndDays(SearchQuery, CheckInDate, CheckOutDate);
-
-            foreach (var apartment in results)
+            if (CheckOutDate <= CheckInDate)
             {
-                SearchResults.Add(apartment);
+                CheckOutDate = CheckInDate.AddDays(1); // Set check-out date to be at least one day after check-in
             }
         }
 
-        private bool CanExecuteSearchCommand(object obj)
+        // Method to update city options based on search query
+        private void UpdateCityOptions()
         {
-            // Ensure valid check-in and check-out dates
-            if (_checkindate == DateTime.MinValue || _checkoutdate == DateTime.MinValue)
-            {
-                return false;
-            }
+            var allCities = GetCityList(); // Get all available city options (replace with actual data retrieval)
 
-            // Check if check-in date is before check-out date
-            return _checkindate < _checkoutdate;
+            if (string.IsNullOrWhiteSpace(SearchQuery))
+            {
+                CityOptions.Clear(); // Clear options if search query is empty
+                CityListBoxVisible = false; // Hide ListBox if no options to display
+            }
+            else
+            {
+                var filteredCities = allCities.Where(city => city.ToLower().Contains(SearchQuery.ToLower())).ToList();
+                CityOptions.Clear();
+
+                foreach (var city in filteredCities)
+                {
+                    CityOptions.Add(city); // Add filtered city options to collection
+                }
+
+                CityListBoxVisible = CityOptions.Count > 0; // Show ListBox if options are available
+            }
         }
 
-        private void UpdateCheckOutDay()
+        // Method to simulate fetching city list (replace with actual data retrieval)
+        private List<string> GetCityList()
         {
-            if (_checkindate >= _checkoutdate)
-            {
-                CheckOutDate = _checkindate.AddDays(1);
-            }
+            return LocationRepository.Instance.GetCitiesByPartial(SearchQuery);
         }
 
+        // Method to trigger search based on search query or date change
         private void OnSearchQueryChanged()
         {
             if (CanExecuteSearchCommand(null))
             {
-                ExecuteSearchCommand(null);
+                ExecuteSearchCommand(null); // Execute search if conditions are met
             }
         }
     }

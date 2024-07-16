@@ -15,6 +15,16 @@ namespace RentalHub.ViewModel
 
         public BookingCreateViewModel()
         {
+            InitCommands();
+        }
+
+        public BookingCreateViewModel(ApartmentModel apartmentModel)
+        {
+            InitCommands();
+        }
+
+        private void InitCommands()
+        {
             BackCommand = new RelayCommand<object>(ExecuteBackCommand);
         }
 

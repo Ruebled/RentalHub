@@ -6,7 +6,16 @@
              xmlns:viewmodel="clr-namespace:RentalHub.ViewModel"
              d:DataContext="{d:DesignInstance Type=viewmodel:SearchViewModel}"
              mc:Ignorable="d"
+             xmlns:utils="clr-namespace:RentalHub.Utils"
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <utils:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="Enter" Command="{Binding EnterCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+    </UserControl.InputBindings>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -26,10 +35,29 @@
                 <!-- City Input -->
                 <StackPanel Grid.Column="0" Orientation="Vertical" Margin="5">
                     <TextBlock Text="City" FontSize="20"/>
-                    <TextBox x:Name="SearchTextBox"
-                             Width="300" Height="30"
-                             Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <TextBox x:Name="CityTextBox"
+             Width="300" Height="30"
+             Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                    <!-- Popup for CityListBox -->
+                    <Popup IsOpen="{Binding CityListBoxVisible}" 
+           PlacementTarget="{Binding ElementName=CityTextBox}">
+                        <Popup.Style>
+                            <Style TargetType="Popup">
+                                <Setter Property="AllowsTransparency" Value="True"/>
+                                <Setter Property="PopupAnimation" Value="Slide"/>
+                            </Style>
+                        </Popup.Style>
+                        <ListBox ItemsSource="{Binding CityOptions}"
+                 SelectionMode="Single">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Padding="5"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Popup>
                 </StackPanel>
+
 
                 <!-- Check In Date -->
                 <StackPanel Grid.Column="1" Orientation="Vertical" Margin="5">

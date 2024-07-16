@@ -78,7 +78,7 @@ namespace RentalHub.ViewModel
         {
             if (MainViewModel.Instance != null)
             {
-                MainViewModel.Instance.PushView(new BookingCreateViewModel());
+                MainViewModel.Instance.PushView(new BookingCreateViewModel(ApartmentSelected));
             }
         }
 
