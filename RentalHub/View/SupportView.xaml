@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="RentalHub.View.SupportView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RentalHub.View" 
+             xmlns:viewmodel="clr-namespace:RentalHub.ViewModel" 
+             d:DataContext="{d:DesignInstance Type=viewmodel:SupportViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0">
+            <!-- Title -->
+            <TextBlock Text="Contact Support" FontSize="30" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <!-- Description -->
+            <TextBlock Text="If you require assistance, questions or suggestion please contact us by filling the form bellow" 
+                       Margin="0,5,0,0"
+                       FontSize="25"
+                       Width="600"
+                       HorizontalAlignment="Left"
+                       TextWrapping="Wrap"/>
+        </StackPanel>
+        
+        <!-- Support Panel -->
+        <StackPanel Grid.Row="1" Margin="0, 40, 0, 0">
+            <!-- Title -->
+
+            <TextBlock Text="Title" 
+                       FontSize="25" 
+                       FontWeight="Bold" 
+                       Margin="0, 10, 0, 10" 
+                       HorizontalAlignment="Left"/>
+            <!-- Message Title -->
+            <TextBox x:Name="txtMessageTitle"
+                     Text="{Binding MessageTitle, UpdateSourceTrigger=PropertyChanged}"
+                     TextWrapping="NoWrap"
+                     MaxLength="30"
+                     VerticalScrollBarVisibility="Auto" 
+                     MinWidth="200"  
+                     MaxWidth="400"
+                     Height="Auto"
+                     Width="Auto"
+                     HorizontalAlignment="Left"
+                     Margin="0,0,0,10"
+                     FontSize="24"/>
+
+            <TextBlock Text="Content" 
+                       FontSize="24" 
+                       FontWeight="Bold" 
+                       Margin="0, 10, 0, 10" 
+                       HorizontalAlignment="Left"/>
+
+            <!-- Full Message -->
+            <TextBox x:Name="txtFullMessage"
+                     Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}"
+                     TextWrapping="Wrap" 
+                     VerticalScrollBarVisibility="Auto"
+                     Padding="10, 10, 20, 10"
+                     MinWidth="300"  
+                     MaxWidth="600"
+                     MinHeight="100"
+                     MaxHeight="200"
+                     Height="Auto"
+                     Width="Auto"
+                     MaxLength="500"
+                     FontSize="24"
+                     HorizontalAlignment="Left"
+                     Margin="0,0,0,10"/>
+
+            <TextBlock Text="{Binding StatusMessage}"
+                       Foreground="{StaticResource SecondaryBrush}"
+                       Margin="0,10"
+                       FontSize="20"/>
+
+            <!-- Submit Button -->
+            <Button Width="120"
+                    Margin="0, 20, 0, 0"
+                    HorizontalAlignment="Left"
+                    Command="{Binding ContactSupportCommand}">
+                <TextBlock Text="Submit"
+                           FontSize="23"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

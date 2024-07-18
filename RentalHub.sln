@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentalHub", "RentalHub\RentalHub.csproj", "{0284A7BF-7C98-4882-B03D-A02A34DD2E1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RentalHub", "RentalHub\RentalHub.csproj", "{0284A7BF-7C98-4882-B03D-A02A34DD2E1B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
